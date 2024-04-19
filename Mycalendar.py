@@ -19,7 +19,7 @@ def pick_date(event):
     cal = Calendar(date_window, selectmode="day", date_pattern="mm/dd/y")    
     cal.place(x=0, y=0)
     
-    submit_btn = Button(date_window, text="Submit", command=grab_date)
+    submit_btn = Button(date_window, text="Select", command=grab_date)
     submit_btn.place(x=80, y=190)
     
 def grab_date():
