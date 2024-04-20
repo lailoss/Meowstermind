@@ -3,9 +3,10 @@ root = Tk()
 #root.geometry("1920x1080")
 
 #background image
-canvas= Canvas(root, width=192, height="108")
+canvas= Canvas(root, width=1920, height="1080")
 canvas.pack()
-canvas.create_image(0,0, image= PhotoImage(file= "#3 bedroom.#3 bedroom.jpg"))
+backgroundimage= PhotoImage(file = "bg_3_bedroom.jpg")
+canvas.create_image(0,0, image= backgroundimage)
 
 #important loop-----------------------
 root.mainloop()
