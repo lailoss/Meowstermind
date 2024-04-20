@@ -7,6 +7,7 @@ import os
 root=Tk()
 root.title("Music Player")
 root.geometry("920x670+290+85")
+root.configure(bg="#1E2647")
 root.resizable(False,False)
 
 mixer.init()
@@ -27,32 +28,25 @@ def play_song():
     mixer.music.play()
     music.config(text=music_name[0:-4])
 
-# icon
-image_icon=PhotoImage(file="logo.png")
-root.iconphoto(False,image_icon)
-
+# top
 Top=PhotoImage(file="top.png")
 Label(root,image=Top).pack()
 
-# logo
-Logo=PhotoImage(file="")
-Label(root,image=Logo ,bd=0).place(x=10,y=50)
-
 # button
 play_button=PhotoImage(file="play.png")
-Button(root,image=play_button,bd=0,command=play_song).place(x=100,y=400)
+Button(root,image=play_button,bg="#1E2647",bd=0,command=play_song).place(x=100,y=400)
 
 stop_button=PhotoImage(file="stop.png")
-Button(root,image=stop_button,bd=0,command=mixer.music.stop).place(x=30,y=500)
-
-resume_button=PhotoImage(file="resume.png")
-Button(root,image=resume_button,bd=0,command=mixer.music.unpause).place(x=115,y=500)
+Button(root,image=stop_button,bg="#1E2647",bd=0,command=mixer.music.stop).place(x=30,y=500)
 
 pause_button=PhotoImage(file="pause.png")
-Button(root,image=pause_button,bd=0,command=mixer.music.pause).place(x=200,y=500)
+Button(root,image=pause_button,bg="#1E2647",bd=0,command=mixer.music.pause).place(x=115,y=500)
+
+resume_button=PhotoImage(file="resume.png")
+Button(root,image=resume_button,bg="#1E2647",bd=0,command=mixer.music.unpause).place(x=200,y=500)
 
 # label
-music=Label(root,text="",font=("arial",10),fg="black")
+music=Label(root,text="",font=("arial",10,"bold"),fg="black")
 music.place(x=150,y=340,anchor="center")
 
 # music
@@ -62,7 +56,7 @@ Label(root,image=Menu).pack(padx=10,pady=50,side=RIGHT)
 music_frame = Frame(root,bd=2,relief=RIDGE)
 music_frame.place(x=330,y=350,width=560,height=250)
 
-Button(root,text="Open Folder",width=15,height=2,font=("Arial",10,"bold"),fg="white",bg="#21b3de",command=open_folder).place(x=330,y=300)
+Button(root,text="Open Folder",width=15,height=2,font=("Arial",10,"bold"),fg="white",bg="#233A4D",command=open_folder).place(x=330,y=300)
 
 scroll = Scrollbar(music_frame)
 playlist=Listbox(music_frame,width=100,font=("arial",10),bg="#333333",fg="grey",selectbackground="lightblue",cursor="hand2",bd=0,yscrollcommand=scroll.set)
