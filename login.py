@@ -1,8 +1,19 @@
 from tkinter import *
+from tkinter import messagebox
 root = Tk()
 root.geometry("950x500")
 root.title("Login Page")
 root.configure(bg="#E8D09C")
+
+#functions
+
+def login():
+    username="meowstermind" #link db
+    password="12345" #link db
+    if username_entry.get()==username and password_entry.get()==password:
+        messagebox.showinfo(title="Login Success", message="You shall pass.")
+    else:
+        messagebox.showerror(title="Error", message="You shall not pass.")
 
 #frame
 frame= Frame(bg="#FFFFFF")
@@ -15,7 +26,7 @@ username_entry.get()
 password_label = Label(frame, text="Password", font=("Lato", 15), padx=30, pady=15, bg="#FFFFFF")
 password_entry = Entry(frame, show="•", font=("Lato", 15), bg="#FFFFFF")
 password_entry.get()
-login_button = Button(frame, text="Login", font=("Lato", 15), pady=15, bg="#FFFFFF")
+login_button = Button(frame, text="Login", font=("Lato", 15), pady=15, bg="#FFFFFF", command=login)
 
 
 #pack it in
