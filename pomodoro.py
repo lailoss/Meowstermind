@@ -2,8 +2,11 @@ import time
 from tkinter import *
 import pygame
 
+pygame.init()
 #consts
 red='#d04e2f'
+peach='#FFE4B6'
+beep=pygame. mixer.music.load('pomodoro_beep.mp3')
 
 #window
 root=Tk()
@@ -15,33 +18,67 @@ root.iconbitmap(r'./images/pomodoroIcon.ico')
 
 
 #time tracker
-hour=StringVar()
-minute=StringVar()
-seconds=StringVar()
+
+mins=StringVar()
+Entry(root, textvariable='mins', height='10', width='5',fg=peach).place(x='250',y='100')
+Label(root,text='minutes').place(x='250',y='200')
+
+sec=StringVar()
+Entry(root, textvariable='sec', fg=peach). place(x='200',y='200')
+Label(root,text='seconds').place(x='300',y='200')
+
+hrs = StringVar()
+Entry(root, textvariable='hours', fg=peach). place(x='200',y='200')
+Label(root, text='hours').place(x='250',y='200')
+
+hrs.set('00')
+mins.set('00')
+sec.set('00')
+
 
 #load images
 workaicon=PhotoImage('./25minicon.png')
 
 
+startbutton=Button(root, text='start'). place(x='300',y=' 270')
+pausebutton=Button(root, text='pause').place(x='250',y='270')
+stopbutton=Button(root,text='stop').place(x='350',y='270')
+
 def worka():
-    minute.set('25')
-    seconds.set('00')
+    hrs.set('00')
+    mins.set('250')
+    sec.set('00')
     
 def workb():
-    minute.set('60')
-    seconds.set('00')
+    hrs.set('00')
+    mins.set('60')
+    sec.set('00')
     
 def workc():
-    minute.set('120')
-    seconds.set('00')
+    hrs.set('2')
+    mins.set('00')
+    sec.set('00')
     
 def timer():
-    totaltime=int(minute.get()*60 + int(seconds.get()))
+    totaltime=int(hrs.get()*3600 +int(mins.get())*60 + int(sec.get()))
     
     while totaltime>-1:
-        minute,second =(totaltime//60)
+        minute,second =(totaltime//60,totaltime%60)
+    hours == 0
+    if minute> 60:
+        hours, minute=(minute//60, minute%60)
+    sec.set(second)
+    mins.set(minute)
+    hrs.set(hours)
     
-      
+    root.update()
+    time.sleep(1) #halts execution for x sec
+    
+    if totaltime==0:
+        pygame.mixer.play(beep)
+        
+    
+    
 #time presets
 worka=25 * 60
 workb=60 * 60
@@ -56,11 +93,9 @@ worka_button.place(x=50, y=40)
 workb_button.place(x=70, y=40)
 workc_button.place(x=100, y=40)
 
-minute.set('00')
-seconds.set('00')
+
 #custom time - enter in minutes
-inputTime=Entry(root, width=5, font=('Arial',20),  textvariable=hour)
-inputTime.pack()
+
 
 #converting entry to integer
 
