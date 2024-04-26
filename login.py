@@ -37,19 +37,19 @@ def center_frame(event=None):
 
 
 #PARAMETER-----------------------------------------------------------
-phont30 = ("Gill Sans MT", 30, "bold")
-phont15 = ("Gill Sans MT", 15)
+font_30 = ("Gill Sans MT", 30, "bold")
+font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS-------------------------------------------------------------
-login_title = Label(frame, text="Login", font=phont30, padx=30, pady=30, bg="#FFFFFF")
-username_label = Label(frame, text="Username", font=phont15, padx=30, pady=15, bg="#FFFFFF")
-username_entry = Entry(frame, font=phont15, bg="#FFFFFF")
+login_title = Label(frame, text="LOGIN", font=font_30ont30, padx=30, pady=30, bg="#FFFFFF")
+username_label = Label(frame, text="Username", font=font_15ont15, padx=30, pady=15, bg="#FFFFFF")
+username_entry = Entry(frame, font=font_15ont15, bg="#FFFFFF")
 username_entry.get()
-password_label = Label(frame, text="Password", font=phont15, padx=30, pady=15, bg="#FFFFFF")
-password_entry = Entry(frame, show="•", font=phont15, bg="#FFFFFF")
+password_label = Label(frame, text="Password", font=font_15ont15, padx=30, pady=15, bg="#FFFFFF")
+password_entry = Entry(frame, show="•", font=font_15ont15, bg="#FFFFFF")
 password_entry.get()
-login_button = Button(frame, text="Login", font=phont15, pady=15, bg="#FFFFFF")
+login_button = Button(frame, text="Login", font=font_15ont15, pady=15, bg="#FFFFFF")
 
 
 #pack it in
