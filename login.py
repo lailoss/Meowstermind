@@ -17,53 +17,38 @@ root.configure(bg="#E8D09C")
 
 
 #FRAME---------------------------------------------------------------
-frame=Frame(root, bg="#FFFFFF")
-
-#to center frame
-def center_frame(event=None):
-
-    print("it works")
-    bbox = root.bbox("all")  # get bounding box coordinates of all widgets
-    screen_width = root.winfo_screenwidth()  #get screen width
-    screen_height = root.winfo_screenheight()  #get screen height
-    frame_width = bbox[2] - bbox[0] #frame.winfo_width() - get requested/recommended width
-    frame_height = bbox[3] - bbox[1] #frame.winfo_height() - get requested/recommended height
-
-    x = (screen_width - frame_width) // 2
-    y = (screen_height - frame_height) // 2
-
-    frame.config(width=frame_width, height=frame_height) 
-    frame.place(x=x, y=y)
+frame=Frame(root, bg="#FFFFFF", padx=20, pady=20)
 
 
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS-------------------------------------------------------------
-login_title = Label(frame, text="LOGIN", font=font_30ont30, padx=30, pady=30, bg="#FFFFFF")
-username_label = Label(frame, text="Username", font=font_15ont15, padx=30, pady=15, bg="#FFFFFF")
-username_entry = Entry(frame, font=font_15ont15, bg="#FFFFFF")
+login_title = Label(frame, text="LOGIN", font=font_30, padx=0, pady=30, bg="#FFFFFF")
+username_label = Label(frame, text="Username", font=font_15, padx=30, pady=15, bg="#FFFFFF")
+username_entry = Entry(frame, font=font_15, bg="#FFFFFF")
 username_entry.get()
-password_label = Label(frame, text="Password", font=font_15ont15, padx=30, pady=15, bg="#FFFFFF")
-password_entry = Entry(frame, show="•", font=font_15ont15, bg="#FFFFFF")
+password_label = Label(frame, text="Password", font=font_15, padx=30, pady=15, bg="#FFFFFF")
+password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 password_entry.get()
-login_button = Button(frame, text="Login", font=font_15ont15, pady=15, bg="#FFFFFF")
+
+register_button = Button(frame, text = "Don't have an account? Register now!", font=font_15, fg= "blue", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
+login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50)
 
 
 #pack it in
-login_title.grid(row=0, column=0, columnspan=3, sticky="ew")
+login_title.grid(row=0, column=1, columnspan=2, sticky="ew")
 username_label.grid(row=1, column=1)
 username_entry.grid(row=1, column=2)
 password_label.grid(row=2, column=1)
 password_entry.grid(row=2, column=2)
-login_button.grid(row=3, column=0, columnspan=3, sticky="ew")
+register_button.grid(row= 3, column= 1, columnspan=2, sticky="ew")
+login_button.grid(row=4, column=1, columnspan=2)
 
-frame.pack(fill=BOTH, expand=True)
-frame.pack_propagate(False)
+frame.pack(side="top", expand=True)
 
-root.bind("<Configure>", center_frame)
-#frame.bind("<Configure>", center_frame)
 
 root.mainloop()
