@@ -8,13 +8,27 @@ root.configure(bg="#E8D09C")
 
 
 #FUNCTIONS ---------------------------------------------------------
-def register():
-    if password_entry.get() == repassword_entry.get():
-        create_button.config(state=NORMAL)
-        os.system("login.py")
-
+def validate_password():
+    password = password_entry.get()
+    repassword = repassword_entry.get()
+    if len(password) < 8:
+        messagebox.showerror("Error", "Password must be at least 8 characters long.")
+        return False
+    if password != repassword:
+        messagebox.showerror("Error", "Passwords do not match.")
+        return False
     else:
-        create_button.config(state=DISABLED)
+        return True
+        create_button.config(state=NORMAL)
+
+def register():
+    print("Register function called")
+    if validate_password():
+        print("Password validation passed")
+        messagebox.showinfo("Success", "Account created successfully!")
+        os.system(login.py)
+    else:
+        print("Password validation failed")
 
 
 #PARAMETER-----------------------------------------------------------
@@ -38,7 +52,7 @@ repassword_label = Label(frame, text="Re-enter Password", font=font_15, pady=5, 
 repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 repassword_entry.get() #uuuuuuuuuuuuuuuuuuuuuu
 
-register_button = Button(frame, text = "Alredy have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
+register_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
 
 create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=register)
 
