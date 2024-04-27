@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import os
 root = Tk()
 root.geometry("1200x700")
 root.title("Login Page")
@@ -7,17 +8,13 @@ root.configure(bg="#E8D09C")
 
 
 #FUNCTIONS ---------------------------------------------------------
-"""def login():
+def login():
     username="meowstermind" #link db
     password="12345" #link db
     if username_entry.get()==username and password_entry.get()==password:
-        messagebox.showinfo(title="Login Success", message="You shall pass.")
+         os.system("homescreen.py")
     else:
-        messagebox.showerror(title="Error", message="You shall not pass.")"""
-
-
-#FRAME---------------------------------------------------------------
-frame=Frame(root, bg="#FFFFFF", padx=20, pady=20)
+        messagebox.showerror(title="Error", message="You shall not pass.")
 
 
 #PARAMETER-----------------------------------------------------------
@@ -26,8 +23,12 @@ font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
 
+#FRAME---------------------------------------------------------------
+frame=Frame(root, bg="#FFFFFF", padx=20, pady=20)
+
+
 #WIDGETS-------------------------------------------------------------
-login_title = Label(frame, text="LOGIN", font=font_30, padx=0, pady=30, bg="#FFFFFF")
+login_title = Label(frame, text="L O G I N", font=font_30, padx=0, pady=30, bg="#FFFFFF")
 username_label = Label(frame, text="Username", font=font_15, padx=30, pady=15, bg="#FFFFFF")
 username_entry = Entry(frame, font=font_15, bg="#FFFFFF")
 username_entry.get()
@@ -36,7 +37,8 @@ password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 password_entry.get()
 
 register_button = Button(frame, text = "Don't have an account? Register now!", font=font_15, fg= "blue", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
-login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50)
+
+login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50, command=login)
 
 
 #pack it in
