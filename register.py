@@ -9,9 +9,12 @@ REGwindow.configure(bg="#E8D09C")
 
 #FUNCTIONS ---------------------------------------------------------
 def register():
+    username = username_entry.get().strip()
     password = password_entry.get().strip()
     repassword = repassword_entry.get().strip()
-    if len(password) < 8:
+    if len(username) < 1:
+        messagebox.showerror("Error", "Username must be at least 1 character long.")
+    elif len(password) < 8:
         messagebox.showerror("Error", "Password must be at least 8 characters long.")
         return False
     elif password != repassword:
