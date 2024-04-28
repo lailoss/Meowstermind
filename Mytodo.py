@@ -29,7 +29,7 @@ def add_task():
         messagebox.showerror('Error', 'Please select a category.')
         return
     
-    tasks_list.insert(task_counter - 1, f"{task_counter}. {task} |  {deadline} |  {category}")
+    tasks_list.insert(task_counter - 1, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
     task_counter += 1 #increment the task counter
     task_entry.delete(0, END)
     dl_entry.delete(0, END)
