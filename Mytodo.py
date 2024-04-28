@@ -131,22 +131,22 @@ add_button.place(x=300,y=250)
 remove_button = customtkinter.CTkButton(root,command=remove_task,font=font3,text_color='#fff',text='Remove Task', fg_color='#96061c',hover_color='#AD130E',bg_color='#09112e',cursor='hand2',corner_radius=5,width=80)
 remove_button.place(x=400,y=250)
 
-# a dropdown menu for selecting the category
+# dropdown menu for selecting the category
 category_var = StringVar(root)
 category_var.set("Select Category")
 category_menu = OptionMenu(root, category_var,  "Personal", "Work", "Exam", "Event")
 category_menu.config(font=("Arial", 8), bg="white", fg="#BDB7C6", highlightthickness=0, relief=FLAT)
 category_menu.place(x=750, y=260, width=150, height= 20)
 
-# entry box
+# entry box (insert task)
 task_entry = customtkinter.CTkEntry(root,font=font2,text_color='#000',fg_color='white',border_color='white',width=600,height=30)
 task_entry.place(x=300,y=290)
 
-# list box
+# list box (display task , date , category)
 tasks_list = Listbox(root,width=85,height=10,font=font3)
 tasks_list.place(x=300,y=340)
 
-# Calendar entry
+# Calendar entry (dl=deadline)
 dl_label = Label(root, text="Select Deadline: ", bg="#E8D09C", fg="black", font=("Arial", 8))
 dl_label.place(x=500, y=260)
 
