@@ -4,9 +4,10 @@ from tkinter import ttk, filedialog
 from pygame import mixer
 import os
 
+
 root=Tk()
 root.title("Music Player")
-root.geometry("920x670+290+85")
+root.geometry("1200x700")
 root.configure(bg="#1E2647")
 root.resizable(False,False)
 
