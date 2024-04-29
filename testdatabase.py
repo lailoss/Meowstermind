@@ -15,6 +15,20 @@ c.execute("""CREATE TABLE accounts(
     )""")
 
 
+#WIDGETS & GRID----------------------------------------------------
+unlabel = Label(root, text="Username")
+unlabel.grid(row= 0, column= 0)
+
+username = Entry(root, width=30)
+username.grid(row=0, column=1, padx=20)
+
+passlabel = Label(root, text="Password")
+passlabel.grid(row=1, column= 0)
+
+password = Entry(root, width=30)
+password.grid(row=1, column=1, padx=30)
+
+
 #COMMIT CHANGES----------------------------------------------------
 conn.commit()
 
