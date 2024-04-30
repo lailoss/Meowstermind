@@ -2,6 +2,7 @@
 from tkinter import *
 import pygame
 from tkinter import font
+from playsound import playsound
 import time
 from tkinter import messagebox
 
@@ -17,7 +18,7 @@ root.configure(bg='red')
 root.iconbitmap(r'./images/pomodoroIcon.ico')
 canvas = Canvas()
 root.resizable(False, False)
-pygame.mixer.init()
+
 
 #consts
 red='#d04e2f'
@@ -50,28 +51,17 @@ Label(root,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
 
+cycle =1
 current_time=None
+breaktime=NO
 
-def timer():
-    global time_run
-    global current_time
-    total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-    
-    if total_time > 0:
-        
-        total_time -= 1
-        hrs.set(str(total_time // 3600).zfill(1))
-        mins.set(str((total_time % 3600) // 60).zfill(1))
-        sec.set(str(total_time % 60).zfill(1))
-        current_time= root.after(1000, timer) #starts countdown
-    
-    else:
-        pygame.mixer.music.play(beep)
 
 
 def start_timer():
     global time_run
+    global cycle
     time_run=True
+    cycle=+1
     timer()
    
 def pause_timer():
@@ -102,6 +92,56 @@ def pause_timer():
     no_button.place(x='160', y='140')
     
     
+
+def break_mode():
+    print('hellow world')
+    global bg_timer
+    bg_timer=PhotoImage(file=r'BREAK.png')
+    bg.config(image=bg_timer)
+    workabutton.destroy()
+    workbbutton.destroy()
+    workcbutton.destroy()
+    break_noti.destroy()
+    
+
+
+def timer():
+    global time_run
+    global current_time
+    total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
+    
+    if total_time > 0:
+        
+        total_time -= 1
+        hrs.set(str(total_time // 3600).zfill(1))
+        mins.set(str((total_time % 3600) // 60).zfill(1))
+        sec.set(str(total_time % 60).zfill(1))
+        current_time= root.after(1000, timer) #starts countdown
+        
+
+    
+    else:
+        global break_noti
+        global break_notiimg
+        global breaktime
+        breaktime=YES
+
+        break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
+        break_noti = Toplevel()
+        break_noti.title(f'Break Time!')
+        break_noti.geometry('500x300')
+        break_noti.resizable(False,False)
+        break_noti.iconbitmap(r'./images/break_icon.ico')
+        break_notibg=Label(break_noti,image=break_notiimg)
+        break_notibg.pack()        
+        break_continue=Button(break_noti, text='Proceed', font=('arial 18 bold'), bg='white', bd=0)
+        break_continue.place(x='450', y='350')
+        break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
+        break_continuebutton.place(x='400', y='250')
+
+global break_continuebutton
+
+
   
    
    
@@ -111,6 +151,12 @@ def stop_timer():
     hrs.set('00')
     mins.set('00')
     sec.set('00')
+
+
+
+
+
+
 
 #play, pause and stop buttons
 starticon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\start.png')
@@ -157,24 +203,6 @@ def long_break():
     mins.set("15")
     sec.set("00")
     
-
-def break_mode():
-    print('hellow world')
-    global bg_timer
-    bg_timer=PhotoImage(file=r'BREAK.png')
-    bg.config(image=bg_timer)
-    workabutton.destroy()
-    workbbutton.destroy()
-    workcbutton.destroy()
-    short_break=Button(root, text='SHORT BREAK', bg='white', font='comfortaa 18 bold', borderwidth=0, command=short_break).place(x='50', y='160')
-    long_break=Button(root, text='LONG BREAK', bg='white', font='comfortaa 18 bold', borderwidth=0, command=long_break).place(x='150', y='160')
-  
-    
-        
-    
-#break button
-break_button=Button(root, text='BREAK', font=('comfortaa 15 bold'), bg='#BD1A1A', fg='white', bd=0, command=break_mode).place(x='485', y='12')
-
 
 
 root.mainloop()
