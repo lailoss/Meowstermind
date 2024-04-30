@@ -10,7 +10,7 @@ c = conn.cursor() #create cursor
 
 
 #commented out because it only needs to create once
-'''#CREATE TABLE------------------------------------------------------
+'''#CREATE TABLE----------------------------------------------------------------
 c.execute("""CREATE TABLE accounts(
     username text,
     password text
@@ -18,7 +18,7 @@ c.execute("""CREATE TABLE accounts(
 '''
 
 
-#FUNCTIONS---------------------------------------------------------
+#FUNCTIONS----------------------------------------------------------------------
 
 def submit(): 
     conn = sqlite3.connect("account.db") #create / fetch database
@@ -75,7 +75,34 @@ def delete():
     password.delete(0, END)
 
 
+def update():
+    global editor
+    conn = sqlite3.connect("account.db") #create / fetch database
+    c = conn.cursor() #create cursor
+
+    record_id = delete_box.get()
+
+    c.execute("""UPDATE accounts SET
+        username = :username,
+        password = :password
+
+        WHERE oid = :oid""",
+            {
+                'username': username_editor.get(),
+                'password': password_editor.get(),
+
+                'oid': record_id
+            }
+    ) # to replace with new info
+
+    conn.commit() #commit changes
+    conn.close() #close connection
+
+    editor.destroy()
+
+
 def edit():
+    global editor
     editor = Tk()
     editor.title("Edit Record")
     editor.geometry("500x500")
@@ -86,6 +113,11 @@ def edit():
     record_id = delete_box.get()
     c.execute("SELECT * FROM accounts WHERE oid =" + record_id)
     records = c.fetchall()
+
+    #WE GOING GLOBAL (since its used in prev func-------------
+    global username_editor
+    global password_editor
+
 
     #REPEAT INPUTS--------------------------------------------
     unlabel_editor = Label(editor, text="Username", pady=10)
@@ -100,7 +132,7 @@ def edit():
     password_editor = Entry(editor)
     password_editor.grid(row=1, column=1)
 
-    save = Button(editor, text="Save a record", command=edit)
+    save = Button(editor, text="Save a record", command=update)
     save.grid(row= 3, column= 0, columnspan=2, ipadx= 52)
 
     #LOOP THROUGH RECORDS-------------------------------------
@@ -109,7 +141,7 @@ def edit():
         password_editor.insert(0, record[1])
 
 
-#WIDGETS & GRID----------------------------------------------------
+#WIDGETS & GRID--------------------------------------------------------------
 unlabel = Label(root, text="Username", pady=10)
 unlabel.grid(row= 0, column= 0)
 
