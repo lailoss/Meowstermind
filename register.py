@@ -23,7 +23,7 @@ def register():
     else: 
         messagebox.showinfo("Success", "Account created successfully!")
         login.create_LOGwindow()
-        REGwindow.withdraw()
+        REGwindow.destroy()
 
 
 #PARAMETER-----------------------------------------------------------
