@@ -1,14 +1,10 @@
-
 from tkinter import *
 import pygame
 from tkinter import font
-from playsound import playsound
 import time
 from tkinter import messagebox
 
 pygame.init()
-
-
 
 #window
 root=Tk()
@@ -19,7 +15,6 @@ root.iconbitmap(r'./images/pomodoroIcon.ico')
 canvas = Canvas()
 root.resizable(False, False)
 
-
 #consts
 red='#d04e2f'
 peach='#FFE4B6'
@@ -27,24 +22,22 @@ beep=pygame. mixer.music.load('pomodoro_beep.mp3')
 bg_img=PhotoImage(file=r'./timer.png')
 pink='#FFC5C5'
 
+#tracker or whatever it's called
 cycle =1
 current_time=None
 short_breaktime=False
 long_breaktime=False
 breaktime=False
-    
 
-    
-
+#backgground
 bg=Label(root, image=bg_img)
 bg.pack()
-#time tracker
 
+#time tracker
 hrs = StringVar(root, value='00')
 hrs.set("00")
 Entry(root, textvariable=hrs, fg='black', width=2, font='arial 40', borderwidth=0, ). place(x='100',y='80')
 Label(root, text='HOURS', bg='white').place(x='180',y='120')
-
 
 mins=StringVar(root, value='00')
 Entry(root, textvariable=mins, width='2',fg='black',  font='arial 40',borderwidth=0).place(x='250',y='80')
@@ -56,10 +49,7 @@ Entry(root, textvariable=sec, width=2,  fg='black', font='arial 40',borderwidth=
 Label(root,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
-
-
-
-
+#starts time
 def start_timer():
     global time_run
     time_run=True
@@ -127,17 +117,12 @@ def timer():
         current_time= root.after(1000, timer) #starts countdown        
     
     else: #timer 00
-        global break_noti, cycle, breaktime, break_notiimg
+        global break_noti,  break_notiimg
         breaktime=True
-        if breaktime==True: 
-            cycle+=1
-            if cycle%4==0:
-                short_breaktime==False
-                long_breaktime==True
-            else:
-                long_breaktime==False
-                short_breaktime == True
-                
+        cycle+=1
+        is_breaktime()
+        break_presets()
+            
         
         break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
         break_noti = Toplevel()
@@ -151,49 +136,65 @@ def timer():
         break_continue.place(x='450', y='350')
         break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
         break_continuebutton.place(x='400', y='250')
+        
 
-
+def is_breaktime():
+    global short_breaktime, long_breaktime
+    if cycle%4==0:
+        short_breaktime=False
+        long_breaktime=True
+    else:
+        long_breaktime=False
+        short_breaktime = True
+                
+    
+def break_presets():
+    work_duration= int(hrs.get())*60 +int(mins.get())
+    if work_duration <=25:
+        if short_breaktime:
+            hrs.set("00")
+            mins.set("05")
+            sec.set("00")
+        elif long_breaktime:
+            hrs.set("00")
+            mins.set("15")
+            sec.set("00")
+    elif work_duration <=40:
+        if short_breaktime:
+            hrs.set("00")
+            mins.set("10")
+            sec.set("00")
+        elif long_breaktime:
+            hrs.set("00")
+            mins.set("20")
+            sec.set("00")
+    else:
+        if short_breaktime:
+            hrs.set("00")
+            mins.set("15")
+            sec.set("00")
+        elif long_breaktime:
+            hrs.set("00")
+            mins.set("25")
+            sec.set("00")
+       
+    
 #time presets
 def worka():
     hrs.set("00")
     mins.set("00")
     sec.set("10")
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("05")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("15")
-        sec.set("00")
+
     
 def workb():
     hrs.set('00')
     mins.set('40')
     sec.set('00')
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("10")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("20")
-        sec.set("00")
-    
+
 def workc():
     hrs.set('01')
     mins.set('00')
     sec.set('00')
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("15")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("25")
-        sec.set("00")
-
-
 
 #play, pause and stop buttons
 starticon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\start.png')
