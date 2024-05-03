@@ -27,12 +27,6 @@ beep=pygame. mixer.music.load('pomodoro_beep.mp3')
 bg_img=PhotoImage(file=r'./timer.png')
 pink='#FFC5C5'
 
-cycle =1
-current_time=None
-short_breaktime=False
-long_breaktime=False
-breaktime=False
-    
 
     
 
@@ -57,12 +51,17 @@ Label(root,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
 
+cycle =1
+current_time=None
+breaktime=NO
 
 
 
 def start_timer():
     global time_run
+    global cycle
     time_run=True
+    cycle=+1
     timer()
    
 def pause_timer():
@@ -70,7 +69,8 @@ def pause_timer():
     time_run=False
     print('timer has paused')
     global current_time
-    root.after_cancel(current_time) #cancels the operation above
+    if current_time is not None:
+        root.after_cancel(current_time) #cancels the operation above
    
     global pause_popup
     global pausebg
@@ -91,14 +91,6 @@ def pause_timer():
     no_button=Button(pause_popup, text='NO, ILL TRY AGAIN', font=('calibri 10 bold'), bg='white', bd=0)
     no_button.place(x='160', y='140')
     
-
-   
-def stop_timer():
-    global time_run
-    time_run=False
-    hrs.set('00')
-    mins.set('00')
-    sec.set('00')
     
 
 def break_mode():
@@ -111,34 +103,29 @@ def break_mode():
     workcbutton.destroy()
     break_noti.destroy()
     
-               
 
 
 def timer():
-    global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle
-   
+    global time_run
+    global current_time
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     
-    if total_time > 0 :
+    if total_time > 0:
+        
         total_time -= 1
         hrs.set(str(total_time // 3600).zfill(1))
         mins.set(str((total_time % 3600) // 60).zfill(1))
         sec.set(str(total_time % 60).zfill(1))
-        current_time= root.after(1000, timer) #starts countdown        
-    
-    else: #timer 00
-        global break_noti, cycle, breaktime, break_notiimg
-        breaktime=True
-        if breaktime==True: 
-            cycle+=1
-            if cycle%4==0:
-                short_breaktime==False
-                long_breaktime==True
-            else:
-                long_breaktime==False
-                short_breaktime == True
-                
+        current_time= root.after(1000, timer) #starts countdown
         
+
+    
+    else:
+        global break_noti
+        global break_notiimg
+        global breaktime
+        breaktime=YES
+
         break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
         break_noti = Toplevel()
         break_noti.title(f'Break Time!')
@@ -152,46 +139,22 @@ def timer():
         break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
         break_continuebutton.place(x='400', y='250')
 
+global break_continuebutton
 
-#time presets
-def worka():
-    hrs.set("00")
-    mins.set("00")
-    sec.set("10")
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("05")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("15")
-        sec.set("00")
-    
-def workb():
+
+  
+   
+   
+def stop_timer():
+    global time_run
+    time_run=False
     hrs.set('00')
-    mins.set('40')
-    sec.set('00')
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("10")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("20")
-        sec.set("00")
-    
-def workc():
-    hrs.set('01')
     mins.set('00')
     sec.set('00')
-    if short_breaktime:
-        hrs.set("00")
-        mins.set("15")
-        sec.set("00")
-    elif long_breaktime:
-        hrs.set("00")
-        mins.set("25")
-        sec.set("00")
+
+
+
+
 
 
 
@@ -204,19 +167,43 @@ stopicon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\stop.png')
 stopbutton=Button(root,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
 
 
-    
-moyen=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MOYEN.png')
-moolan=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MOOLAN.png')
-maria=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MARIA.png')
-workabutton=Button(root, image=moyen, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=worka)
-workabutton.place(x='175',y=' 160')
-workbbutton=Button(root, image=moolan, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workb)
-workbbutton.place(x='270',y=' 160')
-workcbutton=Button(root, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
-workcbutton.place(x='365',y=' 160')
 
+
+
+#time presets
+def worka():
+    hrs.set("00")
+    mins.set("25")
+    sec.set("00")
+    
+def workb():
+    hrs.set('01')
+    mins.set('00')
+    sec.set('00')
+    
+def workc():
+    hrs.set('2')
+    mins.set('00')
+    sec.set('00')
+    
+workabutton=Button(root, text='25 MIN', bg=pink, font='comfortaa 18 bold', borderwidth=0, command=worka)
+workabutton.place(x='80',y=' 160')
+workbbutton=Button(root, text='60 MIN', bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workb)
+workbbutton.place(x='250',y=' 160')
+workcbutton=Button(root, text='120 MIN', bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
+workcbutton.place(x='410',y=' 160')
+
+def short_break():
+    hrs.set("00")
+    mins.set("5")
+    sec.set("00")
+    
+def long_break():
+    hrs.set("00")
+    mins.set("15")
+    sec.set("00")
+    
 
 
 root.mainloop()
 root.update()
-
