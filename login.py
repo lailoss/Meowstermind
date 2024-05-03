@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import homescreen
 
 
 def create_LOGwindow():
@@ -8,16 +9,47 @@ def create_LOGwindow():
     LOGwindow.title("Login Page")
     LOGwindow.configure(bg="#E8D09C")
 
+    conn = sqlite3.connect("account.db") #create / fetch database
+    c = conn.cursor() #create cursor
+
+
 
     #FUNCTIONS ---------------------------------------------------------
     def login():
-        username="meowstermind" #link db
-        password="12345" #link db
-        if username_entry.get()==username and password_entry.get()==password:
-            os.system("homescreen.py")
-        else:
-            messagebox.showerror(title="Error", message="You shall not pass.")
+        username = username_entry.get().strip()
+        password = password_entry.get().strip()
 
+        conn = sqlite3.connect("account.db") #create / fetch database
+        c = conn.cursor() #create cursor
+
+        #scans through the table
+        c.execute("SELECT * FROM userinfo WHERE username=? AND password=?", (username, password))
+        user = c.fetchone() #fetch one as in fetch the ONE that matches. its either match or no match.
+
+        if user: #dont have to explicitly type 'true', it knows.
+            messagebox.showinfo("Success", "Login successful!")
+            homescreen.create_root()
+            LOGwindow.destroy()
+
+
+        else:
+            messagebox.showerror("Error", "Invalid username or password.")
+
+
+    def query():
+        conn = sqlite3.connect("account.db") #create / fetch database
+        c = conn.cursor() #create cursor
+
+        c.execute("SELECT *, oid FROM userinfo")
+        records = c.fetchall()
+        print(records)
+
+        print_records=''
+        for record in records:
+            print_records += str(record[0]) + "  " + str(record[1]) + "  " + str(record[2]) + "\n"
+
+        conn.commit() #commit changes
+        conn.close() #close connection
 
     #PARAMETER-----------------------------------------------------------
     font_30 = ("Gill Sans MT", 30, "bold")
@@ -42,6 +74,10 @@ def create_LOGwindow():
 
     login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50, command=login)
 
+
+    #TEST SAJA
+    query = Button(LOGwindow, text="Show records", command=query)
+    query.pack(side="bottom")
 
     #pack it in
     login_title.grid(row=0, column=1, columnspan=2, sticky="ew")

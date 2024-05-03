@@ -1,10 +1,24 @@
 from tkinter import *
 from tkinter import messagebox
+import sqlite3
 import login
+
 REGwindow = Tk()
 REGwindow.geometry("1200x700")
 REGwindow.title("Registration")
 REGwindow.configure(bg="#E8D09C")
+
+
+conn = sqlite3.connect("account.db") #create / fetch database
+c = conn.cursor() #create cursor
+
+
+#commented out because it only needs to create once
+#CREATE TABLE---------------------------------------------------------------------------------------
+'''c.execute("""CREATE TABLE userinfo(
+    username text,
+    password text
+    )""")'''
 
 
 #FUNCTIONS ---------------------------------------------------------
@@ -12,15 +26,38 @@ def register():
     username = username_entry.get().strip()
     password = password_entry.get().strip()
     repassword = repassword_entry.get().strip()
+
     if len(username) < 1:
         messagebox.showerror("Error", "Username must be at least 1 character long.")
+        
     elif len(password) < 8:
         messagebox.showerror("Error", "Password must be at least 8 characters long.")
         return False
+
     elif password != repassword:
         messagebox.showerror("Error", "Passwords do not match.")
         return False
+
     else: 
+        conn = sqlite3.connect("account.db") #create / fetch database
+        c = conn.cursor() #create cursor
+
+        #insert into table
+        c.execute("INSERT INTO userinfo VALUES (:username, :password)", 
+            {
+                'username': username_entry.get(),
+                'password': password_entry.get()
+            }
+        )
+
+        conn.commit() #commit changes
+        conn.close() #close connection
+
+        #clear the entry boxes
+        username_entry.delete(0, END)
+        password_entry.delete(0, END)
+        repassword_entry.delete(0, END)
+
         messagebox.showinfo("Success", "Account created successfully!")
         login.create_LOGwindow()
         REGwindow.destroy()
@@ -48,7 +85,7 @@ password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 repassword_label = Label(frame, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
 repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 
-register_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
+loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
 create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=register)
 
 
@@ -68,7 +105,7 @@ repassword_label.grid(row=3, column=1)
 repassword_entry.grid(row=3, column=2)
 
 create_button.grid(row=4, column=1, columnspan=2)
-register_button.grid(row= 5, column= 1, columnspan=2, sticky="ew")
+loginPage_button.grid(row= 5, column= 1, columnspan=2, sticky="ew")
 
 frame.pack(side="top", expand=True)
 
