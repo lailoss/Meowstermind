@@ -4,10 +4,13 @@ from tkinter import filedialog
 import time
 from mutagen.mp3 import MP3
 import tkinter.ttk as ttk
+import customtkinter
+
 
 root = Tk()
 root.title('Meow Music')
 root.geometry("800x500")
+root.configure(bg="#1E2647")
 
 # Initialise Pygame Mixer
 pygame.mixer.init()
@@ -257,14 +260,13 @@ def volume(x):
 master_frame = Frame(root)
 master_frame.pack(pady=20)  
 
-  
 # Create Playlist Box
 song_box = Listbox(master_frame, bg="black",fg="green",width=60, selectbackground="gray", selectforeground="black")
-song_box.grid(row=0, column=0)
+song_box.pack(row=0, column=0)
 
 # Define Player Control Button Images
-back_btn_img = PhotoImage(file="stop.png")
-foward_btn_img = PhotoImage(file="play.png")
+back_btn_img = PhotoImage(file="back.png")
+foward_btn_img = PhotoImage(file="foward.png")
 play_btn_img = PhotoImage(file="play.png")
 pause_btn_img = PhotoImage(file="pause.png")
 stop_btn_img = PhotoImage(file="stop.png")
