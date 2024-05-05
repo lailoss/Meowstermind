@@ -63,6 +63,10 @@ def register():
         REGwindow.destroy()
 
 
+def redirect():
+    login.create_LOGwindow()
+    REGwindow.withdraw()
+
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
 font_20 = ("Gill Sans MT", 20)
@@ -85,7 +89,7 @@ password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 repassword_label = Label(frame, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
 repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 
-loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
+loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat", command=redirect) #change to hyperlink
 create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=register)
 
 
