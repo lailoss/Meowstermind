@@ -267,16 +267,13 @@ headphone_cat.place(x=10, y=13)
 # music logo image
 image2 = PhotoImage(file="musiclogo.png").subsample(13)
 music_logo = Label(outer_frame, image=image2, bg='#1E2647')  # Set the background color to match the outer frame
-music_logo.place(x=430, y=30)
+music_logo.place(x=450, y=30)
 
 
 # font and title
-font1 = ('Arial',50,'bold')
-font2 = ('Arial',10,'bold')
-font3 = ('Arial',10,'bold')
-
+font1 = ('Georgia',50,'bold')
 title_label = customtkinter.CTkLabel(root,font=font1,text='Meow Music',text_color='#EFE0BF',bg_color='#1E2647')
-title_label.place(x=370,y=160)
+title_label.place(x=360,y=160)
 
 # button
 # Define Player Control Button Images
@@ -289,7 +286,7 @@ stop_btn_img = PhotoImage(file="stop.png")
 # Create Player Control Buttons with custom background color
 back_btn = Button(root, image=back_btn_img, borderwidth=0, bg="#EFE0BF", command=previous_song)
 forward_btn = Button(root, image=foward_btn_img, borderwidth=0, bg="#EFE0BF", command=next_song)
-play_btn = Button(root, image=play_btn_img, borderwidth=0, bg="#EFE0BF", command=play_song)
+play_btn = Button(root,text="PLAY",width=10,height=1,font=("Arial",8,"bold"),fg="white",bg="#1E2647", command=play_song)
 pause_btn = Button(root, image=pause_btn_img, borderwidth=0, bg="#EFE0BF", command=lambda: pause(paused))
 stop_btn = Button(root, image=stop_btn_img, borderwidth=0, bg="#EFE0BF", command=stop)
 
@@ -297,15 +294,15 @@ stop_btn = Button(root, image=stop_btn_img, borderwidth=0, bg="#EFE0BF", command
 # Place buttons individually
 back_btn.place(x=320, y=440)
 forward_btn.place(x=480, y=440)
-play_btn.place(x=270, y=240)
+play_btn.place(x=280, y=275)
 pause_btn.place(x=400, y=440)
 stop_btn.place(x=540, y=440)
 
-# open folder - choose your song
-Button(root,text="Your Playlist",width=13,height=1,font=("Arial",8,"bold"),fg="white",bg="#1E2647",command=open_folder).place(x=640,y=270)
+# Button open folder - choose your song
+Button(root,text="Your Playlist",width=19,height=1,font=("Arial",8,"bold"),fg="white",bg="#506580",command=open_folder).place(x=640,y=270)
 
-# Remove song button
-Button(root,text="Remove Song",width=13,height=1,font=("Arial",8,"bold"),fg="white",bg="#415166",command = delete_song).place(x=740,y=270)
+# Button Remove song button
+Button(root,text="Remove Song",width=19,height=1,font=("Arial",8,"bold"),fg="white",bg="#506580",command = delete_song).place(x=790,y=270)
 
 # playlist frame
 music_frame = Frame(root,bd=2,relief=RIDGE)
@@ -316,8 +313,12 @@ border_label = Label(root, bg="#EFE0BF", bd=2, relief="solid", width=50, height=
 border_label.place(x=280, y=310)
 
 # Create the label for the text "Now Playing..."
-text_label = Label(root, text="Now Playing....", font=("arial", 10, "bold"), fg="black", bg="#EFE0BF")
-text_label.place(x=276, y=280)
+text_label = Label(root, text="Now Playing....", font=("Georgia", 8, "bold"), fg="black", bg="#EFE0BF")
+text_label.place(x=285, y=315)
+
+# song name label display after choosing song ("now playing")              
+music=Label(root,text="",font=("Georgia",12,"bold"),fg="black",bg="#EFE0BF")
+music.place(x=445,y=350,anchor="center")
 
 # Text for +
 text_label2 = Label(root, text="+", font=("arial", 15, "bold"), fg="black", bg="#EFE0BF")
@@ -326,14 +327,14 @@ text_label2.place(x=610, y=250)
 # Text for -
 text_label3 = Label(root, text="-", font=("arial", 18, "bold"), fg="black", bg="#EFE0BF")
 text_label3.place(x=590, y=246)
-                  
-# song name label display after choosing song ("now playing")              
-music=Label(root,text="",font=("arial",10,"bold"),fg="black",bg="#EFE0BF")
-music.place(x=380,y=350,anchor="center")
 
-# Create Status Bar
-status_bar = Label(root, text='',font=("arial",10,"bold"),fg="black",bg="#EFE0BF")
-status_bar.place(x=498, y=395)
+# Text for "VOLUME"
+text_label3 = Label(root, text="volume", font=("arial", 8, "bold"), fg="black", bg="#EFE0BF")
+text_label3.place(x=435, y=255)
+
+# Time Minute and Sec of the song
+status_bar = Label(root, text='',font=("Courier new",8,"bold"),fg="black",bg="#EFE0BF")
+status_bar.place(x=485, y=395)
 
 # Music slider
 style = ttk.Style()
@@ -345,8 +346,8 @@ my_slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command
 my_slider.place(x=280, y=420)
 
 # Create Volume Slider
-volume_slider = ttk.Scale(root, from_=0, to=1, orient=HORIZONTAL, value=1, command=volume, length=125)
-volume_slider.place(x=510, y=280)
+volume_slider = ttk.Scale(root, from_=0, to=1, orient=HORIZONTAL, value=1, command=volume, length=200)
+volume_slider.place(x=435, y=280)
 
 scroll = Scrollbar(music_frame)
 playlist=Listbox(music_frame,width=100,font=("arial",10),bg="#1E2647",fg="grey",selectbackground="lightblue",cursor="hand2",bd=0,yscrollcommand=scroll.set)
