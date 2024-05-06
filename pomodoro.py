@@ -19,11 +19,11 @@ root.resizable(False, False)
 red='#d04e2f'
 peach='#FFE4B6'
 beep=pygame. mixer.music.load('pomodoro_beep.mp3')
-bg_img=PhotoImage(file=r'./timer.png')
+bg_img=PhotoImage(file='timer.png')
 pink='#FFC5C5'
 
 #tracker or whatever it's called
-cycle =1
+cycle =0
 current_time=None
 short_breaktime=False
 long_breaktime=False
@@ -66,12 +66,12 @@ def pause_timer():
    
     global pause_popup
     global pausebg
-    pausebg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\pausepopup.png')
+    pausebg=PhotoImage(file='./pausepopup.png')
     pause_popup = Toplevel()
     pause_popup.title(f'Don\'t give up!')
     pause_popup.geometry('300x200')
     pause_popup.resizable(False,False)
-    pause_popup.iconbitmap(r'./images/sad.ico')
+    pause_popup.iconbitmap('./images/sad.ico')
     pause_popupbg=Label(pause_popup,image=pausebg)
     pause_popupbg.pack()
     pausemsg=Label(pause_popup, text='DON’T STOP UNTIL YOU’RE PROUD.', font=('arial 10 bold'), bg='#FAF9F7')
@@ -83,8 +83,6 @@ def pause_timer():
     no_button=Button(pause_popup, text='NO, ILL TRY AGAIN', font=('calibri 10 bold'), bg='white', bd=0)
     no_button.place(x='160', y='140')
     
-
-   
 def stop_timer():
     global time_run
     time_run=False
@@ -96,7 +94,7 @@ def stop_timer():
 def break_mode():
     print('hellow world')
     global bg_timer
-    bg_timer=PhotoImage(file=r'BREAK.png')
+    bg_timer=PhotoImage(file='BREAK.png')
     bg.config(image=bg_timer)
     break_noti.destroy()
     
@@ -125,9 +123,6 @@ def timer():
         sec.set(str(total_time % 60).zfill(1))
         current_time= root.after(1000, timer) #starts countdown  
         
-           
-    
-    
     else: #timer 00
         if not breaktime:
             global break_noti,  break_notiimg
@@ -135,12 +130,12 @@ def timer():
             cycle+=1
             is_breaktime()
             break_presets()
-            break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
+            break_notiimg=PhotoImage(file='BREAK_NOTI.png')
             break_noti = Toplevel()
             break_noti.title(f'Break Time!')
             break_noti.geometry('500x300')
             break_noti.resizable(False,False)
-            break_noti.iconbitmap(r'./images/break_icon.ico')
+            break_noti.iconbitmap('./images/break_icon.ico')
             break_notibg=Label(break_noti,image=break_notiimg)
             break_notibg.pack()        
             break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
@@ -150,7 +145,7 @@ def timer():
             breaktime=False
             study_mode()
                 
-            studynotiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\STUDY_NOTI.png')
+            studynotiimg=PhotoImage(file='STUDY_NOTI.png')
             study_noti = Toplevel()
             study_noti.title(f'Study Time!')
             study_noti.geometry('500x300')
@@ -225,18 +220,18 @@ def workc():
     sec.set('00')
 
 #play, pause and stop buttons
-starticon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\start.png')
+starticon=PhotoImage(file='./images/start.png')
 startbutton=Button(root, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y=' 230')
-pauseicon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\pause.png')
+pauseicon=PhotoImage(file='./images/pause.png')
 pausebutton=Button(root, text='pause', image=pauseicon, bg='white', borderwidth=0, command=pause_timer).place(x='200',y='250')
-stopicon=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\stop.png')
+stopicon=PhotoImage(file='./images/stop.png')
 stopbutton=Button(root,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
 
 
     
-moyen=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MOYEN.png')
-moolan=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MOOLAN.png')
-maria=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\images\MARIA.png')
+moyen=PhotoImage(file='./images/MOYEN.png')
+moolan=PhotoImage(file='./images/MOOLAN.png')
+maria=PhotoImage(file='./images/MARIA.png')
 workabutton=Button(root, image=moyen, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=worka)
 workabutton.place(x='175',y=' 160')
 workbbutton=Button(root, image=moolan, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workb)
