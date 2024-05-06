@@ -318,7 +318,7 @@ text_label.place(x=285, y=315)
 
 # song name label display after choosing song ("now playing")              
 music=Label(root,text="",font=("Georgia",12,"bold"),fg="black",bg="#EFE0BF")
-music.place(x=445,y=350,anchor="center")
+music.place(x=450,y=350,anchor="center")
 
 # Text for +
 text_label2 = Label(root, text="+", font=("arial", 15, "bold"), fg="black", bg="#EFE0BF")
@@ -336,17 +336,23 @@ text_label3.place(x=435, y=255)
 status_bar = Label(root, text='',font=("Courier new",8,"bold"),fg="black",bg="#EFE0BF")
 status_bar.place(x=485, y=395)
 
-# Music slider
-style = ttk.Style()
-style.theme_use('default')
-style.configure("Horizontal.TScale", background="black", troughcolor="#EFE0BF")  # Set the background and trough color
+# Music slider 
+music_slider_style = ttk.Style()
+music_slider_style.theme_use('default')
+music_slider_style.configure("Music.Horizontal.TScale", background="#506580", troughcolor="black",borderwidth=-2)  
 
-# Create Music Position SLider
-my_slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command=slide, length=355, style="Horizontal.TScale")
+# Create Music Position Slider
+my_slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command=slide, length=355, style="Music.Horizontal.TScale")
 my_slider.place(x=280, y=420)
 
+
+# Volume slider style
+volume_slider_style = ttk.Style()
+volume_slider_style.theme_use('default')
+volume_slider_style.configure("Volume.Horizontal.TScale", background="#1E2647", troughcolor="#899CB4")  
+
 # Create Volume Slider
-volume_slider = ttk.Scale(root, from_=0, to=1, orient=HORIZONTAL, value=1, command=volume, length=200)
+volume_slider = ttk.Scale(root, from_=0, to=1, orient=HORIZONTAL, value=1, command=volume, length=200, style="Volume.Horizontal.TScale")
 volume_slider.place(x=435, y=280)
 
 scroll = Scrollbar(music_frame)
