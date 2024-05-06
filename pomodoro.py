@@ -29,6 +29,7 @@ short_breaktime=False
 long_breaktime=False
 breaktime=False
 
+
 #backgground
 bg=Label(root, image=bg_img)
 bg.pack()
@@ -96,47 +97,74 @@ def break_mode():
     global bg_timer
     bg_timer=PhotoImage(file=r'BREAK.png')
     bg.config(image=bg_timer)
-    workabutton.destroy()
-    workbbutton.destroy()
-    workcbutton.destroy()
     break_noti.destroy()
     
-               
-
+    
+def study_mode():
+    bg.config(image=bg_img)
+    hrs.set('00')
+    mins.set('00')
+    sec.set('00')
+    
 
 def timer():
-    global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle
+    global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     
-    if total_time > 0 :
+    if total_time > 0:
+        
         total_time -= 1
         hrs.set(str(total_time // 3600).zfill(1))
         mins.set(str((total_time % 3600) // 60).zfill(1))
         sec.set(str(total_time % 60).zfill(1))
-        current_time= root.after(1000, timer) #starts countdown        
+        current_time= root.after(1000, timer) #starts countdown  
+           
+    
     
     else: #timer 00
-        global break_noti,  break_notiimg
-        breaktime=True
-        cycle+=1
-        is_breaktime()
-        break_presets()
+        if not breaktime:
+            global break_noti,  break_notiimg
+            breaktime=True
+            cycle+=1
+            is_breaktime()
+            break_presets()
+            break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
+            break_noti = Toplevel()
+            break_noti.title(f'Break Time!')
+            break_noti.geometry('500x300')
+            break_noti.resizable(False,False)
+            break_noti.iconbitmap(r'./images/break_icon.ico')
+            break_notibg=Label(break_noti,image=break_notiimg)
+            break_notibg.pack()        
+            break_continue=Button(break_noti, text='Proceed', font=('arial 18 bold'), bg='white', bd=0)
+            break_continue.place(x='450', y='350')
+            break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
+            break_continuebutton.place(x='400', y='250')
+        else:
+            study_noti
+            breaktime=False
+            study_mode()
             
-        
-        break_notiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\BREAK_NOTI.png')
-        break_noti = Toplevel()
-        break_noti.title(f'Break Time!')
-        break_noti.geometry('500x300')
-        break_noti.resizable(False,False)
-        break_noti.iconbitmap(r'./images/break_icon.ico')
-        break_notibg=Label(break_noti,image=break_notiimg)
-        break_notibg.pack()        
-        break_continue=Button(break_noti, text='Proceed', font=('arial 18 bold'), bg='white', bd=0)
-        break_continue.place(x='450', y='350')
-        break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
-        break_continuebutton.place(x='400', y='250')
-        
+def default_timer():
+    global current_time
+    hrs.set('00')
+    mins.set('00')
+    sec.set('00')
+
+
+def study_noti():    
+        studynotiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\STUDY_NOTI.png')
+        study_noti = Toplevel()
+        study_noti.title(f'Break Time!')
+        study_noti.geometry('500x300')
+        study_noti.resizable(False,False)
+        study_noti.iconbitmap(r'./images/break_icon.ico')
+        study_notibg=Label(break_noti,image=studynotiimg)
+        study_notibg.pack()        
+        study_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=study_noti)
+        study_continuebutton.place(x='400', y='250')
+    
 
 def is_breaktime():
     global short_breaktime, long_breaktime
@@ -150,40 +178,40 @@ def is_breaktime():
     
 def break_presets():
     work_duration= int(hrs.get())*60 +int(mins.get())
+   
     if work_duration <=25:
-        if short_breaktime:
-            hrs.set("00")
-            mins.set("05")
-            sec.set("00")
-        elif long_breaktime:
-            hrs.set("00")
-            mins.set("15")
-            sec.set("00")
+            if short_breaktime:
+                hrs.set("00")
+                mins.set("00")
+                sec.set("03")
+            elif long_breaktime:
+                hrs.set("00")
+                mins.set("15")
+                sec.set("00")
     elif work_duration <=40:
-        if short_breaktime:
-            hrs.set("00")
-            mins.set("10")
-            sec.set("00")
-        elif long_breaktime:
-            hrs.set("00")
-            mins.set("20")
-            sec.set("00")
+            if short_breaktime:
+                hrs.set("00")
+                mins.set("10")
+                sec.set("00")
+            elif long_breaktime:
+                hrs.set("00")
+                mins.set("20")
+                sec.set("00")
     else:
-        if short_breaktime:
-            hrs.set("00")
-            mins.set("15")
-            sec.set("00")
-        elif long_breaktime:
-            hrs.set("00")
-            mins.set("25")
-            sec.set("00")
-       
-    
+            if short_breaktime:
+                hrs.set("00")
+                mins.set("15")
+                sec.set("00")
+            elif long_breaktime:
+                hrs.set("00")
+                mins.set("25")
+                sec.set("00")
+
 #time presets
 def worka():
     hrs.set("00")
     mins.set("00")
-    sec.set("10")
+    sec.set("5")
 
     
 def workb():
@@ -220,4 +248,3 @@ workcbutton.place(x='365',y=' 160')
 
 root.mainloop()
 root.update()
-
