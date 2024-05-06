@@ -1,6 +1,4 @@
 from tkinter import *
-'''import register
-import login'''
 
 primary = Tk()
 primary.geometry("1200x700")

@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import sqlite3
 
-
+LOGwindow = None  # Global variable to hold the login window
 LOGwindow = Tk()
 LOGwindow.geometry("600x600")
 LOGwindow.title("Login Page")
@@ -28,32 +28,17 @@ def login():
         messagebox.showinfo("Success", "Login successful!")
         import homescreen
         create_root()
+        LOGwindow.destroy()
 
-    elif (username == "meowstermind", password == "12345678"):
+    elif (username == "meow", password == "1234"):
         import admin
         create_admin()
+        LOGwindow.destroy()
 
     else:
         messagebox.showerror("Error", "Invalid username or password.")
 
 
-'''def query():
-    conn = sqlite3.connect("account.db") #create / fetch database
-    c = conn.cursor() #create cursor
-
-    c.execute("SELECT *, oid FROM userinfo")
-    records = c.fetchall()
-    print(records)
-
-    print_records=''
-    for record in records:
-        print_records += str(record[0]) + "  " + str(record[1]) + "  " + str(record[2]) + "\n"
-
-    query_label= Label(LOGwindow, text=print_records)
-    query_label.pack(side="bottom")
-
-    conn.commit() #commit changes
-    conn.close() #close connection'''
 
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
@@ -76,10 +61,6 @@ password_entry.get()
 
 login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50, command=login)
 
-
-#TEST SAJA
-#query = Button(LOGwindow, text="Show records", command=query)
-#query.pack(side="bottom")
 
 #pack it in
 login_title.grid(row=0, column=1, columnspan=2, sticky="ew")

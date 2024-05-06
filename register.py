@@ -74,7 +74,7 @@ frame=Frame(REGwindow, bg="#FFFFFF", padx=20, pady=20)
 
 
 #WIDGETS-------------------------------------------------------------
-signup_title = Label(frame, text="REGISTRATION", font=font_30, padx=0, pady=30, bg="#FFFFFF")
+reg_title = Label(frame, text="REGISTRATION", font=font_30, padx=0, pady=30, bg="#FFFFFF")
 
 username_label = Label(frame, text="Username", font=font_15, pady=5, bg="#FFFFFF")
 username_entry = Entry(frame, font=font_15, bg="#FFFFFF")
@@ -93,7 +93,7 @@ create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF",
 
 
 #PACK IT IN (OR GRID IG)----------------------------------------------
-signup_title.grid(row=0, column=1, columnspan=2, sticky="ew")
+reg_title.grid(row=0, column=1, columnspan=2, sticky="ew")
 
 username_label.grid(row=1, column=1)
 username_entry.grid(row=1, column=2)
