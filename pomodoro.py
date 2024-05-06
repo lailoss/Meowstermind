@@ -34,6 +34,7 @@ breaktime=False
 bg=Label(root, image=bg_img)
 bg.pack()
 
+
 #time tracker
 hrs = StringVar(root, value='00')
 hrs.set("00")
@@ -106,19 +107,24 @@ def study_mode():
     mins.set('00')
     sec.set('00')
     
+def studynotigone():
+    study_noti.destroy()
 
+    
 def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
+    cycletext=Label(root, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
+    cycletext.place(x='80', y='33')
     
     if total_time > 0:
-        
         total_time -= 1
         hrs.set(str(total_time // 3600).zfill(1))
         mins.set(str((total_time % 3600) // 60).zfill(1))
         sec.set(str(total_time % 60).zfill(1))
         current_time= root.after(1000, timer) #starts countdown  
+        
            
     
     
@@ -137,34 +143,28 @@ def timer():
             break_noti.iconbitmap(r'./images/break_icon.ico')
             break_notibg=Label(break_noti,image=break_notiimg)
             break_notibg.pack()        
-            break_continue=Button(break_noti, text='Proceed', font=('arial 18 bold'), bg='white', bd=0)
-            break_continue.place(x='450', y='350')
             break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
             break_continuebutton.place(x='400', y='250')
         else:
-            study_noti
+            global study_noti, studynotiimg 
             breaktime=False
             study_mode()
+                
+            studynotiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\STUDY_NOTI.png')
+            study_noti = Toplevel()
+            study_noti.title(f'Study Time!')
+            study_noti.geometry('500x300')
+            study_noti.resizable(False,False)
+            study_noti.iconbitmap(r'./images/break_icon.ico')
+            study_notibg=Label(study_noti,image=studynotiimg)
+            study_notibg.pack()
+            studycontinuebutton=Button(study_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=studynotigone)
+            studycontinuebutton.place(x='400', y='250')
             
-def default_timer():
-    global current_time
-    hrs.set('00')
-    mins.set('00')
-    sec.set('00')
+            
 
 
-def study_noti():    
-        studynotiimg=PhotoImage(file=r'C:\Users\USER\Projects\Meowstermind\STUDY_NOTI.png')
-        study_noti = Toplevel()
-        study_noti.title(f'Break Time!')
-        study_noti.geometry('500x300')
-        study_noti.resizable(False,False)
-        study_noti.iconbitmap(r'./images/break_icon.ico')
-        study_notibg=Label(break_noti,image=studynotiimg)
-        study_notibg.pack()        
-        study_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=study_noti)
-        study_continuebutton.place(x='400', y='250')
-    
+
 
 def is_breaktime():
     global short_breaktime, long_breaktime
@@ -243,6 +243,7 @@ workbbutton=Button(root, image=moolan, bg=pink, font='comfortaa 18 bold', border
 workbbutton.place(x='270',y=' 160')
 workcbutton=Button(root, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
 workcbutton.place(x='365',y=' 160')
+
 
 
 
