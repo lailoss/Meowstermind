@@ -62,10 +62,6 @@ def signup():
         create_LOGwindow(REGwindow)
         REGwindow.destroy()
 
-'''def redirect_l():
-    signup()
-    #create_LOGwindow()
-    REGwindow.destroy()'''
 
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
@@ -89,7 +85,7 @@ password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 repassword_label = Label(frame, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
 repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 
-loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat")
+#loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat")
 create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=signup)
 
 
@@ -109,7 +105,7 @@ repassword_label.grid(row=3, column=1)
 repassword_entry.grid(row=3, column=2)
 
 create_button.grid(row=4, column=1, columnspan=2)
-loginPage_button.grid(row= 5, column= 1, columnspan=2, sticky="ew")
+#loginPage_button.grid(row= 5, column= 1, columnspan=2, sticky="ew")
 
 frame.pack(side="top", expand=True)
 

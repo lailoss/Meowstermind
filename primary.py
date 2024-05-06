@@ -36,17 +36,23 @@ primary.grid_columnconfigure(1, weight=1)
 title = Label(primary, text="Welcome!", font=font_30, pady=50, bg="#E8D09C")
 title.grid(row =0, column=0, columnspan=2, sticky="ew")
 
-frame1 = Frame(primary, padx=20, pady=20, bg="#000A00")
+frame1 = Frame(primary, padx=20, pady=20)
 frame1.grid(row=1, column=0)
 
-regbutton = Button(frame1, text= "register", font=font_20, padx=10, pady=10, command=redirect_r)
-regbutton.grid(row=0, column=0)
+reglabel = Label(frame1, text="Are you a new member? Register here!", font=font_15, padx=10, pady=20)
+reglabel.grid(row=0, column=0)
+
+regbutton = Button(frame1, text= "Register", font=font_20, padx=10, pady=10, command=redirect_r)
+regbutton.grid(row=1, column=0)
 
 frame2 = Frame(primary, padx=20, pady=20)
 frame2.grid(row=1, column=1)
 
-logbutton = Button(frame2, text= "login", font=font_20, padx=10, pady=10, command=redirect_l)
-logbutton.grid(row=0, column=0)
+loglabel = Label(frame2, text="Already have an account? Welcome back!", font=font_15, padx=10, pady=20)
+loglabel.grid(row=0, column=0)
+
+logbutton = Button(frame2, text= "Login", font=font_20, padx=10, pady=10, command=redirect_l)
+logbutton.grid(row=1, column=0)
 
 
 primary.mainloop()

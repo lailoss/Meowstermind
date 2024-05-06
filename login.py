@@ -27,6 +27,8 @@ def login():
 
     if user: #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
+        import homescreen
+        create_root()
 
     else:
         messagebox.showerror("Error", "Invalid username or password.")
@@ -69,8 +71,6 @@ password_label = Label(frame, text="Password", font=font_15, padx=30, pady=15, b
 password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 password_entry.get()
 
-register_button = Button(frame, text = "Don't have an account? Register now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat") #change to hyperlink
-
 login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "flat", padx=50, command=login)
 
 
@@ -84,7 +84,6 @@ username_label.grid(row=1, column=1)
 username_entry.grid(row=1, column=2)
 password_label.grid(row=2, column=1)
 password_entry.grid(row=2, column=2)
-register_button.grid(row= 3, column= 1, columnspan=2, sticky="ew")
 login_button.grid(row=4, column=1, columnspan=2)
 frame.pack(side="top", expand=True)
 
