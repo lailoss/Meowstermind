@@ -3,7 +3,6 @@ from tkinter import messagebox
 import sqlite3
 
 
-
 LOGwindow = Tk()
 LOGwindow.geometry("600x600")
 LOGwindow.title("Login Page")
@@ -30,11 +29,15 @@ def login():
         import homescreen
         create_root()
 
+    elif (username == "meowstermind", password == "12345678"):
+        import admin
+        create_admin()
+
     else:
         messagebox.showerror("Error", "Invalid username or password.")
 
 
-def query():
+'''def query():
     conn = sqlite3.connect("account.db") #create / fetch database
     c = conn.cursor() #create cursor
 
@@ -50,7 +53,7 @@ def query():
     query_label.pack(side="bottom")
 
     conn.commit() #commit changes
-    conn.close() #close connection
+    conn.close() #close connection'''
 
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
@@ -75,8 +78,8 @@ login_button = Button(frame, text="Login", font=font_20, bg="#FFFFFF", relief= "
 
 
 #TEST SAJA
-query = Button(LOGwindow, text="Show records", command=query)
-query.pack(side="bottom")
+#query = Button(LOGwindow, text="Show records", command=query)
+#query.pack(side="bottom")
 
 #pack it in
 login_title.grid(row=0, column=1, columnspan=2, sticky="ew")
