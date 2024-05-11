@@ -201,21 +201,24 @@ def worka():
     hrs.set("00")
     mins.set("00")
     sec.set("5")
+    
 
     
 def workb():
     hrs.set('00')
     mins.set('40')
     sec.set('00')
+    
 
 def workc():
     hrs.set('01')
     mins.set('00')
     sec.set('00')
+    
 
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
-startbutton=Button(root, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y=' 230')
+startbutton=Button(root, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y='230')
 pauseicon=PhotoImage(file='./images/pause.png')
 pausebutton=Button(root, text='pause', image=pauseicon, bg='white', borderwidth=0, command=pause_timer).place(x='200',y='250')
 stopicon=PhotoImage(file='./images/stop.png')
