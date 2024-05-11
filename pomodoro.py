@@ -11,14 +11,14 @@ root=Tk()
 root.geometry('600x300') 
 root.title('Pomodoro Timer')
 root.configure(bg='red')
-root.iconbitmap(r'./images/pomodoroIcon.ico')
+root.iconbitmap('./images/pomodoroIcon.ico')
 canvas = Canvas()
 root.resizable(False, False)
 
 #consts
 red='#d04e2f'
 peach='#FFE4B6'
-beep=pygame. mixer.music.load('pomodoro_beep.mp3')
+#beep=pygame. mixer.music.load('pomodoro_beep.mp3')
 bg_img=PhotoImage(file='timer.png')
 pink='#FFC5C5'
 
@@ -51,6 +51,8 @@ Entry(root, textvariable=sec, width=2,  fg='black', font='arial 40',borderwidth=
 Label(root,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
+
+
 #starts time
 def start_timer():
     global time_run
@@ -76,12 +78,7 @@ def pause_timer():
     pause_popupbg.pack()
     pausemsg=Label(pause_popup, text='DON’T STOP UNTIL YOU’RE PROUD.', font=('arial 10 bold'), bg='#FAF9F7')
     pausemsg.place(x='35', y='70')
-    pause_yes=Label(pause_popup, text='Continue?', font=('calibri 10 bold'), bg='white')
-    pause_yes.place(x='120', y='100')      
-    yes_button=Button(pause_popup, text='YES, IM A FIGHTER', font=('calibri 10 bold'), bg='#8A9A5B', bd=0)
-    yes_button.place(x='30', y='140')
-    no_button=Button(pause_popup, text='NO, ILL TRY AGAIN', font=('calibri 10 bold'), bg='white', bd=0)
-    no_button.place(x='160', y='140')
+
     
 def stop_timer():
     global time_run
@@ -138,8 +135,7 @@ def timer():
             break_noti.iconbitmap('./images/break_icon.ico')
             break_notibg=Label(break_noti,image=break_notiimg)
             break_notibg.pack()        
-            break_continuebutton=Button(break_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=break_mode)
-            break_continuebutton.place(x='400', y='250')
+            break_mode()
         else:
             global study_noti, studynotiimg 
             breaktime=False
@@ -153,10 +149,8 @@ def timer():
             study_noti.iconbitmap(r'./images/break_icon.ico')
             study_notibg=Label(study_noti,image=studynotiimg)
             study_notibg.pack()
-            studycontinuebutton=Button(study_noti, text='PROCEED', font=('calibri 12 bold'), bg='white', bd=1, command=studynotigone)
-            studycontinuebutton.place(x='400', y='250')
-            
-            
+            studynotigone()
+
 
 
 
