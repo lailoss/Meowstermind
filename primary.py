@@ -31,26 +31,34 @@ primary.grid_columnconfigure(1, weight=1)
 #primary.grid_rowconfigure(0, weight=1) #helps with centering , by row
 
 
-title = Label(primary, text="Welcome!", font=font_30, pady=50, bg="#E8D09C")
+title = Label(primary, text="W E L C O M E", font=font_30, pady=50, bg="#E8D09C")
 title.grid(row =0, column=0, columnspan=2, sticky="ew")
 
-frame1 = Frame(primary, padx=20, pady=20)
+frame1 = Frame(primary, padx=20, pady=20, bg="#FFFFFF")
 frame1.grid(row=1, column=0)
 
-reglabel = Label(frame1, text="Are you a new member? Register here!", font=font_15, padx=10, pady=20)
+reglabel = Label(frame1, text="Are you a new member?\n", font=font_20, padx=10, pady=20, bg="#FFFFFF")
 reglabel.grid(row=0, column=0)
 
-regbutton = Button(frame1, text= "Register", font=font_20, padx=10, pady=10, command=redirect_r)
-regbutton.grid(row=1, column=0)
+picreg = PhotoImage(file="picreg.png")
+picreglabel = Label(frame1,image=picreg, pady=5, bg="#FFFFFF")
+picreglabel.grid(row=1, column=0)
 
-frame2 = Frame(primary, padx=20, pady=20)
+regbutton = Button(frame1, text= "Register here!", font=font_20, padx=10, bg="#FFFFFF", borderwidth=1, command=redirect_r)
+regbutton.grid(row=2, column=0)
+
+frame2 = Frame(primary, padx=20, pady=20, bg="#FFFFFF")
 frame2.grid(row=1, column=1)
 
-loglabel = Label(frame2, text="Already have an account? Welcome back!", font=font_15, padx=10, pady=20)
+loglabel = Label(frame2, text="Already have an account?\nWelcome back!", font=font_20, padx=10, pady=20, bg="#FFFFFF")
 loglabel.grid(row=0, column=0)
 
-logbutton = Button(frame2, text= "Login", font=font_20, padx=10, pady=10, command=redirect_l)
-logbutton.grid(row=1, column=0)
+piclog = PhotoImage(file="piclog.png")
+picloglabel = Label(frame2,image=piclog, pady=5, bg="#FFFFFF")
+picloglabel.grid(row=1, column=0)
+
+logbutton = Button(frame2, text= "Login", font=font_20, padx=10, bg="#FFFFFF", borderwidth=1, command=redirect_l)
+logbutton.grid(row=2, column=0, ipadx=50)
 
 
 primary.mainloop()
