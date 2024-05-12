@@ -5,10 +5,10 @@ from tkinter import messagebox
 import customtkinter
 from ttkbootstrap import Style as ttkstyle
 
-root = tk.Tk()
-root.title("Meow Flashcard")
-root.geometry("800x500")
-root.resizable(False,False)
+fc_window = tk.Tk()
+fc_window.title("Meow Flashcard")
+fc_window.geometry("800x500")
+fc_window.resizable(False,False)
 
 def switch_to_flashcards():
     # Switch to the "Flashcards" tab
@@ -260,7 +260,7 @@ if __name__ == '__main__':
     create_tables(conn)
 
 # Create Notebook widget inside the inner_frame
-notebook = ttk.Notebook(root)
+notebook = ttk.Notebook(fc_window)
 notebook.pack(fill='both', expand=True)
 
 # Add a tab to the Notebook
@@ -270,7 +270,7 @@ notebook.add(tab1, text='Create')
 # Load the background image
 bg_image = tk.PhotoImage(file="pawbg.png")
 
-# Create a label with the background image and add it to the root window
+# Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab1, image=bg_image)
 bg_label.place(relwidth=1, relheight=1)
 
@@ -351,7 +351,7 @@ delete_set_button = ttk.Button(tab1, text='DELETE', style='SaveSet.TButton', wid
 delete_set_button.place(x=580, y=300)
 
 # Button to flashcard (fc) after select set ,command=
-fc_set_button = ttk.Button(tab1, text='LEARN', style='SaveSet.TButton', width=50, command=learn_flashcards)
+fc_set_button = ttk.Button(tab1, text='START', style='SaveSet.TButton', width=50, command=learn_flashcards)
 fc_set_button.place(x=418, y=350)
 
 # select your card (box option)
@@ -374,7 +374,7 @@ notebook.add(tab2, text='Flashcards')
 # Load the background image
 bg_image1 = tk.PhotoImage(file="pawbg1.png")
 
-# Create a label with the background image and add it to the root window
+# Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab2, image=bg_image1)
 bg_label.place(relwidth=1, relheight=1)
 
@@ -402,17 +402,32 @@ word_label.place(x=320, y=150)  # Adjust the y-coordinate to make room for the d
 definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center")
 definition_label.place(x=320, y=230)  # Adjust the y-coordinate to make room for the word label
 
+# button
+# Create PhotoImage objects for the images
+flip_image = tk.PhotoImage(file='flip.png')
+next_image = tk.PhotoImage(file='next.png')
+prev_image = tk.PhotoImage(file='pre.png')
+
+# Create Player Control Buttons with custom background color and images
+flip_btn = tk.Button(tab2, image=flip_image, command=flip_card, borderwidth=0, highlightthickness=0)
+next_btn = tk.Button(tab2, image=next_image, command=next_card, borderwidth=0, highlightthickness=0)
+pre_btn = tk.Button(tab2, image=prev_image, command=prev_card, borderwidth=0, highlightthickness=0)
+
+# Set background color directly
+flip_btn.configure(bg="#45595A")
+next_btn.configure(bg="#45595A")
+pre_btn.configure(bg="#45595A")
+
+# Place buttons individually
+flip_btn.place(x=350, y=340)
+next_btn.place(x=470, y=340)
+pre_btn.place(x=230, y=340)
+
+# Place buttons individually
+flip_btn.place(x=350, y=340)
+next_btn.place(x=470, y=340)
+pre_btn.place(x=230, y=340)
 
 
-# Button to flip the flashcard , command=flip_card
-ttk.Button(tab2, text='Flip', command=flip_card).place(x=350,y=370)
-    
-# Button to view the next flashcard  , command=next_card
-ttk.Button(tab2, text='Next', command=next_card).place(x=450,y=370)
-    
-# Button to view the previous flashcard  , command=prev_card
-ttk.Button(tab2, text='Previous', command=prev_card).place(x=250,y=370)
 
-
-
-root.mainloop()
+fc_window.mainloop()
