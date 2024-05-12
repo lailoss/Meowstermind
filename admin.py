@@ -20,7 +20,7 @@ def query():
     meowmbers = Tk()
     meowmbers.geometry("400x500")
     meowmbers.configure(bg="#99BDFA")
-    meowmbers.title("Meowmbers")
+    meowmbers.title("Meowers")
 
     print_records=''
     for record in records:
@@ -30,10 +30,10 @@ def query():
     drawer=Frame(meowmbers, bg="#FFFFFF", padx=20, pady=20)
     drawer.pack(side="top", expand=True)
 
-    meowmbers_title = Label(drawer, text="MEOWMBERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
+    meowmbers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
     meowmbers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
 
-    query_label= Label(drawer, text=print_records, font=font_15, fg="navy", bg="#FFFFFF")
+    query_label= Label(drawer, text=print_records, font=font_15, bg="#FFFFFF")
     query_label.grid(row=1, column=0, pady=(15,0))
 
     conn.commit() #commit changes
@@ -48,7 +48,7 @@ def save():
     c.execute(""" UPDATE userinfo SET
               username = :username,
               password = :password
-              
+
               WHERE oid = :oid""",
               {'username' : username_entry.get(),
                'password' : password_entry.get(),
