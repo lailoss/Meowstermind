@@ -10,11 +10,11 @@ primary.title("Welcome!")
 
 def redirect_l():
     import login
-    create_LOGwindow()
+    login.create_LOGwindow()
 
 def redirect_r():
     import register
-    create_REGwindow()
+    register.create_REGwindow()
 
 
 #PARAMETER-----------------------------------------------------------

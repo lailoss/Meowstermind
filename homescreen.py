@@ -12,12 +12,12 @@ root.resizable(False, False)
 #FUNCTIONS-----------------------------------------------------------
 def redirect_todo():
     import Mytodo
-    Mytodo.create.todo_window()
+    Mytodo.create_todo_window()
     return
 
 def redirect_music():
     import Mymusic
-    Mymusic.create.music_window()
+    Mymusic.create_music_window()
     return
 
 '''def redirect_timer():
