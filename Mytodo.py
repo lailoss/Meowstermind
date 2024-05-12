@@ -2,11 +2,12 @@ import customtkinter
 from tkinter import *
 from tkcalendar import*
 from tkinter import messagebox
+import tkinter as tk
 
-root = customtkinter.CTk()
-root.title('meow todo?')
-root.geometry('1200x700')
-root.resizable(False,False)
+todo_window = customtkinter.CTk()
+todo_window.title('meow todo?')
+todo_window.geometry('800x500')
+todo_window.resizable(False,False)
 
 # global variable to store the task counter
 task_counter = 1
@@ -29,7 +30,7 @@ def add_task():
         messagebox.showerror('Error', 'Please select a category.')
         return
     
-    tasks_list.insert(task_counter - 1, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
+    tasks_list.insert(task_counter + 1, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
     task_counter += 1 #increment the task counter
     task_entry.delete(0, END)
     dl_entry.delete(0, END)
@@ -79,7 +80,7 @@ def load_tasks():
 def pick_date(event):
     global cal, date_window
     
-    date_window = Toplevel(root)
+    date_window = Toplevel(todo_window)
     date_window.grab_set()
     date_window.title("Choose Date ")
     date_window.geometry('250x220+290+370')    
@@ -95,65 +96,58 @@ def grab_date():
     date_window.destroy()
 
 # background image
-bg_image = PhotoImage(file="bg.png")
-background_label = Label(root, image=bg_image)
-background_label.place(relwidth=1, relheight=1)
+bg_image = PhotoImage(file="todobg.png")
+background_label = Label(todo_window, image=bg_image)
 
-# outer frame
-outer_frame_width = 800
-outer_frame_height = 500
-outer_frame = customtkinter.CTkFrame(root, width=outer_frame_width, height=outer_frame_height,corner_radius= 10 ,fg_color="#792B14")
-outer_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+# Create a label with the background image and add it to the root window
+bg_label = tk.Label(todo_window, image=bg_image)
+bg_label.place(relwidth=1, relheight=1)
 
-# inner frame
-inner_frame_width = 700
-inner_frame_height = 350
-inner_frame = customtkinter.CTkFrame(outer_frame, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color="#E8D09C")
+# Inner Frame
+inner_frame_width = 730
+inner_frame_height = 383
+inner_frame = customtkinter.CTkFrame(todo_window, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color="#EFE0BF")
 inner_frame.place(relx=0.5, rely=0.6, anchor=CENTER)
 
-# laying cat image
-image = PhotoImage(file="layingcat.png").subsample(3)
-lay_cat = Label(outer_frame, image=image, bg='#792B14')  # Set the background color to match the outer frame
-lay_cat.place(x=10, y=-4)
 
 # font and title
 font1 = ('Arial',50,'bold')
 font2 = ('Arial',10,'bold')
 font3 = ('Arial',10,'bold')
 
-title_label = customtkinter.CTkLabel(root,font=font1,text='Meow To-DO...',text_color='#E8D09C',bg_color='#792B14')
-title_label.place(x=400,y=160)
+title_label = customtkinter.CTkLabel(todo_window,font=font1,text='Meow To-DO.',text_color='#EFE0BF',bg_color='#792B14')
+title_label.place(x=60,y=40)
 
 # add and remove button
-add_button = customtkinter.CTkButton(root,command=add_task,font=font2,text_color='#fff',text='Add Task', fg_color='#13643F',hover_color='#06911f',bg_color='#09112e',corner_radius=5,width=80)
-add_button.place(x=300,y=250)
+add_button = customtkinter.CTkButton(todo_window,command=add_task,font=font2,text_color='#fff',text='Add Task', fg_color='#13643F',hover_color='#06911f',bg_color='#09112e',corner_radius=5,width=80)
+add_button.place(x=80,y=140)
 
-remove_button = customtkinter.CTkButton(root,command=remove_task,font=font3,text_color='#fff',text='Remove Task', fg_color='#96061c',hover_color='#AD130E',bg_color='#09112e',cursor='hand2',corner_radius=5,width=80)
-remove_button.place(x=400,y=250)
+remove_button = customtkinter.CTkButton(todo_window,command=remove_task,font=font3,text_color='#fff',text='Remove Task', fg_color='#96061c',hover_color='#AD130E',bg_color='#09112e',cursor='hand2',corner_radius=5,width=80)
+remove_button.place(x=170,y=140)
 
 # dropdown menu for selecting the category
-category_var = StringVar(root)
+category_var = StringVar(todo_window)
 category_var.set("Select Category")
-category_menu = OptionMenu(root, category_var,  "Personal", "Work", "Exam", "Event")
+category_menu = OptionMenu(todo_window, category_var,  "Personal", "Work", "Exam", "Event")
 category_menu.config(font=("Arial", 8), bg="white", fg="#BDB7C6", highlightthickness=0, relief=FLAT)
-category_menu.place(x=750, y=260, width=150, height= 20)
+category_menu.place(x=510, y=150, width=150, height= 20)
 
 # entry box (insert task)
-task_entry = customtkinter.CTkEntry(root,font=font2,text_color='#000',fg_color='white',border_color='white',width=600,height=30)
-task_entry.place(x=300,y=290)
+task_entry = customtkinter.CTkEntry(todo_window,font=font2,text_color='#000',fg_color='white',border_color='white',width=600,height=30)
+task_entry.place(x=80,y=190)
 
 # list box (display task , date , category)
-tasks_list = Listbox(root,width=85,height=10,font=font3)
-tasks_list.place(x=300,y=340)
+tasks_list = Listbox(todo_window,width=85,height=10,font=font3)
+tasks_list.place(x=80,y=240)
 
 # Calendar entry (dl=deadline)
-dl_label = Label(root, text="Select Deadline: ", bg="#E8D09C", fg="black", font=("Arial", 8))
-dl_label.place(x=500, y=260)
+dl_label = Label(todo_window, text="Select Deadline: ", bg="#EFE0BF", fg="black", font=("Arial", 8))
+dl_label.place(x=290, y=150)
 
-dl_entry = Entry(root, highlightthickness=0, relief=FLAT, bg="white", fg="#BDB7C6", font=("Arial", 8))
-dl_entry.place(x=600, y=260, width=100, height=20)
+dl_entry = Entry(todo_window, highlightthickness=0, relief=FLAT, bg="white", fg="#BDB7C6", font=("Arial", 8))
+dl_entry.place(x=390, y=150, width=100, height=20)
 dl_entry.insert(0, "mm/dd/yyyy")
 dl_entry.bind("<1>", pick_date)
 
 load_tasks()
-root.mainloop()
+todo_window.mainloop()
