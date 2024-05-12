@@ -381,34 +381,37 @@ bg_label.place(relwidth=1, relheight=1)
 # inner frame
 inner_frame_width = 730
 inner_frame_height = 383
-inner_frame = customtkinter.CTkFrame(tab2, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color="#D4C9B5")
-inner_frame.place(relx=0.5, rely=0.6, anchor=CENTER)
+inner_frame = customtkinter.CTkFrame(tab2, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color='#45595A')
+inner_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-# font and title
-font1 = ('Georgia',50,'bold')
-title_label = customtkinter.CTkLabel(tab2,font=font1,text='MeowCards.',text_color='#874236',bg_color='#EFEDE0')
-title_label.place(x=98,y=32)
+# flashcard frame
+meowset_frame_width = 600
+meowset_frame_height = 180
+meowset_frame = customtkinter.CTkFrame(tab2, width=meowset_frame_width, height=meowset_frame_height, corner_radius=5, fg_color="#D4C9B5")
+meowset_frame.place(x=100,y=140)
 
  ## Initialize variables for tracking card index and current cards
 card_index = 0
 current_cards = []  # corrected variable name
     
 # Label to display the word on flashcards
-word_label = ttk.Label(tab2, text='', font=('TkDefaultFont', 24))
-word_label.place(x=200, y=200)
-    
-# Label to display the word on flashcard
-definition_label = ttk.Label(tab2, text='', font=('TkDefaultFont', 16))
-definition_label.place(x=200, y=300)
+word_label = ttk.Label(tab2, text=' ', font=('Georgia', 35), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center")
+word_label.place(x=320, y=150)  # Adjust the y-coordinate to make room for the definition label
+
+# Label to display the definition on flashcard
+definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center")
+definition_label.place(x=320, y=230)  # Adjust the y-coordinate to make room for the word label
+
+
 
 # Button to flip the flashcard , command=flip_card
-ttk.Button(tab2, text='Flip', command=flip_card).place(x=350,y=400)
+ttk.Button(tab2, text='Flip', command=flip_card).place(x=350,y=370)
     
 # Button to view the next flashcard  , command=next_card
-ttk.Button(tab2, text='Next', command=next_card).place(x=450,y=400)
+ttk.Button(tab2, text='Next', command=next_card).place(x=450,y=370)
     
 # Button to view the previous flashcard  , command=prev_card
-ttk.Button(tab2, text='Previous', command=prev_card).place(x=250,y=400)
+ttk.Button(tab2, text='Previous', command=prev_card).place(x=250,y=370)
 
 
 
