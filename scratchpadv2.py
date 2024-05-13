@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import sqlite3
 
+
 #database
 connect=sqlite3.connect('nota.db')
 cursor=connect.cursor() #allow you to send SQL commands to database
@@ -23,7 +24,7 @@ notebook=ttk.Notebook(note)
 notebook.pack(fill='both', expand=True)
 
 tab1=Frame(notebook)
-notebook.add(tab1,text='New Notes')
+notebook.add(tab1,text='ADD NEW NOTES')
 
 
 
@@ -31,24 +32,31 @@ notebook.add(tab1,text='New Notes')
 
 
 tab2=Frame(notebook)
-notebook.add(tab2, text='text')
-
+notebook.add(tab2, text='VIEW MY NOTES')
+notesbg1=PhotoImage(file="./images/meowtes2.png")
+bg=Label(tab1, image=notesbg1)
+bg.pack()
+notesbg2=PhotoImage(file="./images/meowtes2.png")
+bg2=Label(tab2, image=notesbg2)
+bg2.pack()
 
 
 
 #title-----------------------------------------------------------
 
 title_entry=Entry(tab1, width='45', font='comfortaa 17 bold', bd=0)
-title_entry.place(x='150', y='75')
+title_entry.place(x='150', y='22')
 content_entry=Text(tab1, width=93, height=16, bd=0, font='arial,  11', undo=True)
-content_entry.place(x='22', y='125')
+content_entry.place(x='29', y='80')
+
 #add new notes--------------------------------------------------
 
 def add_note():
     title_entry.delete(0, END)
     content_entry.delete('1.0', END)
     
-save_button=Button(tab1, text='+', font='comfortaa 15 bold', bg='white', bd=0, command=add_note).place(x='270',y='10')
+save_button=Button(tab1, text='CLEAR', font='comfortaa 15 bold', bg=yellow , bd=0, command=add_note)
+save_button.place(x='405',y='430')
     
 #save into mote-------------------------------------
 def save_note():
@@ -59,7 +67,7 @@ def save_note():
     cursor.execute(note_save)
     connect.commit()
     
-save_button=Button(tab1, text='SAVE', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='525',y='440')
+save_button=Button(tab1, text='SAVE', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='550',y='430')
     
 #edit current note----------------------
 def edit_note():
@@ -69,7 +77,7 @@ def edit_note():
     cursor.execute(note_edit)
     connect.commit()
     
-edit_button=Button(tab2, text='EDIT', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='410',y='440')
+edit_button=Button(tab2, text='EDIT', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='415',y='429')
     
 #delete note-------------------------------------------------
 
@@ -79,11 +87,11 @@ def delete_note():
     cursor.execute(note_delete)
     connect.commit()
     
-delete_button=Button(tab2, text='DELETE', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='275',y='440')
+delete_button=Button(tab2, text='DELETE', font='comfortaa 15 bold', bg=yellow, bd=0, command=save_note).place(x='520',y='429')
 #search notes----------------------------------------------------------------------------
 
 search_text= Entry(tab2, bd=0, width='10', font=('comfortaa 12 bold'))
-search_text.place(x='70', y='35')
+search_text.place(x='150', y='25')
 
 def search():
     global cursor
@@ -92,21 +100,18 @@ def search():
     cursor.execute(searchquery, (title,))
     note1=cursor.fetchone()
     if note1:
-        content_entry.configure(text=note1[1])
+        content_entry.delete('1.0', END)
+        content_entry.config(text=note1[1])
     else:
-        content_entry.configure(text='NOTE NOT FOUND')
+        content_entry.delete('1.0', END)
+        content_entry.config(text='NOTE NOT FOUND')
         
 searchicon=PhotoImage(file='./images/search_icon.png')
 
-search_button=Button(tab2, image=searchicon, font='comfortaa 16 bold', bg=yellow, bd=0, command=search).place(x='25',y='30')
+search_button=Button(tab2, image=searchicon, font='comfortaa 16 bold', bg='white', bd=0, command=search).place(x='740',y='25')
 
 #tabs---------------------------------------------------------------------------------------------------
-notesbg1=PhotoImage(file="./images/meowtes.png")
-bg=Label(tab1, image=notesbg1)
-bg.pack()
-notesbg2=PhotoImage(file="./images/meowtes2.png")
-bg2=Label(tab2, image=notesbg2)
-bg2.pack()
+
 #--------------------------------------------------------
 # style= ttk.Style()
 # style.theme("notebook.Tab":{'padding':[10,3], 'font':('comfortaa', '5', 'bold')}

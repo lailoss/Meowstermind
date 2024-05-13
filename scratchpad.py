@@ -14,7 +14,7 @@ yellow='#FFBD59'
 note=Tk()
 note.title('ScratchPad')
 note.geometry('800x500')
-notesbg=PhotoImage(file="./images/meowtes.png")
+notesbg=PhotoImage(file="./images/meowtes1.png")
 bg=Label(note, image=notesbg)
 bg.pack()
 
