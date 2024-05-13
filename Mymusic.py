@@ -248,7 +248,7 @@ def volume(x):
     pygame.mixer.music.set_volume(volume_slider.get())
 
 # Load the background image
-bg_image = tk.PhotoImage(file="bg.png")
+bg_image = tk.PhotoImage(file="mymusicbg.png")
 
 # Create a label with the background image and add it to the root window
 bg_label = tk.Label(music_window, image=bg_image)
