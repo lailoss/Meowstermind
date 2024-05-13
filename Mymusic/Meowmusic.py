@@ -266,10 +266,10 @@ title_label.place(x=150,y=50)
 
 # button
 # Define Player Control Button Images
-back_btn_img = PhotoImage(file="back.png")
-foward_btn_img = PhotoImage(file="foward.png")
-pause_btn_img = PhotoImage(file="pause.png")
-stop_btn_img = PhotoImage(file="stop.png")
+back_btn_img = PhotoImage(file="backmusic.png")
+foward_btn_img = PhotoImage(file="fowardmusic.png")
+pause_btn_img = PhotoImage(file="pausemusic.png")
+stop_btn_img = PhotoImage(file="stopmusic.png")
 
 # Create Player Control Buttons with custom background color
 back_btn = Button(music_window, image=back_btn_img, borderwidth=0, bg="#EFE0BF", command=previous_song)
