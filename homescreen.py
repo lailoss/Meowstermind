@@ -12,18 +12,18 @@ root.resizable(False, False)
 #FUNCTIONS-----------------------------------------------------------
 def redirect_todo():
     import Mytodo
-    create
+    Mytodo.create_todo_window()
     return
 
 def redirect_music():
     import Mymusic
-    create
+    Mymusic.create_music_window()
     return
 
-def redirect_timer():
+'''def redirect_timer():
     import pomodoro
     create
-    return
+    return'''
 
 
 #PARAMETER-----------------------------------------------------------
