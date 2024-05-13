@@ -1,5 +1,5 @@
 from tkinter import *
-import customtkinter
+#import customtkinter
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
