@@ -19,7 +19,7 @@ pygame.mixer.init()
 current_song_index = 0  # Global variable to store the current song index
 
 def open_folder():
-    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/Meowstermind/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
+    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/Meowstermind/Mymusic/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
     
     # Loop thru song list and insert into playlist
     for song in songs:
@@ -46,7 +46,7 @@ def play_time():
     # Grab song title from playlist
     song = playlist.get(current_song) # or put (ACTIVE) inside bracket if error
     # Add directory structure and mp3 to song title
-    song = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
+    song = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
     # Load song length with mutagen
     song_mut =MP3(song)
     # Get song length
@@ -106,7 +106,7 @@ def play_song():
     song = playlist.get(ACTIVE)
     
     # Load and play the selected song
-    song_path = os.path.join("C:/Users/Fawqan/Meowstermind/Songs", song)  # Construct the full file path
+    song_path = os.path.join("C:/Users/Fawqan/Meowstermind/Mymusic/Songs", song)  # Construct the full file path
     pygame.mixer.music.load(song_path)
     pygame.mixer.music.play(loops=0)
     
@@ -170,7 +170,7 @@ def previous_song():
     
     # Get the song title from the playlist using the current index
     song = playlist.get(current_song_index)
-    song_path = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
+    song_path = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
     # Load and play the previous song
     pygame.mixer.music.load(song_path)
     pygame.mixer.music.play(loops=0)
@@ -206,7 +206,7 @@ def next_song():
     next_song_title = playlist.get(next_index)
     
     # Construct the file path for the next song
-    next_song_path = f'C:/Users/Fawqan/Meowstermind/Songs/{next_song_title}'
+    next_song_path = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{next_song_title}'
     
     # Load and play song
     pygame.mixer.music.load(next_song_path)
@@ -236,7 +236,7 @@ def delete_song():
 def slide(x):
     #slider_label.config(text=f'{int(my_slider.get())} of {int(song_length)}')
     song = playlist.get(ACTIVE)
-    song = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
+    song = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0, start=int(my_slider.get()))
@@ -248,7 +248,7 @@ def volume(x):
     pygame.mixer.music.set_volume(volume_slider.get())
 
 # Load the background image
-bg_image = tk.PhotoImage(file="bg.png")
+bg_image = tk.PhotoImage(file="mymusicbg.png")
 
 # Create a label with the background image and add it to the root window
 bg_label = tk.Label(music_window, image=bg_image)
@@ -266,11 +266,10 @@ title_label.place(x=150,y=50)
 
 # button
 # Define Player Control Button Images
-back_btn_img = PhotoImage(file="back.png")
-foward_btn_img = PhotoImage(file="foward.png")
-play_btn_img = PhotoImage(file="play.png")
-pause_btn_img = PhotoImage(file="pause.png")
-stop_btn_img = PhotoImage(file="stop.png")
+back_btn_img = PhotoImage(file="backmusic.png")
+foward_btn_img = PhotoImage(file="fowardmusic.png")
+pause_btn_img = PhotoImage(file="pausemusic.png")
+stop_btn_img = PhotoImage(file="stopmusic.png")
 
 # Create Player Control Buttons with custom background color
 back_btn = Button(music_window, image=back_btn_img, borderwidth=0, bg="#EFE0BF", command=previous_song)
