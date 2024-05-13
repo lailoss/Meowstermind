@@ -7,13 +7,13 @@ from tkinter import messagebox
 pygame.init()
 
 #window
-root=Tk()
-root.geometry('600x300') 
-root.title('Pomodoro Timer')
-root.configure(bg='red')
-root.iconbitmap('./images/pomodoroIcon.ico')
+timer=Tk()
+timer.geometry('600x300') 
+timer.title('Pomodoro Timer')
+timer.configure(bg='red')
+# timer.iconbitmap('./images/pomodoroIcon.ico')
 canvas = Canvas()
-root.resizable(False, False)
+timer.resizable(False, False)
 
 #consts
 red='#d04e2f'
@@ -31,24 +31,24 @@ breaktime=False
 
 
 #backgground
-bg=Label(root, image=bg_img)
+bg=Label(timer, image=bg_img)
 bg.pack()
 
 
 #time tracker
-hrs = StringVar(root, value='00')
+hrs = StringVar(timer, value='00')
 hrs.set("00")
-Entry(root, textvariable=hrs, fg='black', width=2, font='arial 40', borderwidth=0, ). place(x='100',y='80')
-Label(root, text='HOURS', bg='white').place(x='180',y='120')
+Entry(timer, textvariable=hrs, fg='black', width=2, font='arial 40', borderwidth=0, ). place(x='100',y='80')
+Label(timer, text='HOURS', bg='white').place(x='180',y='120')
 
-mins=StringVar(root, value='00')
-Entry(root, textvariable=mins, width='2',fg='black',  font='arial 40',borderwidth=0).place(x='250',y='80')
-Label(root,text='MINS', bg='white').place(x='330',y='120')
+mins=StringVar(timer, value='00')
+Entry(timer, textvariable=mins, width='2',fg='black',  font='arial 40',borderwidth=0).place(x='250',y='80')
+Label(timer,text='MINS', bg='white').place(x='330',y='120')
 mins.set("00")
 
-sec=StringVar(root, value='00')
-Entry(root, textvariable=sec, width=2,  fg='black', font='arial 40',borderwidth=0, bg='white'). place(x='400',y='80')
-Label(root,text='SEC', bg='white').place(x='470',y='120')
+sec=StringVar(timer, value='00')
+Entry(timer, textvariable=sec, width=2,  fg='black', font='arial 40',borderwidth=0, bg='white'). place(x='400',y='80')
+Label(timer,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
 
@@ -64,7 +64,7 @@ def pause_timer():
     time_run=False
     print('timer has paused')
     global current_time
-    root.after_cancel(current_time) #cancels the operation above
+    timer.after_cancel(current_time) #cancels the operation above
    
     global pause_popup
     global pausebg
@@ -110,7 +110,7 @@ def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-    cycletext=Label(root, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
+    cycletext=Label(timer, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
     cycletext.place(x='80', y='33')
     
     if total_time > 0:
@@ -118,7 +118,7 @@ def timer():
         hrs.set(str(total_time // 3600).zfill(1))
         mins.set(str((total_time % 3600) // 60).zfill(1))
         sec.set(str(total_time % 60).zfill(1))
-        current_time= root.after(1000, timer) #starts countdown  
+        current_time= timer.after(1000, timer) #starts countdown  
         
     else: #timer 00
         if not breaktime:
@@ -218,26 +218,26 @@ def workc():
 
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
-startbutton=Button(root, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y='230')
+startbutton=Button(timer, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y='230')
 pauseicon=PhotoImage(file='./images/pause.png')
-pausebutton=Button(root, text='pause', image=pauseicon, bg='white', borderwidth=0, command=pause_timer).place(x='200',y='250')
+pausebutton=Button(timer, text='pause', image=pauseicon, bg='white', borderwidth=0, command=pause_timer).place(x='200',y='250')
 stopicon=PhotoImage(file='./images/stop.png')
-stopbutton=Button(root,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
+stopbutton=Button(timer,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
 
 
     
 moyen=PhotoImage(file='./images/MOYEN.png')
 moolan=PhotoImage(file='./images/MOOLAN.png')
 maria=PhotoImage(file='./images/MARIA.png')
-workabutton=Button(root, image=moyen, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=worka)
+workabutton=Button(timer, image=moyen, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=worka)
 workabutton.place(x='175',y=' 160')
-workbbutton=Button(root, image=moolan, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workb)
+workbbutton=Button(timer, image=moolan, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workb)
 workbbutton.place(x='270',y=' 160')
-workcbutton=Button(root, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
+workcbutton=Button(timer, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
 workcbutton.place(x='365',y=' 160')
 
 
 
 
-root.mainloop()
-root.update()
+timer.mainloop()
+timer.update()
