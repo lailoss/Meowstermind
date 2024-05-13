@@ -44,7 +44,7 @@ pomodoro_button.grid(row= 1, column= 2)
 note_button = Button(botframe, text="notepad", bg= "#FFFFFF")
 note_button.grid(row= 1, column= 3)
 
-music_button = Button(botframe, text="song", bg="#FFFFFF", command=redirect_music)
+music_button = Button(botframe, text="song", bg="#FFFFFF")
 music_button.grid(row= 1, column= 4)
 
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
