@@ -9,10 +9,12 @@ primary.title("Welcome!")
 #FUNCTIONS ----------------------------------------------------------
 
 def redirect_l():
+    primary.destroy()
     import login
     login.create_LOGwindow()
 
 def redirect_r():
+    primary.destroy()
     import register
     register.create_REGwindow()
 

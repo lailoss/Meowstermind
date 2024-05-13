@@ -59,8 +59,11 @@ def signup():
         repassword_entry.delete(0, END)
 
         messagebox.showinfo("Success", "Account created successfully!")
-        create_LOGwindow(REGwindow)
         REGwindow.destroy()
+        import login
+        login.create_LOGwindow()
+        
+        
 
 
 #PARAMETER-----------------------------------------------------------

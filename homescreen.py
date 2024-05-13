@@ -1,5 +1,5 @@
 from tkinter import *
-#import customtkinter
+import customtkinter
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
@@ -47,6 +47,10 @@ midframe.pack(expand=True)
 
 quote = Button(midframe, text="quote", fg="navy", relief="flat", command=quote)
 quote.grid(row=0, column=0)
+
+'''nagiwagi = PhotoImage(file="nagito.png")
+picbutton = customtkinter.CTkButton(master=midframe, image=nagiwagi, compound="center", bg_color="transparent")
+picbutton.grid(row=1, column=0)'''
 
 #footer
 botframe = Frame(root, bg="#FFFFFF", padx=20, pady=20)
