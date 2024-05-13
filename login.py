@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 import sqlite3
-import homescreen
-import admin
 
 LOGwindow = None  # Global variable to hold the login window
 LOGwindow = Tk()
@@ -29,12 +27,12 @@ def login():
 
     if user: #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
-        #import homescreen
+        import homescreen
         homescreen.create_root()
         LOGwindow.destroy()
 
     elif (username == "meow", password == "1234"):
-        #import admin
+        import admin
         admin.create_admin()
         LOGwindow.destroy()
 

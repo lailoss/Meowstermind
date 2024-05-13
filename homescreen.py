@@ -1,5 +1,5 @@
 from tkinter import *
-import customtkinter
+#import customtkinter
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
@@ -10,7 +10,17 @@ root.resizable(False, False)
 
 
 #FUNCTIONS-----------------------------------------------------------
-def redirect_todo():
+
+def quote():
+
+    image = PhotoImage(file="cuba.png")
+
+    image_label = Label(midframe, image=image)
+    image_label.image = image  # prevents garbage collection
+    image_label.grid(row=0, column=1)
+
+
+'''def redirect_todo():
     import Mytodo
     Mytodo.create_todo_window()
     return
@@ -20,7 +30,7 @@ def redirect_music():
     Mymusic.create_music_window()
     return
 
-'''def redirect_timer():
+def redirect_timer():
     import pomodoro
     create
     return'''
@@ -32,7 +42,14 @@ font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS and PACKING-------------------------------------------------
-botframe=Frame(root, bg="#FFFFFF", padx=20, pady=20)
+midframe = Frame(root, padx=20, pady=20, bg="#FFFFFF")
+midframe.pack(expand=True)
+
+quote = Button(midframe, text="quote", fg="navy", relief="flat", command=quote)
+quote.grid(row=0, column=0)
+
+#footer
+botframe = Frame(root, bg="#FFFFFF", padx=20, pady=20)
 botframe.pack(side="bottom")
 
 todo_button = Button(botframe, text="todo", bg= "#FFFFFF")
