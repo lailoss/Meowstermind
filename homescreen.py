@@ -20,10 +20,9 @@ def redirect_music():
     Mymusic.create_music_window()
     return
 
-'''def redirect_timer():
+def redirect_timer():
     import pomodoro
-    create
-    return'''
+    pomodoro.create_pom()
 
 
 #PARAMETER-----------------------------------------------------------
@@ -38,7 +37,7 @@ botframe.pack(side="bottom")
 todo_button = Button(botframe, text="todo", bg= "#FFFFFF", command=redirect_todo)
 todo_button.grid(row= 1, column= 1)
 
-pomodoro_button = Button(botframe, text="timer", bg= "#FFFFFF")
+pomodoro_button = Button(botframe, text="timer", bg= "#FFFFFF", command=redirect_timer)
 pomodoro_button.grid(row= 1, column= 2)
 
 note_button = Button(botframe, text="notepad", bg= "#FFFFFF")
