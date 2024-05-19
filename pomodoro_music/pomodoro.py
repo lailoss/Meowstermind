@@ -258,7 +258,6 @@ pausebutton=Button(pom, text='pause', image=pauseicon, bg='white', borderwidth=0
 stopicon=PhotoImage(file='./images/stop.png')
 stopbutton=Button(pom,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
 
-
     
 moyen=PhotoImage(file='./images/MOYEN.png')
 moolan=PhotoImage(file='./images/MOOLAN.png')
