@@ -1,5 +1,6 @@
 from tkinter import *
-#import customtkinter
+import customtkinter
+from pygame import *
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
@@ -13,16 +14,17 @@ root.resizable(False, False)
 def redirect_todo():
     import Mytodo
     Mytodo.create_todo_window()
-    return
+
 
 def redirect_music():
     import Mymusic
     Mymusic.create_music_window()
     return
 
-def redirect_timer():
+'''def redirect_timer():
     import pomodoro
-    pomodoro.create_pom()
+    create
+    return'''
 
 
 #PARAMETER-----------------------------------------------------------
@@ -34,7 +36,7 @@ font_15 = ("Gill Sans MT", 15)
 botframe=Frame(root, bg="#FFFFFF", padx=20, pady=20)
 botframe.pack(side="bottom")
 
-todo_button = Button(botframe, text="todo", bg= "#FFFFFF", command=redirect_todo)
+todo_button = Button(botframe, text="todo", bg= "#FFFFFF")
 todo_button.grid(row= 1, column= 1)
 
 pomodoro_button = Button(botframe, text="timer", bg= "#FFFFFF", command=redirect_timer)
@@ -43,7 +45,7 @@ pomodoro_button.grid(row= 1, column= 2)
 note_button = Button(botframe, text="notepad", bg= "#FFFFFF")
 note_button.grid(row= 1, column= 3)
 
-music_button = Button(botframe, text="song", bg="#FFFFFF")
+music_button = Button(botframe, text="song", bg="#FFFFFF", command=redirect_music)
 music_button.grid(row= 1, column= 4)
 
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
