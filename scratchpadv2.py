@@ -6,7 +6,7 @@ import sqlite3
 #database
 connect=sqlite3.connect('nota.db')
 cursor=connect.cursor() #allow you to send SQL commands to database
-cursor.execute("CREATE TABLE IF NOT EXISTS notes (title PRIMARY KEY, content TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS nota (title PRIMARY KEY, content TEXT)")
 connect.commit()
 
 #parameters-------------------------------------------------
@@ -53,7 +53,7 @@ def save_note():
     global title_entry
     title = title_entry.get()
     content = content_entry.get("1.0", "end-1c")  
-    note_save = "INSERT OR REPLACE INTO notes(title, content) VALUES (?, ?)"
+    note_save = "INSERT OR REPLACE INTO nota(title, content) VALUES (?, ?)"
     cursor.execute(note_save, (title, content))  
     connect.commit()
     update_notes_list()
@@ -64,7 +64,7 @@ def delete_note():
     
     global delete_entry
     selected_note = noteslist.get(noteslist.curselection())
-    note_delete = "DELETE FROM notes WHERE title=?"
+    note_delete = "DELETE FROM nota WHERE title=?"
     cursor.execute(note_delete, (selected_note,))
     connect.commit()
     tt2.config(text='')
@@ -85,7 +85,7 @@ search_text.place(x='70', y='35')
 
 def search():
     title = search_text.get()
-    searchquery = "SELECT * FROM notes WHERE title=?"
+    searchquery = "SELECT * FROM nota WHERE title=?"
     cursor.execute(searchquery, (title,))
     note1 = cursor.fetchone()
     tt2.config(text=title)
@@ -101,7 +101,7 @@ searchicon=PhotoImage(file='./images/search_icon.png')
 #LISTBOX-----------------------------------------------------------------------------
 def update_notes_list():
     noteslist.delete(0, END)
-    cursor.execute("SELECT title FROM notes")
+    cursor.execute("SELECT title FROM nota")
     notes = cursor.fetchall()
     for note in notes:
         noteslist.insert(END, note[0])
@@ -110,7 +110,7 @@ def update_notes_list():
 def display_content(event):
     try:
         selected_note=noteslist.get(noteslist.curselection())
-        cursor.execute("SELECT content FROM notes WHERE title=?", (selected_note,))
+        cursor.execute("SELECT content FROM nota WHERE title=?", (selected_note,))
         note_content = cursor.fetchone()
         if note_content:
             content_entry2.delete("1.0", END)
