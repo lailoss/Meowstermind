@@ -1,6 +1,7 @@
 from tkinter import *
-import customtkinter
 from PIL import Image, ImageTk
+import pygame
+import os
 import random
 import time
 root = Tk()
@@ -9,17 +10,32 @@ root.title("Home Screen")
 root.configure(bg="#E8D09C")
 root.resizable(False, False)
 
+'''# Initialize Pygame mixer
+pygame.mixer.init()'''
+
+# Load Pygame window
+embed = Frame(root, width=700, height=400)
+embed.pack()
+
+os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
+os.environ['SDL_VIDEODRIVER'] = 'windib'
+
+screen = pygame.display.set_mode((700, 400))
+screen.fill((0, 0, 0))  # Fill with black for transparency
+
 
 #FUNCTIONS-----------------------------------------------------------
 
-def quote(canvas, images):
-    for img_id, img in images.items():
-        canvas.delete("all")
-        x = random.randint(0, canvas.winfo_width() - img.width())
-        y = random.randint(0, canvas.winfo_height() - img.height())
-        canvas.create_image(x, y, anchor=NW, image=img)
-        canvas.update()
-        time.sleep(5)
+def quote(screen, images, images_id):
+    if not images_id:
+        images_id = list(images.keys())
+        random.shuffle(images_id)  # Shuffle again when reusing the function / went through the loop
+    img_id = images_id.pop(0)  # Get the first image index and remove it from the list
+    img = images[img_id]  # Retrieve the image corresponding to the index
+    screen.blit(img, (0, 0))
+    pygame.display.flip()
+    pygame.time.delay(1000)
+    quote(screen, images, images_id)
 
 
 '''def redirect_todo():
@@ -44,25 +60,22 @@ font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS and PACKING-------------------------------------------------
-quoteframe = Frame(root, width=700, height=400, bg="#FFFFFF")
-quoteframe.pack(expand=True)
-quoteframe.pack_propagate(False) #prevents resizing according to content / maintains size
-
-canvas = Canvas(quoteframe, width=700, height=400, bg="#000000")
-canvas.pack()
 
 images = {
-    0: ImageTk.PhotoImage(Image.open('Quotes/wp1.png')),
-    1: ImageTk.PhotoImage(Image.open('Quotes/wp2.png')),
-    2: ImageTk.PhotoImage(Image.open('Quotes/wp3.png')),
-    3: ImageTk.PhotoImage(Image.open('Quotes/wp4.png')),
-    4: ImageTk.PhotoImage(Image.open('Quotes/wp5.png')),
-    5: ImageTk.PhotoImage(Image.open('Quotes/wp6.png')),
-    6: ImageTk.PhotoImage(Image.open('Quotes/wp7.png')),
-    7: ImageTk.PhotoImage(Image.open('Quotes/wp8.png')),
-    8: ImageTk.PhotoImage(Image.open('Quotes/wp9.png')),
-    9: ImageTk.PhotoImage(Image.open('Quotes/wp10.png'))
+    0: pygame.image.load('Quotes/wp1.png'),
+    1: pygame.image.load('Quotes/wp2.png'),
+    2: pygame.image.load('Quotes/wp3.png'),
+    3: pygame.image.load('Quotes/wp4.png'),
+    4: pygame.image.load('Quotes/wp5.png'),
+    5: pygame.image.load('Quotes/wp6.png'),
+    6: pygame.image.load('Quotes/wp7.png'),
+    7: pygame.image.load('Quotes/wp8.png'),
+    8: pygame.image.load('Quotes/wp9.png'),
+    9: pygame.image.load('Quotes/wp10.png')
 }
+
+images_id = list(images.keys())
+random.shuffle(images_id) #shuffles before going into the quote func
 
 
 #footer
@@ -84,6 +97,6 @@ music_button.grid(row= 1, column= 4)
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
 flash_button.grid(row= 1, column= 5)
 
-root.after(1000, quote, canvas, images) #start displaying images after 1000ms (1s)
+root.after(1000, quote, screen, images, images_id) #start displaying images after 1000ms (1s)
 
 root.mainloop()
