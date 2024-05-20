@@ -396,11 +396,11 @@ current_cards = []  # corrected variable name
     
 # Label to display the word on flashcards
 word_label = ttk.Label(tab2, text=' ', font=('Georgia', 35), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center")
-word_label.place(x=320, y=150)  # Adjust the y-coordinate to make room for the definition label
+word_label.place(x=200, y=150)  # Adjust the y-coordinate to make room for the definition label
 
 # Label to display the definition on flashcard
 definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center")
-definition_label.place(x=320, y=230)  # Adjust the y-coordinate to make room for the word label
+definition_label.place(x=200, y=230)  # Adjust the y-coordinate to make room for the word label
 
 # button
 # Create PhotoImage objects for the images
