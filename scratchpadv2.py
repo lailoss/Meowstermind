@@ -31,7 +31,7 @@ notebook.add(tab2, text='VIEW MY NOTES')
 notesbg1=PhotoImage(file="./images/meowtes2.png")
 bg=Label(tab1, image=notesbg1)
 bg.pack()
-notesbg2=PhotoImage(file="./images/meowtes3.png")
+notesbg2=PhotoImage(file="./images/meowtes_3.png")
 bg2=Label(tab2, image=notesbg2)
 bg2.pack()
 
