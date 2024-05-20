@@ -423,11 +423,8 @@ flip_btn.place(x=350, y=340)
 next_btn.place(x=470, y=340)
 pre_btn.place(x=230, y=340)
 
-# Place buttons individually
-flip_btn.place(x=350, y=340)
-next_btn.place(x=470, y=340)
-pre_btn.place(x=230, y=340)
-
-
+fc_window.bind('<space>', lambda event: flip_card()) # problem [20/5]
+fc_window.bind('<Right>', lambda event: next_card())
+fc_window.bind('<Left>', lambda event: prev_card())
 
 fc_window.mainloop()
