@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 import sqlite3
-#import login
+import subprocess
+import sys
 
 REGwindow = Tk()
 REGwindow.geometry("600x600")
@@ -20,6 +21,13 @@ c = conn.cursor() #create cursor
     password text
     )""")'''
 
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20)
+font_15 = ("Gill Sans MT", 15)
+
+pathlogin = "login.py"
+argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
 
 #FUNCTIONS ---------------------------------------------------------
 def signup():
@@ -59,14 +67,8 @@ def signup():
         repassword_entry.delete(0, END)
 
         messagebox.showinfo("Success", "Account created successfully!")
-        create_LOGwindow(REGwindow)
         REGwindow.destroy()
-
-
-#PARAMETER-----------------------------------------------------------
-font_30 = ("Gill Sans MT", 30, "bold")
-font_20 = ("Gill Sans MT", 20)
-font_15 = ("Gill Sans MT", 15)
+        proc = subprocess.run(argslogin)
 
 
 #FRAME---------------------------------------------------------------
@@ -87,9 +89,6 @@ repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 
 #loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat")
 create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=signup)
-
-
-#BINDERS--------------------------------------------------------------
 
 
 #PACK IT IN (OR GRID IG)----------------------------------------------
