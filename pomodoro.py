@@ -1,10 +1,4 @@
 from tkinter import *
-import pygame
-from tkinter import font
-import time
-from tkinter import messagebox
-
-pygame.init()
 
 #window
 pom=Tk()
