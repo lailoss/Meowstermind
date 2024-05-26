@@ -15,7 +15,7 @@ root.resizable(False, False)
 '''# Initialize Pygame mixer
 pygame.mixer.init()'''
 
-# Load Pygame window
+'''# Load Pygame window
 embed = Frame(root, width=700, height=400)
 embed.pack()
 
@@ -43,7 +43,7 @@ argsscratch = '"%s" "%s"' % (sys.executable, pathscratch)
 
 #FUNCTIONS-----------------------------------------------------------
 
-def quote(screen, images, images_id):
+'''def quote(screen, images, images_id):
     if not images_id:
         images_id = list(images.keys())
         random.shuffle(images_id)  # Shuffle again when reusing the function / went through the loop
@@ -52,7 +52,7 @@ def quote(screen, images, images_id):
     screen.blit(img, (0, 0))
     pygame.display.flip()
     pygame.time.delay(1000)
-    quote(screen, images, images_id)
+    quote(screen, images, images_id)'''
 
 
 '''def redirect_todo():
@@ -109,6 +109,6 @@ music_button.grid(row= 1, column= 4)
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
 flash_button.grid(row= 1, column= 5)
 
-root.after(100, quote, screen, images, images_id) #start displaying images after 1000ms (1s)
+#root.after(100, quote, screen, images, images_id) #start displaying images after 1000ms (1s)
 
 root.mainloop()
