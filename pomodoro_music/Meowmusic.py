@@ -8,7 +8,9 @@ from mutagen.mp3 import MP3
 import customtkinter
 import pygame
 
+
 music_window = customtkinter.CTk()
+music_window.grab_set()
 music_window.title("Meow Music")
 music_window.geometry("800x500")
 music_window.resizable(False,False)
@@ -27,7 +29,12 @@ def open_folder():
         song_name = os.path.basename(song)
         # Insert the song name into the playlist
         playlist.insert(END, song_name)
-   
+    
+    # Save the list of songs to a file
+    with open("selected_songs.txt", "w") as file:
+        for song in songs:
+            file.write(song + "\n")
+            
 # Grab song lenght time info
 def play_time():
     # Check for double timing
@@ -110,6 +117,10 @@ def play_song():
     pygame.mixer.music.load(song_path)
     pygame.mixer.music.play(loops=0)
     
+    # Write the selected song path to a file
+    with open("selected_song.txt", "w") as file:
+        file.write(song_path)
+        
     # Update the "Now Playing" label with just the song name
     music.config(text=music_name)
     
@@ -352,3 +363,9 @@ playlist.pack(side=LEFT,fill=BOTH)
 
 
 music_window.mainloop()
+
+def main():
+    music_window.mainloop()
+
+if __name__ == "__main__":
+    main()
