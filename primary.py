@@ -24,8 +24,9 @@ def redirect_l():
     proc = subprocess.run(argslogin)
 
 def redirect_r():
-    proc = subprocess.run(argsreg)
     primary.destroy()
+    proc = subprocess.run(argsreg)
+
 
 #WIDGETS-------------------------------------------------------------
 
