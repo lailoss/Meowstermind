@@ -4,6 +4,8 @@ import pygame
 import os
 import random
 import time
+import subprocess
+import sys
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
@@ -25,6 +27,20 @@ screen = pygame.display.set_mode((700, 400), pygame.SRCALPHA)
 screen.fill((0, 0, 0, 0))  # Fill with black for transparency'''
 
 
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_15 = ("Gill Sans MT", 15)
+
+pathmusic = "./Mymusic/Meowmusic.py"
+argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
+
+pathpomo = "pomodoro.py"
+argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
+
+pathscratch = "scratchpadv2.py"
+argsscratch = '"%s" "%s"' % (sys.executable, pathscratch)
+
+
 #FUNCTIONS-----------------------------------------------------------
 
 '''def quote(screen, images, images_id):
@@ -42,20 +58,17 @@ screen.fill((0, 0, 0, 0))  # Fill with black for transparency'''
 '''def redirect_todo():
     import Mytodo
     Mytodo.create_todo_window()
-    return
-
-def redirect_music():
-    import Mymusic
-    Mymusic.create_music_window()
     return'''
 
-def redirect_timer():
-    return
+def redirect_music():
+    proc = subprocess.run(argsmusic)
 
+def redirect_pomo():
+    proc = subprocess.run(argspomo)
 
-#PARAMETER-----------------------------------------------------------
-font_30 = ("Gill Sans MT", 30, "bold")
-font_15 = ("Gill Sans MT", 15)
+def redirect_scratch():
+    proc = subprocess.run(argsscratch)
+
 
 
 #WIDGETS and PACKING-------------------------------------------------
@@ -84,13 +97,13 @@ botframe.pack(side="bottom")
 todo_button = Button(botframe, text="todo", bg= "#FFFFFF")
 todo_button.grid(row= 1, column= 1)
 
-pomodoro_button = Button(botframe, text="timer", bg= "#FFFFFF")
+pomodoro_button = Button(botframe, text="pomo", bg= "#FFFFFF", command= redirect_pomo)
 pomodoro_button.grid(row= 1, column= 2)
 
-note_button = Button(botframe, text="notepad", bg= "#FFFFFF")
+note_button = Button(botframe, text="notepad", bg= "#FFFFFF", command= redirect_scratch)
 note_button.grid(row= 1, column= 3)
 
-music_button = Button(botframe, text="song", bg="#FFFFFF")
+music_button = Button(botframe, text="song", bg="#FFFFFF", command= redirect_music)
 music_button.grid(row= 1, column= 4)
 
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
