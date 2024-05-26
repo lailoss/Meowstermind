@@ -3,18 +3,28 @@ from tkinter import *
 from tkcalendar import*
 from tkinter import messagebox
 import tkinter as tk
+import sqlite3
+
+# Initialize SQLite database
+conn = sqlite3.connect('tasks.db')
+c = conn.cursor()
+c.execute('''
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task TEXT,
+        deadline TEXT,
+        category TEXT
+    )
+''')
+conn.commit()
 
 todo_window = customtkinter.CTk()
 todo_window.title('meow todo?')
 todo_window.geometry('800x500')
 todo_window.resizable(False,False)
 
-# global variable to store the task counter
-task_counter = 1
-
 # add task functions [with deadline]
 def add_task():
-    global task_counter 
     task = task_entry.get()
     if not task:
         messagebox.showerror('Error', 'Please enter a task.')
@@ -30,21 +40,28 @@ def add_task():
         messagebox.showerror('Error', 'Please select a category.')
         return
     
-    tasks_list.insert(task_counter + 1, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
-    task_counter += 1 #increment the task counter
+    c.execute("INSERT INTO tasks (task, deadline, category) VALUES (?, ?, ?)", (task, deadline, category))
+    conn.commit()
+    
+    task_id = c.lastrowid
+    tasks_list.insert(END, f"{task_id}. {task} | Date: {deadline} | Category: {category}")
+    
     task_entry.delete(0, END)
     dl_entry.delete(0, END)
     category_var.set("Select Category")  # Reset the dropdown menu
-    save_tasks()
-
-        
+     
 # remove task function     
 def remove_task():
     selected = tasks_list.curselection()
     if selected:
+        task_text = tasks_list.get(selected[0])
+        task_id = int(task_text.split('.')[0])
+        
+        c.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+        conn.commit()
+        
         tasks_list.delete(selected[0])
-        update_task_numbers(selected[0])
-        save_tasks()
+        
     else:
         messagebox.showerror('Error', 'Choose a task to delete')
         
@@ -59,22 +76,14 @@ def update_task_numbers(start_index):
         tasks_list.delete(i)
         tasks_list.insert(i, f"{task_number - 1}. {task_text.split('.', 1)[1]}")
         
-# save task function     
-def save_tasks():
-    with open("tasks.txt", "w") as f:
-        tasks = tasks_list.get(0,END)
-        for task in tasks:
-            f.write(task + "\n")
 
-# task save as txt file inside the folder        
+# load tasks function
 def load_tasks():
-    try:
-        with open("tasks.txt", "r") as f:
-            tasks = f.readlines()
-            for task in tasks:
-                tasks_list.insert(0, task.strip())
-    except FileNotFoundError:
-        pass
+    c.execute("SELECT * FROM tasks")
+    tasks = c.fetchall()
+    for task in tasks:
+        task_id, task_text, deadline, category = task
+        tasks_list.insert(END, f"{task_id}. {task_text} | Date: {deadline} | Category: {category}")
 
 # calendar functions
 def pick_date(event):
