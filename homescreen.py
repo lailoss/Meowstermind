@@ -20,8 +20,9 @@ embed.pack()
 os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
 os.environ['SDL_VIDEODRIVER'] = 'windib'
 
-screen = pygame.display.set_mode((700, 400))
-screen.fill((0, 0, 0))  # Fill with black for transparency
+pygame.init()
+screen = pygame.display.set_mode((700, 400), pygame.SRCALPHA)
+screen.fill((0, 0, 0, 0))  # Fill with black for transparency
 
 
 #FUNCTIONS-----------------------------------------------------------
@@ -97,6 +98,6 @@ music_button.grid(row= 1, column= 4)
 flash_button = Button(botframe, text="flashcards", bg= "#FFFFFF")
 flash_button.grid(row= 1, column= 5)
 
-root.after(1000, quote, screen, images, images_id) #start displaying images after 1000ms (1s)
+root.after(100, quote, screen, images, images_id) #start displaying images after 1000ms (1s)
 
 root.mainloop()

@@ -1,29 +1,31 @@
 from tkinter import *
+import subprocess
+import sys
 
 primary = Tk()
 primary.geometry("1200x700")
 primary.configure(bg="#E8D09C")
 primary.title("Welcome!")
 
-
-#FUNCTIONS ----------------------------------------------------------
-
-def redirect_l():
-    primary.destroy()
-    import login
-    login.create_LOGwindow()
-
-def redirect_r():
-    primary.destroy()
-    import register
-    register.create_REGwindow()
-
-
 #PARAMETER-----------------------------------------------------------
 font_30 = ("Gill Sans MT", 30, "bold")
 font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
+pathlogin = "login.py"
+argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
+
+pathreg = "register.py"
+argsreg = '"%s" "%s"' % (sys.executable, pathreg)
+
+#FUNCTIONS ----------------------------------------------------------
+
+def redirect_l():
+    proc = subprocess.run(argslogin)
+
+def redirect_r():
+    proc = subprocess.run(argsreg)
+    primary.destroy()
 
 #WIDGETS-------------------------------------------------------------
 
