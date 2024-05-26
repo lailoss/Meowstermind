@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
+import subprocess
+import sys
 import sqlite3
 
 LOGwindow = None  # Global variable to hold the login window
@@ -10,6 +12,18 @@ LOGwindow.configure(bg="#E8D09C")
 
 conn = sqlite3.connect("account.db") #create / fetch database
 c = conn.cursor() #create cursor
+
+
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20)
+font_15 = ("Gill Sans MT", 15)
+
+pathhome = "homescreen.py"
+argshome = '"%s" "%s"' % (sys.executable, pathhome)
+
+pathadmin = "admin.py"
+argsadmin = '"%s" "%s"' % (sys.executable, pathadmin)
 
 
 #FUNCTIONS ---------------------------------------------------------
@@ -27,24 +41,15 @@ def login():
 
     if user: #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
-        import homescreen
-        homescreen.create_root()
         LOGwindow.destroy()
+        proc = subprocess.run(argshome)
 
     elif (username == "meow", password == "1234"):
-        import admin
-        admin.create_admin()
         LOGwindow.destroy()
+        proc = subprocess.run(argsadmin)
 
     else:
         messagebox.showerror("Error", "Invalid username or password.")
-
-
-
-#PARAMETER-----------------------------------------------------------
-font_30 = ("Gill Sans MT", 30, "bold")
-font_20 = ("Gill Sans MT", 20)
-font_15 = ("Gill Sans MT", 15)
 
 
 #FRAME---------------------------------------------------------------
