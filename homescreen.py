@@ -17,8 +17,8 @@ font_15 = ("Gill Sans MT", 15)
 
 todo_pic = PhotoImage(file="./icons/icon1.png")
 pomo_pic = PhotoImage(file="./icons/icon2.png")
-music_pic = PhotoImage(file="./icons/icon3.png")
-scratch_pic = PhotoImage(file="./icons/icon4.png")
+scratch_pic = PhotoImage(file="./icons/icon3.png")
+music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
 pathtodo = "./Mytodo/Meowtodo.py"
