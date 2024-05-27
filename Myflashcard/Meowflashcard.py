@@ -11,7 +11,6 @@ fc_window.geometry("800x500")
 fc_window.resizable(False,False)
 
 def switch_to_flashcards():
-    # Switch to the "Flashcards" tab
     notebook.select(tab2)
     
 # Functions
@@ -112,6 +111,17 @@ def delete_set(conn, set_id):
     clear_flashcard_display()
     populate_sets_combobox()
     
+    # Delete the set itself
+    cursor.execute('''
+        DELETE FROM flashcard_sets
+        WHERE id = ?
+    ''', (set_id,))
+    
+    conn.commit()
+    sets_combobox.set('')
+    clear_flashcard_display()
+    populate_sets_combobox()
+    
     # Clear the current_cards list and reset card_index
     global current_cards, card_index
     current_cards= []
@@ -130,6 +140,7 @@ def create_set():
             set_name_var.set('')
             terms_var.set('')
             definition_var.set('')
+            select_set() # Refresh display after creating a new set
                
 def add_word():
     set_name = set_name_var.get()
@@ -148,9 +159,35 @@ def add_word():
         definition_var.set('')    
                
         populate_sets_combobox()  
+        select_set() # Refresh display after adding a new word
 
 def populate_sets_combobox():
     sets_combobox['values'] = tuple(get_sets(conn).keys())
+    
+# Function to delete a flashcard from the database
+def delete_card(conn, card_id):
+    cursor = conn.cursor()
+    
+    # Execute SQL query to delete a flashcard
+    cursor.execute('''
+        DELETE FROM flashcards
+        WHERE id = ?
+    ''', (card_id,))
+    
+    conn.commit()
+
+# Function to edit a flashcard in the database
+def edit_card(conn, card_id, new_word, new_definition):
+    cursor = conn.cursor()
+    
+    # Execute SQL query to update the word and definition of a flashcard
+    cursor.execute('''
+        UPDATE flashcards
+        SET word = ?, definition = ?
+        WHERE id = ?
+    ''', (new_word, new_definition, card_id))
+    
+    conn.commit()
     
 # Function to delete a selected flashcard set
 def delete_selected_set():
@@ -167,6 +204,55 @@ def delete_selected_set():
             populate_sets_combobox()
             clear_flashcard_display()
 
+
+    
+# Function to edit a selected flashcard
+def edit_selected_card():
+    if current_cards:
+        word, definition = current_cards[card_index]
+        
+        # Create a popup window to edit the flashcard
+        edit_window = tk.Toplevel(fc_window)
+        edit_window.title('Edit card')
+        
+        # Entry fields to edit the word and definition
+        new_word_var = tk.StringVar(value=word)
+        new_definition_var = tk.StringVar(value=definition)
+        
+        new_word_label = ttk.Label(edit_window, text='New Word:')
+        new_word_entry = ttk.Entry(edit_window, textvariable=new_word_var)
+        
+        new_definition_label = ttk.Label(edit_window, text='New Definition:')
+        new_definition_entry = ttk.Entry(edit_window, textvariable=new_definition_var)
+        
+        # Button to confirm changes
+        confirm_button = ttk.Button(edit_window, text='Confirm', command=lambda: confirm_edit(edit_window, new_word_var.get(), new_definition_var.get()))
+        
+        new_word_label.grid(row=0, column=0, padx=10, pady=5, sticky='w')
+        new_word_entry.grid(row=0, column=1, padx=10, pady=5, sticky='w')
+        new_definition_label.grid(row=1, column=0, padx=10, pady=5, sticky='w')
+        new_definition_entry.grid(row=1, column=1, padx=10, pady=5, sticky='w')
+        confirm_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+def confirm_edit(edit_window, new_word, new_definition):
+    if current_cards:
+        set_name = sets_combobox.get()
+        if set_name:
+            set_id = get_sets(conn)[set_name]
+            card_id = get_cards(conn, set_id)[card_index][0]  
+            edit_card(conn, card_id, new_word, new_definition)
+            edit_window.destroy()
+            display_flashcards(get_cards(conn, set_id)) 
+            
+def delete_card_set():
+    if current_cards:
+        set_name = sets_combobox.get()
+        if set_name:
+            set_id = get_sets(conn)[set_name]
+            card_id = get_cards(conn, set_id)[card_index][0]  
+            delete_card(conn, card_id)
+           
+            
 # LEARN button command
 def learn_flashcards():
     switch_to_flashcards()
@@ -205,7 +291,6 @@ def display_flashcards(cards):
     else:
         show_card()
         
-    show_card()
     
 def clear_flashcard_display():
     word_label.config(text='')
@@ -426,5 +511,12 @@ pre_btn.place(x=230, y=340)
 fc_window.bind('<space>', lambda event: flip_card()) # problem [20/5]
 fc_window.bind('<Right>', lambda event: next_card())
 fc_window.bind('<Left>', lambda event: prev_card())
+
+# Modify your button creation to include buttons for editing and deleting flashcards
+edit_flashcard_button = ttk.Button(tab2, text='Edit card', command=edit_selected_card)
+edit_flashcard_button.place(x=100, y=100)
+
+delete_flashcard_button = ttk.Button(tab2, text='Delete card', command=delete_card_set)
+delete_flashcard_button.place(x=180, y=100)
 
 fc_window.mainloop()
