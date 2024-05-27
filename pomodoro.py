@@ -1,5 +1,7 @@
 from tkinter import *
-
+import sqlite3
+import login
+  
 #window
 pom=Tk()
 pom.geometry('600x300') 
@@ -9,6 +11,48 @@ pom.iconbitmap('./images/pomodoroIcon.ico')
 canvas = Canvas()
 pom.resizable(False, False)
 
+logged_user= login.logged_user
+
+#coin_column
+def coin_column():
+    connect = sqlite3.connect('account.db')
+    cursor=connect.cursor()
+    
+    cursor.execute("PRAGMA table_info(userinfo)")
+    column=[info[1] for info in cursor.fetchall()]
+    
+    if 'coins' not in column:
+        cursor.execute("ALTER TABLE userinfo ADD COLUMN coins INTEGER DEFAULT 0")
+    connect.commit()
+    connect.close()
+    
+#add coins
+def add_coins(username,coins_added):
+    connect=sqlite3.connect('account.db')
+    cursor=connect.cursor()
+    cursor.execute("UPDATE userinfo SET coins = coins + ? WHERE username=?",(add_coins, username))
+    connect.commit()
+    connect.close()
+    
+def reward_coins(username, coinstoadd):
+    add_coins(username, coinstoadd)
+    
+def get_user(username):
+    connect = sqlite3.connect('account.db')
+    cursor = connect.cursor()
+    cursor.execute("SELECT username FROM userinfo WHERE username = ?", (username,))
+    user = cursor.fetchone()
+    connect.close()
+    if user:
+        return user[0]
+    else:
+        raise ValueError("User not found")
+    
+coin_column()
+username =logged_user
+get_user(username)
+
+   
 #consts
 red='#d04e2f'
 peach='#FFE4B6'
@@ -22,6 +66,7 @@ current_time=None
 short_breaktime=False
 long_breaktime=False
 breaktime=False
+study_minutes=0
 
 
 #backgground
@@ -120,6 +165,10 @@ def timer():
             breaktime=True
             cycle+=1
             is_breaktime()
+            study_minutes += 1 #change this 
+            if study_minutes >= 1:
+                add_coins(logged_user, 5)  
+                study_minutes = 0
             break_presets()
             break_notiimg=PhotoImage(file='BREAK_NOTI.png')
             break_noti = Toplevel()
