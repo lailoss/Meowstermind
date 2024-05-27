@@ -21,19 +21,19 @@ scratch_pic = PhotoImage(file="./icons/icon3.png")
 music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
-pathtodo = "./Mytodo/Meowtodo.py"
+pathtodo = "Meowtodo.py"
 argstodo = '"%s" "%s"' % (sys.executable, pathtodo)
 
 pathpomo = "pomodoro.py"
 argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
 
-pathmusic = "./Mymusic/Meowmusic.py"
+pathmusic = "Meowmusic.py"
 argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
 
 pathscratch = "scratchpadv2.py"
 argsscratch = '"%s" "%s"' % (sys.executable, pathscratch)
 
-pathflash = "./Myflashcard/Meowflashcard.py"
+pathflash = "Meowflashcard.py"
 argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 
 
