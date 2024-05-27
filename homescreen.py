@@ -24,10 +24,10 @@ flash_pic = PhotoImage(file="./icons/icon5.png")
 pathtodo = "./Mytodo/Meowtodo.py"
 argstodo = '"%s" "%s"' % (sys.executable, pathtodo)
 
-pathpomo = "pomodoro.py"
+pathpomo = "./pomodoro_music/pomodoro.py"
 argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
 
-pathmusic = "./Mymusic/Meowmusic.py"
+pathmusic = "./pomodoro_music/Meowmusic.py"
 argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
 
 pathscratch = "scratchpadv2.py"
