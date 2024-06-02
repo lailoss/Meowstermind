@@ -210,48 +210,105 @@ def delete_selected_set():
 def edit_selected_card():
     if current_cards:
         word, definition = current_cards[card_index]
-        
+
+        # Retrieve the set_id and the card_id
+        set_name = sets_combobox.get()
+        set_id = get_sets(conn).get(set_name)
+        card_id_query = '''SELECT id FROM flashcards WHERE set_id = ? AND word = ? AND definition = ?'''
+        cursor = conn.cursor()
+        cursor.execute(card_id_query, (set_id, word, definition))
+        card_id = cursor.fetchone()[0]
+
         # Create a popup window to edit the flashcard
         edit_window = tk.Toplevel(fc_window)
         edit_window.title('Edit card')
-        
+
         # Entry fields to edit the word and definition
         new_word_var = tk.StringVar(value=word)
         new_definition_var = tk.StringVar(value=definition)
-        
+
         new_word_label = ttk.Label(edit_window, text='New Word:')
         new_word_entry = ttk.Entry(edit_window, textvariable=new_word_var)
-        
+
         new_definition_label = ttk.Label(edit_window, text='New Definition:')
         new_definition_entry = ttk.Entry(edit_window, textvariable=new_definition_var)
-        
-        # Button to confirm changes
-        confirm_button = ttk.Button(edit_window, text='Confirm', command=lambda: confirm_edit(edit_window, new_word_var.get(), new_definition_var.get()))
-        
+
+        # Button to confirm changes, passing the card_id and card_index as well
+        confirm_button = ttk.Button(edit_window, text='Confirm', 
+                                    command=lambda: confirm_edit(edit_window, card_id, card_index, new_word_var.get(), new_definition_var.get()))
+
         new_word_label.grid(row=0, column=0, padx=10, pady=5, sticky='w')
         new_word_entry.grid(row=0, column=1, padx=10, pady=5, sticky='w')
         new_definition_label.grid(row=1, column=0, padx=10, pady=5, sticky='w')
         new_definition_entry.grid(row=1, column=1, padx=10, pady=5, sticky='w')
         confirm_button.grid(row=2, column=0, columnspan=2, pady=10)
 
-def confirm_edit(edit_window, new_word, new_definition):
+
+def confirm_edit(edit_window, card_id, card_index, new_word, new_definition):
+    global current_cards  # Declare current_cards as global here
     if current_cards:
+        edit_card(conn, card_id, new_word, new_definition)
+        edit_window.destroy()
+
         set_name = sets_combobox.get()
         if set_name:
-            set_id = get_sets(conn)[set_name]
-            card_id = get_cards(conn, set_id)[card_index][0]  
-            edit_card(conn, card_id, new_word, new_definition)
-            edit_window.destroy()
-            display_flashcards(get_cards(conn, set_id)) 
+            set_id = get_sets(conn).get(set_name)
+            cards = get_cards(conn, set_id)
+
+            # Update the display and keep the current card index
+            current_cards = cards
+            show_card_at_index(card_index)
+
+
+def show_card_at_index(index):
+    global card_index
+    global current_cards
+
+    card_index = index
+    if current_cards:
+        if 0 <= card_index < len(current_cards):
+            word, _ = current_cards[card_index]
+            word_label.config(text=word)
+            definition_label.config(text='')
+        else:
+            clear_flashcard_display()
+    else:
+        clear_flashcard_display()
+
             
 def delete_card_set():
-    if current_cards:
-        set_name = sets_combobox.get()
-        if set_name:
-            set_id = get_sets(conn)[set_name]
-            card_id = get_cards(conn, set_id)[card_index][0]  
+    global current_cards, card_index
+    set_name = sets_combobox.get()
+    if set_name:
+        set_id = get_sets(conn)[set_name]
+        if current_cards:
+            # Get the ID of the card to delete
+            word, _ = current_cards[card_index]
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT id FROM flashcards
+                WHERE set_id = ? AND word = ?
+            ''', (set_id, word))
+            card_id = cursor.fetchone()[0]
+
+            # Delete the card
             delete_card(conn, card_id)
-           
+            
+            # Refresh the card list
+            current_cards = get_cards(conn, set_id)
+
+            # Adjust card_index to point to the next card if available
+            if card_index >= len(current_cards):
+                card_index = max(0, len(current_cards) - 1)
+
+            # Display the next card if available
+            if current_cards:
+                show_card()
+            else:
+                clear_flashcard_display()
+                word_label.config(text="No cards in this set")
+                definition_label.config(text='')
+
             
 # LEARN button command
 def learn_flashcards():
@@ -281,10 +338,10 @@ def select_set():
 def display_flashcards(cards):
     global card_index
     global current_cards
-    
+
     card_index = 0
     current_cards = cards
-    
+
     # Clear the display
     if not cards:
         clear_flashcard_display()
@@ -320,7 +377,7 @@ def flip_card():
     if current_cards:
         _, definition = current_cards[card_index]
         definition_label.config(text=definition)
-        
+    
 # Function to move to the next card
 def next_card():
     global card_index
@@ -338,7 +395,8 @@ def prev_card():
     if current_cards:
         card_index = max(card_index -1, 0)
         show_card()
-    
+
+
 if __name__ == '__main__':
     # Connect to the SQLite database and create tables
     conn = sqlite3.connect('flashcard.db')
@@ -508,7 +566,7 @@ flip_btn.place(x=350, y=340)
 next_btn.place(x=470, y=340)
 pre_btn.place(x=230, y=340)
 
-fc_window.bind('<space>', lambda event: flip_card()) # problem [20/5]
+fc_window.bind('<space>', lambda event: (fc_window.focus_set(), flip_card())) 
 fc_window.bind('<Right>', lambda event: next_card())
 fc_window.bind('<Left>', lambda event: prev_card())
 
