@@ -6,7 +6,7 @@ import tkinter as tk
 import sqlite3
 
 # Initialize SQLite database
-conn = sqlite3.connect('tasks.db')
+conn = sqlite3.connect('mytodo.db')
 c = conn.cursor()
 c.execute('''
     CREATE TABLE IF NOT EXISTS tasks (
@@ -16,7 +16,24 @@ c.execute('''
         category TEXT
     )
 ''')
+c.execute('''
+    CREATE TABLE IF NOT EXISTS counters (
+        name TEXT PRIMARY KEY,
+        value INTEGER
+    )
+''')
 conn.commit()
+
+# Check if task_counter exists in the counters table
+c.execute("SELECT value FROM counters WHERE name = 'task_counter'")
+result = c.fetchone()
+if result:
+    task_counter = result[0]
+else:
+    task_counter = 1
+    # Initialize task_counter in the counters table
+    c.execute("INSERT INTO counters (name, value) VALUES (?, ?)", ('task_counter', task_counter))
+    conn.commit()
 
 todo_window = customtkinter.CTk()
 todo_window.title('meow todo?')
@@ -25,6 +42,7 @@ todo_window.resizable(False,False)
 
 # add task functions [with deadline]
 def add_task():
+    global task_counter
     task = task_entry.get()
     if not task:
         messagebox.showerror('Error', 'Please enter a task.')
@@ -39,12 +57,15 @@ def add_task():
     if category == "Select Category":
         messagebox.showerror('Error', 'Please select a category.')
         return
-    
+        
     c.execute("INSERT INTO tasks (task, deadline, category) VALUES (?, ?, ?)", (task, deadline, category))
     conn.commit()
     
-    task_id = c.lastrowid
-    tasks_list.insert(END, f"{task_id}. {task} | Date: {deadline} | Category: {category}")
+    tasks_list.insert(END, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
+    
+    task_counter += 1
+    c.execute("UPDATE counters SET value = ? WHERE name = 'task_counter'", (task_counter,))
+    conn.commit()
     
     task_entry.delete(0, END)
     dl_entry.delete(0, END)
@@ -56,35 +77,62 @@ def remove_task():
     if selected:
         task_text = tasks_list.get(selected[0])
         task_id = int(task_text.split('.')[0])
-        
+
         c.execute("DELETE FROM tasks WHERE id=?", (task_id,))
         conn.commit()
-        
+
         tasks_list.delete(selected[0])
-        
+
+        reset_ids()
     else:
         messagebox.showerror('Error', 'Choose a task to delete')
-        
-def update_task_numbers(start_index):
-    # Iterate through tasks after the deleted task
-    for i in range(start_index, tasks_list.size()):
-        # Extract the task text
-        task_text = tasks_list.get(i)
-        # Extract the task number
-        task_number = int(task_text.split('.')[0])
-        # Update the task number
-        tasks_list.delete(i)
-        tasks_list.insert(i, f"{task_number - 1}. {task_text.split('.', 1)[1]}")
-        
 
-# load tasks function
-def load_tasks():
+def reset_ids():
     c.execute("SELECT * FROM tasks")
     tasks = c.fetchall()
-    for task in tasks:
-        task_id, task_text, deadline, category = task
-        tasks_list.insert(END, f"{task_id}. {task_text} | Date: {deadline} | Category: {category}")
 
+    # Drop the table and recreate it to reset AUTOINCREMENT
+    c.execute("DROP TABLE IF EXISTS tasks")
+    c.execute('''
+        CREATE TABLE tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            task TEXT,
+            deadline TEXT,
+            category TEXT
+        )
+    ''')
+    conn.commit()
+
+    # Insert tasks with reset ids
+    for task in tasks:
+        c.execute("INSERT INTO tasks (task, deadline, category) VALUES (?, ?, ?)", (task[1], task[2], task[3]))
+
+    conn.commit()
+    load_tasks()
+    
+# load tasks function
+def load_tasks():
+    global task_counter
+    
+    # Clear existing tasks from the listbox
+    tasks_list.delete(0, END)
+    
+    c.execute("SELECT * FROM tasks")
+    tasks = c.fetchall()
+    if tasks:
+        for task in tasks:
+            task_id, task_text, deadline, category = task
+            tasks_list.insert(END, f"{task_id}. {task_text} | Date: {deadline} | Category: {category}")
+        
+        c.execute("SELECT MAX(id) FROM tasks")
+        result = c.fetchone()
+        if result and result[0] is not None:
+            task_counter = result[0] + 1
+        else:
+            task_counter = 1
+    else:
+        task_counter = 1
+    
 # calendar functions
 def pick_date(event):
     global cal, date_window
