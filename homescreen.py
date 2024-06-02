@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from datetime import datetime
 import random
 import subprocess
 import sys
@@ -13,10 +14,10 @@ root.resizable(False, False)
 
 #PARAMETER-----------------------------------------------------------
 #fonts
-font_30 = ("Gill Sans MT", 30, "bold")
-font_15 = ("Gill Sans MT", 15)
+font_20 = ("Gill Sans MT", 20, "bold")
+font_10 = ("Gill Sans MT", 10, "bold")
 
-#quotes pictures
+#midframe pictures
 mascotpic = PhotoImage(file="picreg.png")
 qtitle = PhotoImage(file="./quotes/title/t1.png")
 
@@ -49,11 +50,24 @@ argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 
 #FUNCTIONS-----------------------------------------------------------
 
+#topframe
+
+def date_time():
+    daydate = datetime.now().strftime('%a , %d %B %Y')
+    daydatelabel.config(text=daydate)
+
+    clock = datetime.now().strftime('%H:%M:%S')
+    clocklabel.config(text=clock)
+
+    root.after(1000, date_time)
+
+#midframe
 def quote(quotepic, index):
     random_index = random.randint(0, len(images) - 1)  #Generate a random index
     quotepic.config(image=images_dict[random_index]) 
     root.after(10000, lambda idx=random_index: quote(quotepic, idx))
 
+#botframe
 def redirect_todo():
     proc = subprocess.run(argstodo)
 
@@ -71,6 +85,15 @@ def redirect_flash():
 
 
 #WIDGETS and PACKING-------------------------------------------------
+#header
+topframe = Frame(root, bg="#FFFFFF", padx=10, pady=5)
+topframe.pack(side="top")
+
+clocklabel = Label(topframe, font=font_20, bg="#FFFFFF")
+clocklabel.grid(row=0, column=0)
+
+daydatelabel = Label(topframe, font=font_10, bg="#FFFFFF")
+daydatelabel.grid(row=1, column=0)
 
 #middle
 midframe = Frame(root, bg="#FFFFFF", borderwidth=0)
@@ -85,7 +108,7 @@ midframe2.grid(row=0, column=1)
 '''mascot = Label(midframe1, image=mascotpic)
 mascot.grid(row=0, column=0, rowspan=2)'''
 
-quotetitle = Label(midframe2, bg="#FFFFFF", font=font_15, image=qtitle)
+quotetitle = Label(midframe2, bg="#FFFFFF", image=qtitle)
 quotetitle.grid(row=0, column=0, pady=(5))
 
 quotepic = Label(midframe2)
@@ -112,4 +135,5 @@ flash_button = Button(botframe, image=flash_pic, bg= "#FFFFFF", borderwidth=0, c
 flash_button.grid(row= 1, column= 5, padx=10)
 
 
+date_time()
 root.mainloop()
