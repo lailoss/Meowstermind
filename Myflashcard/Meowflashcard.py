@@ -577,4 +577,5 @@ edit_flashcard_button.place(x=100, y=100)
 delete_flashcard_button = ttk.Button(tab2, text='Delete card', command=delete_card_set)
 delete_flashcard_button.place(x=180, y=100)
 
+populate_sets_combobox()
 fc_window.mainloop()
