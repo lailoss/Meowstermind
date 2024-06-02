@@ -10,7 +10,7 @@ REGwindow.title("Registration")
 REGwindow.configure(bg="#E8D09C")
 
 
-conn = sqlite3.connect("account.db") #create / fetch database
+conn = sqlite3.connect("database.db") #create / fetch database
 c = conn.cursor() #create cursor
 
 
@@ -22,10 +22,12 @@ c = conn.cursor() #create cursor
     )""")'''
 
 #PARAMETER-----------------------------------------------------------
+#fonts
 font_30 = ("Gill Sans MT", 30, "bold")
 font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
+#path
 pathlogin = "login.py"
 argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
 
@@ -47,7 +49,7 @@ def signup():
         return False
 
     else: 
-        conn = sqlite3.connect("account.db") #create / fetch database
+        conn = sqlite3.connect("database.db") #create / fetch database
         c = conn.cursor() #create cursor
 
         #insert into table

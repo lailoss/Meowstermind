@@ -10,7 +10,7 @@ admin.title("Admin Page")
 #FUNCTIONS ----------------------------------------------------------
 
 def query():
-    conn = sqlite3.connect("account.db") #create / fetch database
+    conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
     c.execute("SELECT *, oid FROM userinfo")
@@ -41,7 +41,7 @@ def query():
 
 
 def save():
-    conn = sqlite3.connect("account.db") #create / fetch database
+    conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
     idnum = identry.get()
@@ -68,7 +68,7 @@ def edit():
     editor.configure(bg="#99BDFA")
     editor.title("Editor") 
 
-    conn = sqlite3.connect("account.db") #create / fetch database
+    conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
     idnum = identry.get()
@@ -111,7 +111,7 @@ def edit():
 
 
 def delete():
-    conn = sqlite3.connect("account.db") #create / fetch database
+    conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
     #delete from record

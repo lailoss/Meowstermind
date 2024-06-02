@@ -10,7 +10,7 @@ LOGwindow.geometry("600x600")
 LOGwindow.title("Login Page")
 LOGwindow.configure(bg="#E8D09C")
 
-conn = sqlite3.connect("account.db") #create / fetch database
+conn = sqlite3.connect("database.db") #create / fetch database
 c = conn.cursor() #create cursor
 
 
@@ -32,7 +32,7 @@ def login():
     username = username_entry.get().strip()
     password = password_entry.get().strip()
 
-    conn = sqlite3.connect("account.db") #create / fetch database
+    conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
     #scans through the table
