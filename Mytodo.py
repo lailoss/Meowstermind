@@ -6,7 +6,7 @@ import tkinter as tk
 import sqlite3
 
 # Initialize SQLite database
-conn = sqlite3.connect('mytodo.db')
+conn = sqlite3.connect('database.db')
 c = conn.cursor()
 c.execute('''
     CREATE TABLE IF NOT EXISTS tasks (
