@@ -42,7 +42,7 @@ def login():
     if user: #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
         LOGwindow.destroy()
-        proc = subprocess.run(argshome)
+        proc = subprocess.run([sys.executable, "homescreen.py", username])
 
     elif (username == "meow", password == "1234"):
         LOGwindow.destroy()
