@@ -3,7 +3,15 @@ from tkinter import *
 from tkcalendar import*
 from tkinter import messagebox
 import tkinter as tk
+import sys
 import sqlite3
+
+if len(sys.argv) < 2:
+    print("Usage: python script.py <username>")
+    sys.exit(1)
+
+# Get the username from the command line arguments
+username = sys.argv[1]
 
 # Initialize SQLite database
 conn = sqlite3.connect('database.db')
@@ -13,7 +21,8 @@ c.execute('''
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         task TEXT,
         deadline TEXT,
-        category TEXT
+        category TEXT,
+        username TEXT
     )
 ''')
 c.execute('''
@@ -58,7 +67,7 @@ def add_task():
         messagebox.showerror('Error', 'Please select a category.')
         return
         
-    c.execute("INSERT INTO tasks (task, deadline, category) VALUES (?, ?, ?)", (task, deadline, category))
+    c.execute("INSERT INTO tasks (task, deadline, category, username) VALUES (?, ?, ?, ?)", (task, deadline, category, username))
     conn.commit()
     
     tasks_list.insert(END, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
@@ -78,7 +87,7 @@ def remove_task():
         task_text = tasks_list.get(selected[0])
         task_id = int(task_text.split('.')[0])
 
-        c.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+        c.execute("DELETE FROM tasks WHERE id=? AND username=?", (task_id,username))
         conn.commit()
 
         tasks_list.delete(selected[0])
@@ -88,7 +97,7 @@ def remove_task():
         messagebox.showerror('Error', 'Choose a task to delete')
 
 def reset_ids():
-    c.execute("SELECT * FROM tasks")
+    c.execute("SELECT * FROM tasks WHERE username=?", (username,))
     tasks = c.fetchall()
 
     # Drop the table and recreate it to reset AUTOINCREMENT
@@ -98,33 +107,34 @@ def reset_ids():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             task TEXT,
             deadline TEXT,
-            category TEXT
+            category TEXT,
+            username TEXT
         )
     ''')
     conn.commit()
 
     # Insert tasks with reset ids
     for task in tasks:
-        c.execute("INSERT INTO tasks (task, deadline, category) VALUES (?, ?, ?)", (task[1], task[2], task[3]))
+        c.execute("INSERT INTO tasks (task, deadline, category, username) VALUES (?, ?, ?, ?)", (task[1], task[2], task[3], username))
 
     conn.commit()
-    load_tasks()
+    load_tasks(username)
     
 # load tasks function
-def load_tasks():
+def load_tasks(user):
     global task_counter
     
     # Clear existing tasks from the listbox
     tasks_list.delete(0, END)
     
-    c.execute("SELECT * FROM tasks")
+    c.execute("SELECT * FROM tasks WHERE username=?", (user,))
     tasks = c.fetchall()
     if tasks:
         for task in tasks:
-            task_id, task_text, deadline, category = task
+            task_id, task_text, deadline, category, username = task
             tasks_list.insert(END, f"{task_id}. {task_text} | Date: {deadline} | Category: {category}")
         
-        c.execute("SELECT MAX(id) FROM tasks")
+        c.execute("SELECT MAX(id) FROM tasks WHERE username=?", (user,))
         result = c.fetchone()
         if result and result[0] is not None:
             task_counter = result[0] + 1
@@ -206,5 +216,5 @@ dl_entry.place(x=390, y=150, width=100, height=20)
 dl_entry.insert(0, "mm/dd/yyyy")
 dl_entry.bind("<1>", pick_date)
 
-load_tasks()
+load_tasks(username)
 todo_window.mainloop()

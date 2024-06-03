@@ -4,6 +4,10 @@ from datetime import datetime
 import random
 import subprocess
 import sys
+
+# Get the username from the command line arguments
+username = sys.argv[1]
+
 root = Tk()
 root.geometry("1200x700")
 root.title("Home Screen")
@@ -69,19 +73,19 @@ def quote(quotepic, index):
 
 #botframe
 def redirect_todo():
-    proc = subprocess.run(argstodo)
+    proc = subprocess.run([sys.executable, "Mytodo.py", username])
 
 def redirect_music():
-    proc = subprocess.run(argsmusic)
+    proc = subprocess.run([sys.executable, "Meowmusic.py", username])
 
 def redirect_pomo():
-    proc = subprocess.run(argspomo)
+    proc = subprocess.run([sys.executable, "pomodoro.py", username])
 
 def redirect_scratch():
-    proc = subprocess.run(argsscratch)
+    proc = subprocess.run([sys.executable, "scratchpadv2.py", username])
 
 def redirect_flash():
-    proc = subprocess.run(argsflash)
+    proc = subprocess.run([sys.executable, "Meowflashcard.py", username])
 
 
 #WIDGETS and PACKING-------------------------------------------------
