@@ -44,7 +44,7 @@ def login():
         LOGwindow.destroy()
         proc = subprocess.run([sys.executable, "homescreen.py", username])
 
-    elif (username == "meow", password == "1234"):
+    elif (username == "meow" and password == "1234"):
         LOGwindow.destroy()
         proc = subprocess.run(argsadmin)
 
