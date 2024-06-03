@@ -37,7 +37,7 @@ flash_pic = PhotoImage(file="./icons/icon5.png")
 
 #paths
 pathtodo = "Meowtodo.py"
-argstodo = '"%s" "%s"' % (sys.executable, pathtodo)
+argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
 
 pathpomo = "pomodoro.py"
 argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
