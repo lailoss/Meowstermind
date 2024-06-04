@@ -1,7 +1,38 @@
+import random
 from tkinter import *
+import pygame
+from tkinter import font
+import time
+import os
+from tkinter import messagebox
 import sqlite3
-import login
-  
+import sys
+
+pygame.mixer.init()
+
+if len(sys.argv) < 2:
+    print("Usage: python script.py <username>")
+    sys.exit(1)
+
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
+c.execute('''
+    CREATE TABLE IF NOT EXISTS timer (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        hours_studied INTEGER,
+        username TEXT
+    )
+''')
+c.execute('''
+    CREATE TABLE IF NOT EXISTS counters (
+        name TEXT PRIMARY KEY,
+        value INTEGER
+    )
+''')
+conn.commit()
+
+
+
 #window
 pom=Tk()
 pom.geometry('600x300') 
@@ -11,46 +42,9 @@ pom.iconbitmap('./images/pomodoroIcon.ico')
 canvas = Canvas()
 pom.resizable(False, False)
 
-logged_user= login.logged_user
 
-#coin_column
-def coin_column():
-    connect = sqlite3.connect('account.db')
-    cursor=connect.cursor()
-    
-    cursor.execute("PRAGMA table_info(userinfo)")
-    column=[info[1] for info in cursor.fetchall()]
-    
-    if 'coins' not in column:
-        cursor.execute("ALTER TABLE userinfo ADD COLUMN coins INTEGER DEFAULT 0")
-    connect.commit()
-    connect.close()
-    
-#add coins
-def add_coins(username,coins_added):
-    connect=sqlite3.connect('account.db')
-    cursor=connect.cursor()
-    cursor.execute("UPDATE userinfo SET coins = coins + ? WHERE username=?",(add_coins, username))
-    connect.commit()
-    connect.close()
-    
-def reward_coins(username, coinstoadd):
-    add_coins(username, coinstoadd)
-    
-def get_user(username):
-    connect = sqlite3.connect('account.db')
-    cursor = connect.cursor()
-    cursor.execute("SELECT username FROM userinfo WHERE username = ?", (username,))
-    user = cursor.fetchone()
-    connect.close()
-    if user:
-        return user[0]
-    else:
-        raise ValueError("User not found")
-    
-coin_column()
-username =logged_user
-get_user(username)
+
+
 
    
 #consts
@@ -66,13 +60,10 @@ current_time=None
 short_breaktime=False
 long_breaktime=False
 breaktime=False
-study_minutes=0
 
-
-#backgground
+#background
 bg=Label(pom, image=bg_img)
 bg.pack()
-
 
 #time tracker
 hrs = StringVar(pom, value='00')
@@ -91,16 +82,51 @@ Label(pom,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
 
+# Play selected song
+def play_selected_song():
+    with open("selected_songs.txt", "r") as file:
+        songs = file.readlines()
+    if songs:
+        song = random.choice(songs).strip()
+        pygame.mixer.music.load(song)
+        pygame.mixer.music.play()
+    #try:
+        #with open("selected_song.txt", "r") as file:
+            #songs = [line.strip() for line in file.readlines()]
 
-#starts time
+        #for song_path in songs:
+            #pygame.mixer.music.load(song_path)
+            #pygame.mixer.music.play()
+        #2 try:
+        #with open("selected_song.txt", "r") as file:
+        #    song_path = file.read()
+        #pygame.mixer.music.load(song_path)
+        #pygame.mixer.music.play(loops=0)
+            
+    #except Exception as e:
+        #messagebox.showerror("Error", f"Could not play song: {e}")
+
 def start_timer():
+    global paused_position
     global time_run
-    time_run=True
+
+    if paused_position is not None:
+        # Resume from the paused position
+        pygame.mixer.music.unpause()
+        pygame.mixer.music.set_pos(paused_position)
+    else:
+        # Play the song when the timer starts
+        play_selected_song()
+    
+    time_run = True
     timer()
+    
    
 def pause_timer():
-    global time_run
+    global time_run, paused_position
     time_run=False
+    paused_position = pygame.mixer.music.get_pos() / 1000.0
+    pygame.mixer.music.pause()  # Pause the music
     print('timer has paused')
     global current_time
     pom.after_cancel(current_time) #cancels the operation above
@@ -118,7 +144,7 @@ def pause_timer():
     pausemsg=Label(pause_popup, text='DON’T STOP UNTIL YOU’RE PROUD.', font=('arial 10 bold'), bg='#FAF9F7')
     pausemsg.place(x='35', y='70')
 
-    
+
 def stop_timer():
     global time_run
     time_run=False
@@ -264,7 +290,6 @@ pausebutton=Button(pom, text='pause', image=pauseicon, bg='white', borderwidth=0
 stopicon=PhotoImage(file='./images/stop.png')
 stopbutton=Button(pom,text='stop', image=stopicon, bg='white', borderwidth=0, command=stop_timer).place(x='350',y='250')
 
-
     
 moyen=PhotoImage(file='./images/MOYEN.png')
 moolan=PhotoImage(file='./images/MOOLAN.png')
@@ -275,8 +300,6 @@ workbbutton=Button(pom, image=moolan, bg=pink, font='comfortaa 18 bold', borderw
 workbbutton.place(x='270',y=' 160')
 workcbutton=Button(pom, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
 workcbutton.place(x='365',y=' 160')
-
-
 
 
 pom.mainloop()

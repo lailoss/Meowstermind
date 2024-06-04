@@ -3,18 +3,55 @@ from tkinter import *
 from tkcalendar import*
 from tkinter import messagebox
 import tkinter as tk
+import sys
+import sqlite3
+
+if len(sys.argv) < 2:
+    print("Usage: python script.py <username>")
+    sys.exit(1)
+
+# Get the username from the command line arguments
+username = sys.argv[1]
+
+# Initialize SQLite database
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
+c.execute('''
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task TEXT,
+        deadline TEXT,
+        category TEXT,
+        username TEXT
+    )
+''')
+c.execute('''
+    CREATE TABLE IF NOT EXISTS counters (
+        name TEXT PRIMARY KEY,
+        value INTEGER
+    )
+''')
+conn.commit()
+
+# Check if task_counter exists in the counters table
+c.execute("SELECT value FROM counters WHERE name = 'task_counter'")
+result = c.fetchone()
+if result:
+    task_counter = result[0]
+else:
+    task_counter = 1
+    # Initialize task_counter in the counters table
+    c.execute("INSERT INTO counters (name, value) VALUES (?, ?)", ('task_counter', task_counter))
+    conn.commit()
 
 todo_window = customtkinter.CTk()
 todo_window.title('meow todo?')
 todo_window.geometry('800x500')
 todo_window.resizable(False,False)
 
-# global variable to store the task counter
-task_counter = 1
-
 # add task functions [with deadline]
 def add_task():
-    global task_counter 
+    global task_counter
     task = task_entry.get()
     if not task:
         messagebox.showerror('Error', 'Please enter a task.')
@@ -29,53 +66,83 @@ def add_task():
     if category == "Select Category":
         messagebox.showerror('Error', 'Please select a category.')
         return
+        
+    c.execute("INSERT INTO tasks (task, deadline, category, username) VALUES (?, ?, ?, ?)", (task, deadline, category, username))
+    conn.commit()
     
-    tasks_list.insert(task_counter + 1, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
-    task_counter += 1 #increment the task counter
+    tasks_list.insert(END, f"{task_counter}. {task} | Date: {deadline} | Category: {category}")
+    
+    task_counter += 1
+    c.execute("UPDATE counters SET value = ? WHERE name = 'task_counter'", (task_counter,))
+    conn.commit()
+    
     task_entry.delete(0, END)
     dl_entry.delete(0, END)
     category_var.set("Select Category")  # Reset the dropdown menu
-    save_tasks()
-
         
 # remove task function     
 def remove_task():
     selected = tasks_list.curselection()
     if selected:
+        task_text = tasks_list.get(selected[0])
+        task_id = int(task_text.split('.')[0])
+
+        c.execute("DELETE FROM tasks WHERE id=? AND username=?", (task_id,username))
+        conn.commit()
+
         tasks_list.delete(selected[0])
-        update_task_numbers(selected[0])
-        save_tasks()
+
+        reset_ids()
     else:
         messagebox.showerror('Error', 'Choose a task to delete')
-        
-def update_task_numbers(start_index):
-    # Iterate through tasks after the deleted task
-    for i in range(start_index, tasks_list.size()):
-        # Extract the task text
-        task_text = tasks_list.get(i)
-        # Extract the task number
-        task_number = int(task_text.split('.')[0])
-        # Update the task number
-        tasks_list.delete(i)
-        tasks_list.insert(i, f"{task_number - 1}. {task_text.split('.', 1)[1]}")
-        
-# save task function     
-def save_tasks():
-    with open("tasks.txt", "w") as f:
-        tasks = tasks_list.get(0,END)
+
+def reset_ids():
+    c.execute("SELECT * FROM tasks WHERE username=?", (username,))
+    tasks = c.fetchall()
+
+    # Drop the table and recreate it to reset AUTOINCREMENT
+    c.execute("DROP TABLE IF EXISTS tasks")
+    c.execute('''
+        CREATE TABLE tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            task TEXT,
+            deadline TEXT,
+            category TEXT,
+            username TEXT
+        )
+    ''')
+    conn.commit()
+
+    # Insert tasks with reset ids
+    for task in tasks:
+        c.execute("INSERT INTO tasks (task, deadline, category, username) VALUES (?, ?, ?, ?)", (task[1], task[2], task[3], username))
+
+    conn.commit()
+    load_tasks(username)
+    
+# load tasks function
+def load_tasks(user):
+    global task_counter
+    
+    # Clear existing tasks from the listbox
+    tasks_list.delete(0, END)
+    
+    c.execute("SELECT * FROM tasks WHERE username=?", (user,))
+    tasks = c.fetchall()
+    if tasks:
         for task in tasks:
-            f.write(task + "\n")
-
-# task save as txt file inside the folder        
-def load_tasks():
-    try:
-        with open("tasks.txt", "r") as f:
-            tasks = f.readlines()
-            for task in tasks:
-                tasks_list.insert(0, task.strip())
-    except FileNotFoundError:
-        pass
-
+            task_id, task_text, deadline, category, username = task
+            tasks_list.insert(END, f"{task_id}. {task_text} | Date: {deadline} | Category: {category}")
+        
+        c.execute("SELECT MAX(id) FROM tasks WHERE username=?", (user,))
+        result = c.fetchone()
+        if result and result[0] is not None:
+            task_counter = result[0] + 1
+        else:
+            task_counter = 1
+    else:
+        task_counter = 1
+    
 # calendar functions
 def pick_date(event):
     global cal, date_window
@@ -149,5 +216,5 @@ dl_entry.place(x=390, y=150, width=100, height=20)
 dl_entry.insert(0, "mm/dd/yyyy")
 dl_entry.bind("<1>", pick_date)
 
-load_tasks()
+load_tasks(username)
 todo_window.mainloop()

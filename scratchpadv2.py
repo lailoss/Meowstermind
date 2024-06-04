@@ -4,7 +4,7 @@ import sqlite3
 
 
 #database
-connect=sqlite3.connect('nota.db')
+connect=sqlite3.connect('database.db')
 cursor=connect.cursor() #allow you to send SQL commands to database
 cursor.execute("CREATE TABLE IF NOT EXISTS nota (title PRIMARY KEY, content TEXT)")
 connect.commit()
