@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 # Get the username from the command line arguments
-username = sys.argv[1]
+#username = sys.argv[1]
 
 root = Tk()
 root.geometry("1200x700")
@@ -36,8 +36,8 @@ music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
 #paths
-pathtodo = "Meowtodo.py"
-argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
+'''pathtodo = "Meowtodo.py"
+argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)'''
 
 pathpomo = "pomodoro.py"
 argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
@@ -91,13 +91,22 @@ def redirect_flash():
 #WIDGETS and PACKING-------------------------------------------------
 #header
 topframe = Frame(root, bg="#FFFFFF", padx=10, pady=5)
-topframe.pack(side="top")
+topframe.pack(side="top", fill=X)
 
 clocklabel = Label(topframe, font=font_20, bg="#FFFFFF")
 clocklabel.grid(row=0, column=0)
 
 daydatelabel = Label(topframe, font=font_10, bg="#FFFFFF")
 daydatelabel.grid(row=1, column=0)
+
+info_button = Button(topframe, bg="#FFFFFF", image=todo_pic)
+info_button.grid(row=0, column=1, rowspan=2)
+
+rewards_button = Button(topframe, bg="#FFFFFF", image=pomo_pic)
+rewards_button.grid(row=0, column=2, rowspan=2)
+
+acc_button = Button(topframe, bg="#FFFFFF", image=scratch_pic)
+acc_button.grid(row=0, column=3, rowspan=2)
 
 #middle
 midframe = Frame(root, bg="#FFFFFF", borderwidth=0)
