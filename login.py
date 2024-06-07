@@ -8,7 +8,7 @@ LOGwindow = None  # Global variable to hold the login window
 LOGwindow = Tk()
 LOGwindow.geometry("600x600")
 LOGwindow.title("Login Page")
-LOGwindow.configure(bg="#E8D09C")
+LOGwindow.configure(bg="#E8D09C") 
 
 conn = sqlite3.connect("database.db") #create / fetch database
 c = conn.cursor() #create cursor
@@ -42,9 +42,10 @@ def login():
     if user: #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
         LOGwindow.destroy()
+        print(f"Username to be passed: {username}")
         proc = subprocess.run([sys.executable, "homescreen.py", username])
 
-    elif (username == "meow", password == "1234"):
+    elif (username == "meow" and password == "1234"):
         LOGwindow.destroy()
         proc = subprocess.run(argsadmin)
 
