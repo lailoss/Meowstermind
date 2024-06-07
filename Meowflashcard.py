@@ -3,7 +3,18 @@ import tkinter as tk
 from tkinter import CENTER, ttk
 from tkinter import messagebox
 import customtkinter
+import sys
 from ttkbootstrap import Style as ttkstyle
+
+if len(sys.argv) < 2:
+    print("Usage: python script.py <username>")
+    sys.exit(1)
+
+# Get the username from the command line arguments
+username = sys.argv[1]
+
+# Initialize SQLite database
+conn = sqlite3.connect('database.db')
 
 fc_window = tk.Tk()
 fc_window.title("Meow Flashcard")
@@ -15,35 +26,36 @@ def switch_to_flashcards():
     
 # Functions
 # Create database tables if they don't exist
-def create_tables(conn):
+def create_tables(conn, username):
     cursor = conn.cursor()
     
     # Create flashcard_sets table
-    cursor.execute(''' 
-        CREATE TABLE IF NOT EXISTS flashcard_sets (
+    cursor.execute(f''' 
+        CREATE TABLE IF NOT EXISTS {username}_flashcard_sets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL   
         )                  
 ''')
     
     # Create flashcards table with foreign key reference to flashcard_sets
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS flashcards(
+    cursor.execute(f'''
+        CREATE TABLE IF NOT EXISTS {username}_flashcards(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             set_id INTEGER NOT NULL,
             word TEXT NOT NULL,
             definition TEXT NOT NULL,
-            FOREIGN KEY (set_id) REFERENCES flashcard_sets(id)
+            FOREIGN KEY (set_id) REFERENCES {username}_flashcard_sets(id)
         )
     ''')
+    conn.commit()
     
     # Add a new flashcard set to the database
-def add_set(conn, name):
+def add_set(conn, username, name):
         cursor = conn.cursor()
         
         # Insert the set name into flashcard_sets table
-        cursor.execute('''
-             INSERT INTO flashcard_sets(name)
+        cursor.execute(f'''
+             INSERT INTO {username}_flashcard_sets(name)
              VALUES(?)      
         ''',(name,))
         
@@ -53,12 +65,12 @@ def add_set(conn, name):
         return set_id
     
 # Function to add a flashcard to the database
-def add_card(conn, set_id, word, definition):
+def add_card(conn, username, set_id, word, definition):
     cursor = conn.cursor()
     
     # Execute SQL query to insert a new flashcard into the database
-    cursor.execute(''' 
-         INSERT INTO flashcards (set_id, word, definition)
+    cursor.execute(f''' 
+         INSERT INTO {username}_flashcards (set_id, word, definition)
          VALUES (?, ?, ?)
     ''', (set_id, word, definition))
     
@@ -69,12 +81,12 @@ def add_card(conn, set_id, word, definition):
     return card_id
 
 # Function to retrieve all flashcard sets from the database
-def get_sets(conn):
+def get_sets(conn, username):
     cursor = conn.cursor()
         
     # Execite SQL query to fetch all flashcard sets
-    cursor.execute(''' 
-        SELECT id, name FROM flashcard_sets
+    cursor.execute(f''' 
+        SELECT id, name FROM {username}_flashcard_sets
     ''')
         
     rows = cursor.fetchall()
@@ -83,11 +95,11 @@ def get_sets(conn):
     return sets
     
 # Function to retrieve all flashcards of a specific set
-def get_cards(conn, set_id):
+def get_cards(conn,username, set_id):
     cursor = conn.cursor()
     
-    cursor.execute(''' 
-        SELECT word, definition FROM flashcards
+    cursor.execute(f''' 
+        SELECT word, definition FROM {username}_flashcards
         WHERE set_id = ?
     ''', (set_id,))
     
@@ -97,23 +109,12 @@ def get_cards(conn, set_id):
     return cards
         
 # Function to delete a flashcard set from the database
-def delete_set(conn, set_id):
+def delete_set(conn, username, set_id):
     cursor = conn.cursor()
     
     # Execute SQL query to delete a flashcard set
-    cursor.execute('''
-        DELETE FROM flashcard_sets
-        WHERE id = ?
-    ''', (set_id,))
-    
-    conn.commit()
-    sets_combobox.set('')
-    clear_flashcard_display()
-    populate_sets_combobox()
-    
-    # Delete the set itself
-    cursor.execute('''
-        DELETE FROM flashcard_sets
+    cursor.execute(f'''
+        DELETE FROM {username}_flashcard_sets
         WHERE id = ?
     ''', (set_id,))
     
@@ -131,8 +132,8 @@ def delete_set(conn, set_id):
 def create_set():
     set_name = set_name_var.get()
     if set_name:
-        if set_name not in get_sets(conn):
-            set_id = add_set(conn, set_name)
+        if set_name not in get_sets(conn, username):
+            set_id = add_set(conn, username, set_name)
             populate_sets_combobox()
             set_name_var.set('')
             
@@ -148,12 +149,12 @@ def add_word():
     definition = definition_var.get()
     
     if set_name and word and definition:
-        if set_name not in get_sets(conn):
-            set_id = add_set(conn, set_name)
+        if set_name not in get_sets(conn, username):
+            set_id = add_set(conn,username, set_name)
         else:
-            set_id = get_sets(conn)[set_name]
+            set_id = get_sets(conn, username)[set_name]
             
-        add_card(conn, set_id, word, definition)
+        add_card(conn, username, set_id, word, definition)
         
         terms_var.set('')
         definition_var.set('')    
@@ -162,15 +163,15 @@ def add_word():
         select_set() # Refresh display after adding a new word
 
 def populate_sets_combobox():
-    sets_combobox['values'] = tuple(get_sets(conn).keys())
+    sets_combobox['values'] = tuple(get_sets(conn, username).keys())
     
 # Function to delete a flashcard from the database
 def delete_card(conn, card_id):
     cursor = conn.cursor()
     
     # Execute SQL query to delete a flashcard
-    cursor.execute('''
-        DELETE FROM flashcards
+    cursor.execute(f'''
+        DELETE FROM {username}_flashcards
         WHERE id = ?
     ''', (card_id,))
     
@@ -181,8 +182,8 @@ def edit_card(conn, card_id, new_word, new_definition):
     cursor = conn.cursor()
     
     # Execute SQL query to update the word and definition of a flashcard
-    cursor.execute('''
-        UPDATE flashcards
+    cursor.execute(f'''
+        UPDATE {username}_flashcards
         SET word = ?, definition = ?
         WHERE id = ?
     ''', (new_word, new_definition, card_id))
@@ -199,13 +200,11 @@ def delete_selected_set():
         )
         
         if result == tk.YES:
-            set_id = get_sets(conn)[set_name]
-            delete_set(conn, set_id)
+            set_id = get_sets(conn, username)[set_name]
+            delete_set(conn, username, set_id)
             populate_sets_combobox()
             clear_flashcard_display()
 
-
-    
 # Function to edit a selected flashcard
 def edit_selected_card():
     if current_cards:
@@ -213,8 +212,8 @@ def edit_selected_card():
 
         # Retrieve the set_id and the card_id
         set_name = sets_combobox.get()
-        set_id = get_sets(conn).get(set_name)
-        card_id_query = '''SELECT id FROM flashcards WHERE set_id = ? AND word = ? AND definition = ?'''
+        set_id = get_sets(conn, username).get(set_name)
+        card_id_query = f'''SELECT id FROM {username}_flashcards WHERE set_id = ? AND word = ? AND definition = ?'''
         cursor = conn.cursor()
         cursor.execute(card_id_query, (set_id, word, definition))
         card_id = cursor.fetchone()[0]
@@ -252,8 +251,8 @@ def confirm_edit(edit_window, card_id, card_index, new_word, new_definition):
 
         set_name = sets_combobox.get()
         if set_name:
-            set_id = get_sets(conn).get(set_name)
-            cards = get_cards(conn, set_id)
+            set_id = get_sets(conn, username).get(set_name)
+            cards = get_cards(conn, username, set_id)
 
             # Update the display and keep the current card index
             current_cards = cards
@@ -277,16 +276,16 @@ def show_card_at_index(index):
 
             
 def delete_card_set():
-    global current_cards, card_index
+    global current_cards, card_index, username
     set_name = sets_combobox.get()
     if set_name:
-        set_id = get_sets(conn)[set_name]
+        set_id = get_sets(conn, username)[set_name]
         if current_cards:
             # Get the ID of the card to delete
             word, _ = current_cards[card_index]
             cursor = conn.cursor()
-            cursor.execute('''
-                SELECT id FROM flashcards
+            cursor.execute(f'''
+                SELECT id FROM {username}_flashcards
                 WHERE set_id = ? AND word = ?
             ''', (set_id, word))
             card_id = cursor.fetchone()[0]
@@ -295,7 +294,7 @@ def delete_card_set():
             delete_card(conn, card_id)
             
             # Refresh the card list
-            current_cards = get_cards(conn, set_id)
+            current_cards = get_cards(conn, username, set_id)
 
             # Adjust card_index to point to the next card if available
             if card_index >= len(current_cards):
@@ -319,8 +318,8 @@ def select_set():
     set_name = sets_combobox.get()
     
     if set_name:
-        set_id = get_sets(conn)[set_name]
-        cards = get_cards(conn, set_id)
+        set_id = get_sets(conn, username)[set_name]
+        cards = get_cards(conn, username, set_id)
         
         if cards:
             display_flashcards(cards)
@@ -399,8 +398,8 @@ def prev_card():
 
 if __name__ == '__main__':
     # Connect to the SQLite database and create tables
-    conn = sqlite3.connect('flashcard.db')
-    create_tables(conn)
+    conn = sqlite3.connect('database.db')
+    create_tables(conn, username)
 
 # Create Notebook widget inside the inner_frame
 notebook = ttk.Notebook(fc_window)
