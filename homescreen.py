@@ -6,7 +6,7 @@ import subprocess
 import sys
 
 # Get the username from the command line arguments
-#username = sys.argv[1]
+username = sys.argv[1]
 
 root = Tk()
 root.geometry("1200x700")
@@ -48,8 +48,9 @@ argsinfo = '"%s" "%s"' % (sys.executable, pathinfo)
 '''pathtodo = "Meowtodo.py"
 argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)'''
 
-pathpomo = "pomodoro.py"
-argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
+'''pathpomo = "pomodoro.py"
+argspomo = '"%s" "%s"' % (sys.executable, pathpomo, username)'''
+
 
 pathmusic = "Meowmusic.py"
 argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
