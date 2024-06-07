@@ -201,17 +201,23 @@ def worka():
     hrs.set("00")
     mins.set("00")
     sec.set("5")
+    if is_breaktime==True:
+        break_presets()
 
     
 def workb():
     hrs.set('00')
     mins.set('40')
     sec.set('00')
+    if is_breaktime==True:
+        break_presets()
 
 def workc():
     hrs.set('01')
     mins.set('00')
     sec.set('00')
+    if is_breaktime==True:
+        break_presets()
 
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')

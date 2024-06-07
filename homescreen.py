@@ -19,7 +19,12 @@ root.resizable(False, False)
 #PARAMETER-----------------------------------------------------------
 #fonts
 font_20 = ("Gill Sans MT", 20, "bold")
-font_10 = ("Gill Sans MT", 10, "bold")
+font_15 = ("Gill Sans MT", 15, "bold")
+
+#topframe pictures
+info_pic = PhotoImage(file="./icons/iconinfo.png")
+acc_pic = PhotoImage(file="./icons/iconacc.png")
+rewards_pic = PhotoImage(file="./icons/iconrewards.png")
 
 #midframe pictures
 mascotpic = PhotoImage(file="picreg.png")
@@ -35,12 +40,17 @@ scratch_pic = PhotoImage(file="./icons/icon3.png")
 music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
-#paths
-pathtodo = "Meowtodo.py"
-argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
 
-pathpomo = "pomodoro.py"
-argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
+#paths
+pathinfo = "info.py"
+argsinfo = '"%s" "%s"' % (sys.executable, pathinfo)
+
+'''pathtodo = "Meowtodo.py"
+argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)'''
+
+'''pathpomo = "pomodoro.py"
+argspomo = '"%s" "%s"' % (sys.executable, pathpomo, username)'''
+
 
 pathmusic = "Meowmusic.py"
 argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
@@ -55,6 +65,8 @@ argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 #FUNCTIONS-----------------------------------------------------------
 
 #topframe
+def redirect_info():
+    proc = subprocess.run(argsinfo)
 
 def date_time():
     daydate = datetime.now().strftime('%a , %d %B %Y')
@@ -89,15 +101,36 @@ def redirect_flash():
 
 
 #WIDGETS and PACKING-------------------------------------------------
+
 #header
 topframe = Frame(root, bg="#FFFFFF", padx=10, pady=5)
-topframe.pack(side="top")
+topframe.pack(side="top", fill=X)
+
+'''topframe1 = Frame(topframe, bg="#FFFFFF")
+topframe1.pack(side="top", expand=True)'''
 
 clocklabel = Label(topframe, font=font_20, bg="#FFFFFF")
-clocklabel.grid(row=0, column=0)
+clocklabel.grid(row=0, column=2, pady=(5, 0))
 
-daydatelabel = Label(topframe, font=font_10, bg="#FFFFFF")
-daydatelabel.grid(row=1, column=0)
+daydatelabel = Label(topframe, font=font_15, bg="#FFFFFF")
+daydatelabel.grid(row=0, column=1, pady=(5, 0))
+
+'''topframe2 = Frame(topframe, bg="#FFFFFF")
+topframe2.pack(side="right", padx=(0, 10))'''
+
+rewards_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=rewards_pic)
+rewards_button.grid(row=0, column=3, rowspan=2, padx=(10, 0), sticky="e")
+
+acc_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=acc_pic)
+acc_button.grid(row=0, column=4, rowspan=2, padx=(10, 0), sticky="e")
+
+info_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=info_pic, command=redirect_info)
+info_button.grid(row=0, column=5, rowspan=2, padx=(10, 0), sticky="e")
+
+#topframe.grid_columnconfigure(0, weight=1)
+#topframe.grid_columnconfigure(1, weight=1)
+topframe.grid_columnconfigure(2, weight=1)
+
 
 #middle
 midframe = Frame(root, bg="#FFFFFF", borderwidth=0)
@@ -118,6 +151,7 @@ quotetitle.grid(row=0, column=0, pady=(5))
 quotepic = Label(midframe2)
 quotepic.grid(row=1, column=0, pady=5)
 quote(quotepic, 0)
+
 
 #footer
 botframe = Frame(root, bg="#FFFFFF", padx=20, pady=10, borderwidth=0)

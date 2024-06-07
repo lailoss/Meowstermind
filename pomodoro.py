@@ -5,8 +5,33 @@ from tkinter import font
 import time
 import os
 from tkinter import messagebox
+import sqlite3
+import sys
 
 pygame.mixer.init()
+
+#gets username from login
+if len(sys.argv) > 1:
+    username = sys.argv[1]
+else:
+    print("username not provided :()")
+    sys.exit(1)
+    
+    
+#create table
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
+
+# create table
+c.execute('''
+    CREATE TABLE IF NOT EXISTS timer (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        hours_studied REAL,
+        username TEXT
+    )
+''')
+conn.commit()
+
 
 #window
 pom=Tk()
@@ -17,10 +42,10 @@ pom.iconbitmap('./images/pomodoroIcon.ico')
 canvas = Canvas()
 pom.resizable(False, False)
 
+   
 #consts
 red='#d04e2f'
 peach='#FFE4B6'
-#beep=pygame. mixer.music.load('pomodoro_beep.mp3')
 bg_img=PhotoImage(file='timer.png')
 pink='#FFC5C5'
 
@@ -30,31 +55,39 @@ current_time=None
 short_breaktime=False
 long_breaktime=False
 breaktime=False
-time_run = 0
-paused_position = None
+total_hours=0
 
-#background
+paused_position=None
+total_hours=0
+timerun=False
+
+#background-------------------------------------------
 bg=Label(pom, image=bg_img)
 bg.pack()
 
-#time tracker
-hrs = StringVar(pom, value='00')
+#time tracker---------------------------------------------------
+hrs = StringVar(pom)
 hrs.set("00")
 Entry(pom, textvariable=hrs, fg='black', width=2, font='arial 40', borderwidth=0, ). place(x='100',y='80')
 Label(pom, text='HOURS', bg='white').place(x='180',y='120')
 
-mins=StringVar(pom, value='00')
+mins=StringVar(pom)
 Entry(pom, textvariable=mins, width='2',fg='black',  font='arial 40',borderwidth=0).place(x='250',y='80')
 Label(pom,text='MINS', bg='white').place(x='330',y='120')
 mins.set("00")
 
-sec=StringVar(pom, value='00')
+sec=StringVar(pom)
 Entry(pom, textvariable=sec, width=2,  fg='black', font='arial 40',borderwidth=0, bg='white'). place(x='400',y='80')
 Label(pom,text='SEC', bg='white').place(x='470',y='120')
 sec.set("00")
 
+print('Initial value of hrs:', hrs.get())
+print('Initial value of mins:', mins.get())
+print('Initial value of sec:', sec.get())
 
-# Play selected song
+
+
+# play selected song---------------------------------------------------
 def play_selected_song():
     with open("selected_songs.txt", "r") as file:
         songs = file.readlines()
@@ -78,6 +111,7 @@ def play_selected_song():
     #except Exception as e:
         #messagebox.showerror("Error", f"Could not play song: {e}")
 
+#warning; lots of FUNCTIONS----------------------------------------
 def start_timer():
     global paused_position
     global time_run
@@ -123,15 +157,13 @@ def stop_timer():
     hrs.set('00')
     mins.set('00')
     sec.set('00')
-    
 
 def break_mode():
     print('hellow world')
     global bg_timer
     bg_timer=PhotoImage(file='BREAK.png')
     bg.config(image=bg_timer)
-    break_noti.destroy()
-    
+     
     
 def study_mode():
     bg.config(image=bg_img)
@@ -139,10 +171,7 @@ def study_mode():
     mins.set('00')
     sec.set('00')
     
-def studynotigone():
-    study_noti.destroy()
 
-    
 def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
    
@@ -152,45 +181,33 @@ def timer():
     
     if total_time > 0:
         total_time -= 1
-        hrs.set(str(total_time // 3600).zfill(1))
-        mins.set(str((total_time % 3600) // 60).zfill(1))
-        sec.set(str(total_time % 60).zfill(1))
+        hrs.set(str(total_time // 3600).zfill(2))
+        mins.set(str((total_time % 3600) // 60).zfill(2))
+        sec.set(str(total_time % 60).zfill(2))
         current_time= pom.after(1000, timer) #starts countdown  
         
     else: #timer 00
+
         if not breaktime:
-            global break_noti,  break_notiimg
             breaktime=True
             cycle+=1
             is_breaktime()
             break_presets()
-            break_notiimg=PhotoImage(file='BREAK_NOTI.png')
-            break_noti = Toplevel()
-            break_noti.title(f'Break Time!')
-            break_noti.geometry('500x300')
-            break_noti.resizable(False,False)
-            break_noti.iconbitmap('./images/break_icon.ico')
-            break_notibg=Label(break_noti,image=break_notiimg)
-            break_notibg.pack()        
             break_mode()
+            
+            
         else:
-            global study_noti, studynotiimg 
+      
             breaktime=False
             study_mode()
-                
-            studynotiimg=PhotoImage(file='STUDY_NOTI.png')
-            study_noti = Toplevel()
-            study_noti.title(f'Study Time!')
-            study_noti.geometry('500x300')
-            study_noti.resizable(False,False)
-            study_noti.iconbitmap(r'./images/break_icon.ico')
-            study_notibg=Label(study_noti,image=studynotiimg)
-            study_notibg.pack()
-            studynotigone()
-
-
-
-
+            print('Time recorded:', total_time)  # Check if study time is calculated correctly
+        try:
+            c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (total_time, username))
+            conn.commit()
+            print("Study time inserted into database successfully.")  # Check if insertion is successful
+        except Exception as e:
+            print("Error inserting study time into database:", e)  # Print error if insertion fails
+        
 
 def is_breaktime():
     global short_breaktime, long_breaktime
@@ -233,22 +250,28 @@ def break_presets():
                 mins.set("25")
                 sec.set("00")
 
-#time presets
+#time presets-and boring stuff----------------------------------------
 def worka():
     hrs.set("00")
     mins.set("00")
     sec.set("5")
+    if is_breaktime==True:
+        break_presets()
 
     
 def workb():
     hrs.set('00')
     mins.set('40')
     sec.set('00')
+    if is_breaktime==True:
+        break_presets()
 
 def workc():
     hrs.set('01')
     mins.set('00')
     sec.set('00')
+    if is_breaktime==True:
+        break_presets()
 
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
@@ -269,6 +292,4 @@ workbbutton.place(x='270',y=' 160')
 workcbutton=Button(pom, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
 workcbutton.place(x='365',y=' 160')
 
-
 pom.mainloop()
-pom.update()
