@@ -102,10 +102,12 @@ def play_selected_song():
 
 #warning; lots of FUNCTIONS----------------------------------------
 def start_timer():
-    global paused_position, initial_study_time
+    global paused_position, initial_study_time , start_time
+    global time_run
     
     initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-
+    start_time = time.time()
+    
     if paused_position is not None:
         # Resume from the paused position
         pygame.mixer.music.unpause()
@@ -186,26 +188,23 @@ def timer():
             break_presets()
             break_mode()
             
+            studied_seconds = initial_study_time
+            print("Total time spent studying (in seconds):", studied_seconds)
+
+            hours_studied = studied_seconds / 3600.0
+            try:
+                c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (hours_studied, username))
+                conn.commit()
+                print("Study time inserted into database successfully.")
+            except Exception as e:
+                print("Error inserting study time into database:", e)
             
         else:
       
          breaktime = False
          study_mode()
         
-        # Calculate the current study time
-        current_study_time = initial_study_time - total_time
         
-        # Update the studied_seconds variable
-        studied_seconds = current_study_time
-        print("Total time spent studying (in seconds):", studied_seconds)
-        
-        hours_studied = studied_seconds / 3600.0
-        try:
-            c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (hours_studied, username))
-            conn.commit()
-            print("Study time inserted into database successfully.")
-        except Exception as e:
-            print("Error inserting study time into database:", e)
         
 
 def is_breaktime():
