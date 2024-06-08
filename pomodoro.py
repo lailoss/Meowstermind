@@ -32,6 +32,18 @@ c.execute('''
 ''')
 conn.commit()
 
+def ensure_background_column():
+    try:
+        c.execute("ALTER TABLE timer ADD COLUMN background TEXT")
+        conn.commit()
+    except sqlite3.OperationalError: # Column already exists
+        pass
+
+# Call the function to ensure the background column exists
+ensure_background_column()
+
+conn.commit()
+
 
 #window
 pom=Tk()
