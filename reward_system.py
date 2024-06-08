@@ -32,23 +32,20 @@ except sqlite3.OperationalError as e:
     print("OperationalError:", e)
     
 
-# Function to check if a background is unlocked 
-def is_background_unlocked(username, background):
-    c.execute("SELECT 1 FROM unlocked_backgrounds WHERE username=? AND background=? LIMIT 1", (username, background))
-    return c.fetchone() is not None
 
-# Function to unlock a background
+# let the system unlock the bg for you!
 def unlock_background(username, background):
-    if not is_background_unlocked(username, background):
+    if not has_unlocked_background(username, background):
         c.execute("INSERT INTO unlocked_backgrounds (username, background) VALUES (?, ?)", (username, background))
-        conn.commit()
+        conn.commit() #add the bg to the unlocked bg column
 
     
 #fetch database
 c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,)) #order by id desc; orders by desc order and LIMIT 1; restricts to just one row (most recent bg chosen)
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
-#backgrounds=================
+
+#backgrounds (load image)=================
 
 bgdefault=PhotoImage(file='./backgrounds/default.png')
 bgcafe=PhotoImage(file='./backgrounds/cafe.png')
@@ -66,7 +63,7 @@ backgrounds = {
 bg_image = backgrounds.get(current_background, backgrounds['default'])
 
 #stay LOCKED 
-def has_unlocked_background(username, background_name):
+def has_unlocked_background(username, background_name): #checks what bg do you have
     c.execute("SELECT unlocked_bg FROM timer WHERE username=?", (username,))
     result = c.fetchone()
     if result and result[0]:
@@ -81,6 +78,8 @@ def use_background(bg_name, hours_required):
             current_background = bg_name
             c.execute("UPDATE timer SET background=? WHERE username=?", (bg_name, username))
             conn.commit()
+            with open("current_background.txt", "w") as f:
+                f.write(bg_name)
             messagebox.showinfo("Woohoo!", f"Congrats! Your background set to {bg_name}!")
         else:
             messagebox.showinfo("Silly Billy!", f"You are already using the {bg_name} background.")
@@ -89,9 +88,11 @@ def use_background(bg_name, hours_required):
             current_background = bg_name
             c.execute("UPDATE timer SET background=?, unlocked_bg = COALESCE(unlocked_bg || ',', '') || ? WHERE username=?", (bg_name, bg_name, username))
             conn.commit()
+            with open("current_background.txt", "w") as f:
+                f.write(bg_name)
             messagebox.showinfo("Woohoo!", f"Congrats! Your background set to {bg_name}!")
         else:
-            messagebox.showwarning("Locked", f"This background is locked. You need {hours_required - total_hours} more hours to unlock it.")
+            messagebox.showwarning("Locked", f"Awww, it is locked :( you need {hours_required - total_hours} more hours to unlock it.")
 
 
 

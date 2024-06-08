@@ -19,6 +19,9 @@ root.title("Home Screen")
 root.configure(bg="#E8D09C")
 root.resizable(False, False)
 ##background-----------------------------------------
+
+
+
 c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
