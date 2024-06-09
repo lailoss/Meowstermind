@@ -6,6 +6,11 @@ admin.geometry("600x700")
 admin.configure(bg="#99BDFA")
 admin.title("Admin Page")
 
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20, "bold")
+font_15 = ("Gill Sans MT", 15)
+
 
 #FUNCTIONS ----------------------------------------------------------
 
@@ -120,16 +125,6 @@ def delete():
     identry.delete(0, END) #clear entry box
     conn.commit() #commit changes
     conn.close() #close connection
-
-'''    #clear the entry boxes
-    username.delete(0, END)
-    password.delete(0, END)'''
-
-
-#PARAMETER-----------------------------------------------------------
-font_30 = ("Gill Sans MT", 30, "bold")
-font_20 = ("Gill Sans MT", 20, "bold")
-font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS-------------------------------------------------------------
