@@ -72,8 +72,8 @@ def date_time():
     root.after(1000, date_time)
 
 #background
-
 c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
+
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
 backgrounds = {
@@ -82,9 +82,11 @@ backgrounds = {
     'cafe': PhotoImage(file='./backgrounds/cafe.png'),
     'meadow': PhotoImage(file='./backgrounds/meadow.png')
 }
+
 bg_image = backgrounds.get(current_background, backgrounds['default'])
 bg_label = Label(root, image=bg_image)
 bg_label.place(relwidth=1, relheight=1)
+
 def update_background(bg_name):
     global bg_image
     bg_image = backgrounds[bg_name]
@@ -109,9 +111,6 @@ def check_background_update():
     root.after(1000, check_background_update)
 
 
-
-
-
 #midframe
 def quote(quotepic, index):
     random_index = random.randint(0, len(images) - 1)  #Generate a random index
@@ -120,7 +119,6 @@ def quote(quotepic, index):
 
 
 #botframe
-
 def redirect_rewards(username):
     proc = subprocess.run([sys.executable, "reward_system.py", username])
 
