@@ -57,9 +57,10 @@ long_breaktime=False
 breaktime=False
 total_hours=0
 
+
 paused_position=None
 total_hours=0
-timerun=False
+time_run=False
 
 #background-------------------------------------------
 bg=Label(pom, image=bg_img)
@@ -89,33 +90,24 @@ print('Initial value of sec:', sec.get())
 
 # play selected song---------------------------------------------------
 def play_selected_song():
-    with open("selected_songs.txt", "r") as file:
-        songs = file.readlines()
-    if songs:
-        song = random.choice(songs).strip()
-        pygame.mixer.music.load(song)
-        pygame.mixer.music.play()
-    #try:
-        #with open("selected_song.txt", "r") as file:
-            #songs = [line.strip() for line in file.readlines()]
-
-        #for song_path in songs:
-            #pygame.mixer.music.load(song_path)
-            #pygame.mixer.music.play()
-        #2 try:
-        #with open("selected_song.txt", "r") as file:
-        #    song_path = file.read()
-        #pygame.mixer.music.load(song_path)
-        #pygame.mixer.music.play(loops=0)
-            
-    #except Exception as e:
-        #messagebox.showerror("Error", f"Could not play song: {e}")
+    try:
+        with open("selected_songs.txt", "r") as file:
+            songs = file.readlines()
+        if songs:
+            song = random.choice(songs).strip()
+            pygame.mixer.music.load(song)
+            pygame.mixer.music.play()
+    except Exception as e:
+        print(f"No song found or unable to play song: {e}")
 
 #warning; lots of FUNCTIONS----------------------------------------
 def start_timer():
-    global paused_position
+    global paused_position, initial_study_time , start_time
     global time_run
-
+    
+    initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
+    start_time = time.time()
+    
     if paused_position is not None:
         # Resume from the paused position
         pygame.mixer.music.unpause()
@@ -171,9 +163,10 @@ def study_mode():
     mins.set('00')
     sec.set('00')
     
+initial_study_time = 0
 
 def timer():
-    global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
+    global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode, total_hours, initial_study_time
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
@@ -195,18 +188,23 @@ def timer():
             break_presets()
             break_mode()
             
+            studied_seconds = initial_study_time
+            print("Total time spent studying (in seconds):", studied_seconds)
+
+            hours_studied = studied_seconds / 3600.0
+            try:
+                c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (hours_studied, username))
+                conn.commit()
+                print("Study time inserted into database successfully.")
+            except Exception as e:
+                print("Error inserting study time into database:", e)
             
         else:
       
-            breaktime=False
-            study_mode()
-            print('Time recorded:', total_time)  # Check if study time is calculated correctly
-        try:
-            c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (total_time, username))
-            conn.commit()
-            print("Study time inserted into database successfully.")  # Check if insertion is successful
-        except Exception as e:
-            print("Error inserting study time into database:", e)  # Print error if insertion fails
+         breaktime = False
+         study_mode()
+        
+        
         
 
 def is_breaktime():
