@@ -40,28 +40,9 @@ music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
 
-#paths
+#path
 pathinfo = "info.py"
 argsinfo = '"%s" "%s"' % (sys.executable, pathinfo)
-
-pathacc = "acc_change.py"
-argsacc = '"%s" "%s" "%s"' % (sys.executable, pathacc, username)
-
-pathtodo = "Meowtodo.py"
-argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
-
-'''pathpomo = "pomodoro.py"
-argspomo = '"%s" "%s"' % (sys.executable, pathpomo, username)'''
-
-
-pathmusic = "Meowmusic.py"
-argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
-
-pathscratch = "scratchpadv2.py"
-argsscratch = '"%s" "%s"' % (sys.executable, pathscratch)
-
-pathflash = "Meowflashcard.py"
-argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 
 
 #FUNCTIONS-----------------------------------------------------------
@@ -71,9 +52,9 @@ def redirect_info():
     proc = subprocess.run(argsinfo)
 
 def redirect_acc(username):
-    command = [sys.executable, "acc_change.py", username]
-    print(f"Redirecting to acc_change.py with command: {command}")
-    proc = subprocess.run(command)
+    command_acc = [sys.executable, "acc_change.py", username]
+    print(f"Redirecting to acc_change.py with command: {command_acc}")
+    proc = subprocess.run(command_acc)
 
 def date_time():
     daydate = datetime.now().strftime('%a , %d %B %Y')
