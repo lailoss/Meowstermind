@@ -14,7 +14,7 @@ conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
 root = Tk()
-root.geometry("1200x700")
+root.geometry("1304x734")
 root.title("Home Screen")
 root.configure(bg="#E8D09C")
 root.resizable(False, False)
