@@ -36,6 +36,9 @@ font_15 = ("Gill Sans MT", 15)
 
 #FUNCTIONS-----------------------------------------------------------
 def display():
+    for widget in tab1.winfo_children(): #destroy existing widgets in tab1
+        widget.destroy()
+
     conn = sqlite3.connect("database.db")  # Create / fetch database
     c = conn.cursor()  # Create cursor
 
@@ -73,6 +76,9 @@ def display():
 
 
 def edit():
+    for widget in tab2.winfo_children(): #destroy existing widgets in tab2
+        widget.destroy()
+
     conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
@@ -155,6 +161,9 @@ def save():
         repassword_entry.delete(0, END)
 
         messagebox.showinfo("Success", "Account updated successfully!")
+
+        conn.commit()
+        conn.close()
 
         username = newusername
         display()
