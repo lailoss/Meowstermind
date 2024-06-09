@@ -70,8 +70,10 @@ import sqlite3
 import sys
 
 print("Script started")
-print(sys.argv)
+print(f"Received arguments: {sys.argv}")
+
 # Ensure username is passed correctly from the command line arguments
+
 if len(sys.argv) > 1:
     username = sys.argv[1]
     print(f"Username received: {username}")

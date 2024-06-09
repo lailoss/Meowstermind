@@ -46,7 +46,7 @@ pathinfo = "info.py"
 argsinfo = '"%s" "%s"' % (sys.executable, pathinfo)
 
 pathacc = "acc_change.py"
-argsacc = '"%s" "%s"' % (sys.executable, pathacc)
+argsacc = '"%s" "%s" "%s"' % (sys.executable, pathacc, username)
 
 pathtodo = "Meowtodo.py"
 argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
@@ -70,8 +70,10 @@ argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 def redirect_info():
     proc = subprocess.run(argsinfo)
 
-def redirect_acc():
-    proc = subprocess.run(argsacc)
+def redirect_acc(username):
+    command = [sys.executable, "acc_change.py", username]
+    print(f"Redirecting to acc_change.py with command: {command}")
+    proc = subprocess.run(command)
 
 def date_time():
     daydate = datetime.now().strftime('%a , %d %B %Y')
@@ -128,7 +130,7 @@ topframe2.pack(side="right", padx=(0, 10))'''
 rewards_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=rewards_pic)
 rewards_button.grid(row=0, column=3, rowspan=2, padx=(10, 0), sticky="e")
 
-acc_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=acc_pic, command=redirect_acc)
+acc_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=acc_pic,command=lambda: redirect_acc(username))
 acc_button.grid(row=0, column=4, rowspan=2, padx=(10, 0), sticky="e")
 
 info_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=info_pic, command=redirect_info)
