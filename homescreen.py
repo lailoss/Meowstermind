@@ -31,7 +31,6 @@ acc_pic = PhotoImage(file="./icons/iconacc.png")
 rewards_pic = PhotoImage(file="./icons/iconrewards.png")
 
 #midframe pictures
-mascotpic = PhotoImage(file="picreg.png")
 qtitle = PhotoImage(file="./quotes/title/t1.png")
 
 images = [f"./quotes/content/wp{i}.png" for i in range(1, 11)]
@@ -162,7 +161,7 @@ topframe.grid_columnconfigure(2, weight=1)
 
 
 #middle
-midframe = Frame(root, bg="#FFFFFF", borderwidth=0)
+midframe = Frame(root, bg="#FFFFFF", borderwidth=0, highlightthickness=1, highlightbackground="#DEE0DE")
 midframe.pack(expand= TRUE)
 
 quotetitle = Label(midframe, bg="#FFFFFF", image=qtitle)
