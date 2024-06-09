@@ -1,0 +1,38 @@
+from tkinter import *
+import sqlite3
+
+acc_change = Tk()
+acc_change.geometry("400x500")
+acc_change.configure(bg="#99FF98")
+acc_change.title("Account")
+
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20)
+font_15 = ("Gill Sans MT", 15)
+
+
+#FUNCTIONS ----------------------------------------------------------
+
+
+#WIDGETS-------------------------------------------------------------
+frame=Frame(acc_change, bg="#FFFFFF", padx=20, pady=20)
+frame.pack(side="top", expand=True)
+
+acc_change_title = Label(frame, text="ACCOUNT\nSETTINGS", font=font_30, padx=0, pady=30, bg="#FFFFFF")
+acc_change_title.grid(row=0, column=0, columnspan=2, sticky="ew")
+
+username_label = Label(frame, text="Username:", font=font_15, pady=5, bg="#FFFFFF")
+username_label.grid(row=1, column=0)
+
+username_entry = Label(frame, font=font_15, bg="#FFFFFF")
+username_entry.grid(row=1, column=1)
+
+password_label = Label(frame, text="Password:", font=font_15, pady=5, bg="#FFFFFF")
+password_label.grid(row=2, column=0)
+
+password_entry = Label(frame, font=font_15, bg="#FFFFFF")
+password_entry.grid(row=2, column=1)
+
+
+acc_change.mainloop()
