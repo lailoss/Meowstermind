@@ -22,10 +22,10 @@ notebook = ttk.Notebook(acc_change)
 notebook.pack(expand=True, fill='both')
 
 tab1 = Frame(notebook, bg="#99FF98")
-notebook.add(tab1, text='Account Info')
+notebook.add(tab1, text="View Your Info")
 
 tab2 = Frame(notebook, bg="#99FF98")
-notebook.add(tab2, text='Second Function')
+notebook.add(tab2, text="Edit Your Info")
 
 
 #PARAMETER-----------------------------------------------------------
