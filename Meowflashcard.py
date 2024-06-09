@@ -369,14 +369,20 @@ def show_card():
         clear_flashcard_display()
         
 # Function to flip the current card and display its definition
-def flip_card():
+def flip_card(event=None):
     global card_index
     global current_cards
     
     if current_cards:
         _, definition = current_cards[card_index]
         definition_label.config(text=definition)
-    
+
+# Function to handle the space key press event
+def handle_space(event):
+    # Check if the focus is not on an entry widget before flipping the card
+    if fc_window.focus_get() not in [entry, entry1, entry2]:
+        flip_card()
+        
 # Function to move to the next card
 def next_card():
     global card_index
@@ -565,7 +571,7 @@ flip_btn.place(x=350, y=340)
 next_btn.place(x=470, y=340)
 pre_btn.place(x=230, y=340)
 
-fc_window.bind('<space>', lambda event: (fc_window.focus_set(), flip_card())) 
+fc_window.bind('<space>', handle_space) 
 fc_window.bind('<Right>', lambda event: next_card())
 fc_window.bind('<Left>', lambda event: prev_card())
 
