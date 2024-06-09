@@ -4,9 +4,14 @@ from datetime import datetime
 import random
 import subprocess
 import sys
+import sqlite3
+import os 
 
 # Get the username from the command line arguments
 username = sys.argv[1]
+
+conn = sqlite3.connect('database.db')
+c = conn.cursor()
 
 root = Tk()
 root.geometry("1200x700")
@@ -40,27 +45,10 @@ music_pic = PhotoImage(file="./icons/icon4.png")
 flash_pic = PhotoImage(file="./icons/icon5.png")
 
 
-#paths
+#path
 pathinfo = "info.py"
 argsinfo = '"%s" "%s"' % (sys.executable, pathinfo)
 
-pathacc = "acc_change.py"
-argsacc = '"%s" "%s" "%s"' % (sys.executable, pathacc, username)
-
-pathtodo = "Meowtodo.py"
-argstodo = '"%s" "%s" "%s"' % (sys.executable, pathtodo, username)
-
-pathpomo = "pomodoro.py"
-argspomo = '"%s" "%s"' % (sys.executable, pathpomo)
-
-pathmusic = "Meowmusic.py"
-argsmusic = '"%s" "%s"' % (sys.executable, pathmusic)
-
-pathscratch = "scratchpadv2.py"
-argsscratch = '"%s" "%s"' % (sys.executable, pathscratch)
-
-pathflash = "Meowflashcard.py"
-argsflash = '"%s" "%s"' % (sys.executable, pathflash)
 
 
 #FUNCTIONS-----------------------------------------------------------
@@ -70,9 +58,9 @@ def redirect_info():
     proc = subprocess.run(argsinfo)
 
 def redirect_acc(username):
-    command = [sys.executable, "acc_change.py", username]
-    print(f"Redirecting to acc_change.py with command: {command}")
-    proc = subprocess.run(command)
+    command_acc = [sys.executable, "acc_change.py", username]
+    print(f"Redirecting to acc_change.py with command: {command_acc}")
+    proc = subprocess.run(command_acc)
 
 def date_time():
     daydate = datetime.now().strftime('%a , %d %B %Y')
@@ -83,6 +71,45 @@ def date_time():
 
     root.after(1000, date_time)
 
+#background
+c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
+
+current_background_result = c.fetchone()
+current_background = current_background_result[0] if current_background_result else 'default'
+backgrounds = {
+    'default': PhotoImage(file='./backgrounds/default.png'),
+    'bedroom': PhotoImage(file='./backgrounds/bedroom.png'),
+    'cafe': PhotoImage(file='./backgrounds/cafe.png'),
+    'meadow': PhotoImage(file='./backgrounds/meadow.png')
+}
+
+bg_image = backgrounds.get(current_background, backgrounds['default'])
+bg_label = Label(root, image=bg_image)
+bg_label.place(relwidth=1, relheight=1)
+
+def update_background(bg_name):
+    global bg_image
+    bg_image = backgrounds[bg_name]
+    bg_label.config(image=bg_image)
+    c.execute("UPDATE timer SET background=? WHERE username=?", (bg_name, username))
+    conn.commit()
+    
+def load_background():
+    if os.path.exists("current_background.txt"):
+        with open("current_background.txt", "r") as f:
+            bg_name = f.read().strip()
+            return backgrounds.get(bg_name, backgrounds['default'])
+    else:
+        return backgrounds.get(current_background(), backgrounds['default'])
+
+# Function to update background if the shared file is changed
+def check_background_update():
+    new_bg_image = load_background()
+    if new_bg_image != bg_label.cget('image'):
+        bg_label.config(image=new_bg_image)
+        bg_label.image = new_bg_image
+    root.after(1000, check_background_update)
+
 
 #midframe
 def quote(quotepic, index):
@@ -92,6 +119,9 @@ def quote(quotepic, index):
 
 
 #botframe
+def redirect_rewards(username):
+    proc = subprocess.run([sys.executable, "reward_system.py", username])
+
 def redirect_todo():
     proc = subprocess.run([sys.executable, "Mytodo.py", username])
 
@@ -120,7 +150,7 @@ clocklabel.grid(row=0, column=2, pady=(5, 0))
 daydatelabel = Label(topframe, font=font_15, bg="#FFFFFF")
 daydatelabel.grid(row=0, column=1, pady=(5, 0))
 
-rewards_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=rewards_pic)
+rewards_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=rewards_pic, command=lambda: redirect_rewards(username))
 rewards_button.grid(row=0, column=3, rowspan=2, padx=(10, 0), sticky="e")
 
 acc_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=acc_pic,command=lambda: redirect_acc(username))
