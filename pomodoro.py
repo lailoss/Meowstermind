@@ -38,13 +38,13 @@ pom=Tk()
 pom.geometry('600x300') 
 pom.title('Pomodoro Timer')
 pom.configure(bg='red')
-pom.iconbitmap('./images/pomodoroIcon.ico')
+
 canvas = Canvas()
 pom.resizable(False, False)
 
    
 #consts
-red='#d04e2f'
+red='#FFFAF2' #please note that this is not actually red, im just lazy to change everything tq
 peach='#FFE4B6'
 bg_img=PhotoImage(file='timer.png')
 pink='#FFC5C5'
@@ -273,7 +273,7 @@ def workc():
 
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
-startbutton=Button(pom, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='260',y=' 230')
+startbutton=Button(pom, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='285',y=' 240')
 pauseicon=PhotoImage(file='./images/pause.png')
 pausebutton=Button(pom, text='pause', image=pauseicon, bg='white', borderwidth=0, command=pause_timer).place(x='200',y='250')
 stopicon=PhotoImage(file='./images/stop.png')

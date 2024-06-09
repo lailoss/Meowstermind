@@ -125,6 +125,7 @@ use_buttond.place(x='400', y='430')
 c.execute("SELECT SUM(hours_studied) FROM timer WHERE username=?", (username,))
 result = c.fetchone()
 total_hours = result[0] if result[0] is not None else 0
+total_hours=round(total_hours/60, 2)
 
 hours_studiedlabel=Label(rewards, text=total_hours, bg=peach, font='comfortaa 18 bold')
 hours_studiedlabel.place(x='275', y='23')
