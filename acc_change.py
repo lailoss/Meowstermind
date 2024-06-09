@@ -21,10 +21,10 @@ acc_change.title("Account Info Page")
 notebook = ttk.Notebook(acc_change)
 notebook.pack(expand=True, fill='both')
 
-tab1 = Frame(notebook, bg="#99BDFA")
+tab1 = Frame(notebook, bg="#99FF98")
 notebook.add(tab1, text='Account Info')
 
-tab2 = Frame(notebook, bg="#99BDFA")
+tab2 = Frame(notebook, bg="#99FF98")
 notebook.add(tab2, text='Second Function')
 
 
@@ -89,7 +89,7 @@ def edit():
     cabinet=Frame(tab2, bg="#FFFFFF", padx=20, pady=20)
     cabinet.pack(side="top", expand=True)
 
-    editor_title = Label(cabinet, text="EDIT", font=font_20, padx=0, pady=20, bg="#FFFFFF")
+    editor_title = Label(cabinet, text="EDIT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
     editor_title.grid(row=0, column=0, columnspan=2, sticky="ew")    
 
     username_label = Label(cabinet, text="Username", font=font_15, pady=5, bg="#FFFFFF")
@@ -105,10 +105,10 @@ def edit():
     password_entry.grid(row=2, column=1)
 
     repassword_label = Label(cabinet, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
-    repassword_label.grid(row=3, column=1)
+    repassword_label.grid(row=3, column=0)
 
     repassword_entry = Entry(cabinet, show="•", font=font_15, bg="#FFFFFF")
-    repassword_entry.grid(row=3, column=2)
+    repassword_entry.grid(row=3, column=1)
 
     savebutton = Button(cabinet, text="Save changes", font=font_15, bg="#FFFFFF", command=save)
     savebutton.grid(row=4, column=0, columnspan=2, pady=(50,0))
@@ -116,9 +116,9 @@ def edit():
     #FILL IN THE BLANK----------------------------------------------------
     #to loop through results
     #placed after widget so it works
-    for record in records:
-        username_entry.insert(0, record[0])
-        password_entry.insert(0, record[1])
+    if records:
+        username_entry.insert(0, records[0])
+        password_entry.insert(0, records[1])
 
 
 def save():
@@ -140,6 +140,7 @@ def save():
     else: 
         conn = sqlite3.connect("database.db") #create / fetch database
         c = conn.cursor() #create cursor
+        global username
 
         #insert into table
         c.execute("""
@@ -155,8 +156,6 @@ def save():
 
         messagebox.showinfo("Success", "Account updated successfully!")
 
-
-        global username
         username = newusername
         display()
 
