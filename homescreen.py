@@ -1,7 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
 from datetime import datetime
-import sqlite3
 import random
 import subprocess
 import sys
@@ -116,17 +115,11 @@ def redirect_flash():
 topframe = Frame(root, bg="#FFFFFF", padx=10, pady=5)
 topframe.pack(side="top", fill=X)
 
-'''topframe1 = Frame(topframe, bg="#FFFFFF")
-topframe1.pack(side="top", expand=True)'''
-
 clocklabel = Label(topframe, font=font_20, bg="#FFFFFF")
 clocklabel.grid(row=0, column=2, pady=(5, 0))
 
 daydatelabel = Label(topframe, font=font_15, bg="#FFFFFF")
 daydatelabel.grid(row=0, column=1, pady=(5, 0))
-
-'''topframe2 = Frame(topframe, bg="#FFFFFF")
-topframe2.pack(side="right", padx=(0, 10))'''
 
 rewards_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=rewards_pic)
 rewards_button.grid(row=0, column=3, rowspan=2, padx=(10, 0), sticky="e")
@@ -137,8 +130,6 @@ acc_button.grid(row=0, column=4, rowspan=2, padx=(10, 0), sticky="e")
 info_button = Button(topframe, bg="#FFFFFF", borderwidth=0, image=info_pic, command=redirect_info)
 info_button.grid(row=0, column=5, rowspan=2, padx=(10, 0), sticky="e")
 
-#topframe.grid_columnconfigure(0, weight=1)
-#topframe.grid_columnconfigure(1, weight=1)
 topframe.grid_columnconfigure(2, weight=1)
 
 
