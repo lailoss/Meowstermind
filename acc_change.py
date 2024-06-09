@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import sqlite3
 import sys
 
@@ -15,6 +16,16 @@ acc_change = Tk()
 acc_change.geometry("400x600")
 acc_change.configure(bg="#99BDFA")
 acc_change.title("Account Info Page")
+
+#tabs
+notebook = ttk.Notebook(acc_change)
+notebook.pack(expand=True, fill='both')
+
+tab1 = Frame(notebook, bg="#99BDFA")
+notebook.add(tab1, text='Account Info')
+
+tab2 = Frame(notebook, bg="#99BDFA")
+notebook.add(tab2, text='Second Function')
 
 
 #PARAMETER-----------------------------------------------------------
@@ -36,10 +47,10 @@ def display():
         display_username, display_password = record
 
         #WIDGETS-------------------------------------------------------------
-        frame = Frame(acc_change, bg="#FFFFFF", padx=20, pady=20)
+        frame = Frame(tab1, bg="#FFFFFF", padx=20, pady=20)
         frame.pack(side="top", expand=True)
 
-        acc_change_title = Label(frame, text="YOUR ACCOUNT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
+        acc_change_title = Label(frame, text="YOUR\nACCOUNT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
         acc_change_title.grid(row=0, column=0, columnspan=2, sticky="ew")
 
         username_text = Label(frame, text="Username:", font=font_15, bg="#FFFFFF")
