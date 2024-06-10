@@ -14,7 +14,7 @@ conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
 root = Tk()
-root.geometry("1200x700")
+root.geometry("1304x734")
 root.title("Home Screen")
 root.configure(bg="#E8D09C")
 root.resizable(False, False)
@@ -31,7 +31,6 @@ acc_pic = PhotoImage(file="./icons/iconacc.png")
 rewards_pic = PhotoImage(file="./icons/iconrewards.png")
 
 #midframe pictures
-mascotpic = PhotoImage(file="picreg.png")
 qtitle = PhotoImage(file="./quotes/title/t1.png")
 
 images = [f"./quotes/content/wp{i}.png" for i in range(1, 11)]
@@ -72,8 +71,8 @@ def date_time():
     root.after(1000, date_time)
 
 #background
-
 c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
+
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
 backgrounds = {
@@ -82,9 +81,11 @@ backgrounds = {
     'cafe': PhotoImage(file='./backgrounds/cafe.png'),
     'meadow': PhotoImage(file='./backgrounds/meadow.png')
 }
+
 bg_image = backgrounds.get(current_background, backgrounds['default'])
 bg_label = Label(root, image=bg_image)
 bg_label.place(relwidth=1, relheight=1)
+
 def update_background(bg_name):
     global bg_image
     bg_image = backgrounds[bg_name]
@@ -108,10 +109,6 @@ def check_background_update():
         bg_label.image = new_bg_image
     root.after(1000, check_background_update)
 
-
-
-
-
 #midframe
 def quote(quotepic, index):
     random_index = random.randint(0, len(images) - 1)  #Generate a random index
@@ -120,7 +117,6 @@ def quote(quotepic, index):
 
 
 #botframe
-
 def redirect_rewards(username):
     proc = subprocess.run([sys.executable, "reward_system.py", username])
 
@@ -165,7 +161,7 @@ topframe.grid_columnconfigure(2, weight=1)
 
 
 #middle
-midframe = Frame(root, bg="#FFFFFF", borderwidth=0)
+midframe = Frame(root, bg="#FFFFFF", borderwidth=0, highlightthickness=1, highlightbackground="#DEE0DE")
 midframe.pack(expand= TRUE)
 
 quotetitle = Label(midframe, bg="#FFFFFF", image=qtitle)
