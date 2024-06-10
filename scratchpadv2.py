@@ -1,13 +1,20 @@
 from tkinter import *
 from tkinter import ttk
 import sqlite3
+import sys
 
-
+if len(sys.argv) > 1:
+    username = sys.argv[1]
+else:
+    print("username not provided :()")
+    sys.exit(1)
+    
 #database
 connect=sqlite3.connect('database.db')
 cursor=connect.cursor() #allow you to send SQL commands to database
-cursor.execute("CREATE TABLE IF NOT EXISTS nota (title PRIMARY KEY, content TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS nota (title PRIMARY KEY, content TEXT, username TEXT)")
 connect.commit()
+
 
 #parameters-------------------------------------------------
 yellow='#FFBD59'
@@ -53,8 +60,8 @@ def save_note():
     global title_entry
     title = title_entry.get()
     content = content_entry.get("1.0", "end-1c")  
-    note_save = "INSERT OR REPLACE INTO nota(title, content) VALUES (?, ?)"
-    cursor.execute(note_save, (title, content))  
+    note_save = "INSERT OR REPLACE INTO nota(title, content, username) VALUES (?, ?,?)"
+    cursor.execute(note_save, (title, content, username))  
     connect.commit()
     update_notes_list()
 
@@ -64,8 +71,8 @@ def delete_note():
     
     global delete_entry
     selected_note = noteslist.get(noteslist.curselection())
-    note_delete = "DELETE FROM nota WHERE title=?"
-    cursor.execute(note_delete, (selected_note,))
+    note_delete = "DELETE FROM nota WHERE title=? AND username=?"
+    cursor.execute(note_delete, (selected_note, username))
     connect.commit()
     tt2.config(text='')
     content_entry2.delete("1.0", END)
@@ -85,8 +92,8 @@ search_text.place(x='70', y='35')
 
 def search():
     title = search_text.get()
-    searchquery = "SELECT * FROM nota WHERE title=?"
-    cursor.execute(searchquery, (title,))
+    searchquery = "SELECT * FROM nota WHERE title=? AND username=?"
+    cursor.execute(searchquery, (title, username))
     note1 = cursor.fetchone()
     tt2.config(text=title)
     if note1:
@@ -101,7 +108,7 @@ searchicon=PhotoImage(file='./images/search_icon.png')
 #LISTBOX-----------------------------------------------------------------------------
 def update_notes_list():
     noteslist.delete(0, END)
-    cursor.execute("SELECT title FROM nota")
+    cursor.execute("SELECT title FROM nota WHERE username=?",(username,))
     notes = cursor.fetchall()
     for note in notes:
         noteslist.insert(END, note[0])
@@ -110,7 +117,7 @@ def update_notes_list():
 def display_content(event):
     try:
         selected_note=noteslist.get(noteslist.curselection())
-        cursor.execute("SELECT content FROM nota WHERE title=?", (selected_note,))
+        cursor.execute("SELECT content FROM nota WHERE title=? AND username=?", (selected_note,username))
         note_content = cursor.fetchone()
         if note_content:
             content_entry2.delete("1.0", END)
