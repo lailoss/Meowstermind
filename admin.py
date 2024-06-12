@@ -7,6 +7,13 @@ admin.configure(bg="#99BDFA")
 admin.title("Admin Page")
 
 
+#PARAMETER-----------------------------------------------------------
+font_30 = ("Gill Sans MT", 30, "bold")
+font_20 = ("Gill Sans MT", 20, "bold")
+font_15b = ("Gill Sans MT", 15, "bold")
+font_15 = ("Gill Sans MT", 15)
+
+
 #FUNCTIONS ----------------------------------------------------------
 
 def query():
@@ -22,25 +29,40 @@ def query():
     meowmbers.configure(bg="#99BDFA")
     meowmbers.title("Meowers")
 
-    print_records=''
+    oid_list = []
+    userName_list = []
+
     for record in records:
-        print_records += str(record[0]) + "  " + str(record[1]) + "  " + str(record[2]) + "\n"
+        oid_list.append(str(record[2]))
+        userName_list.append(str(record[0]))
+
+    oid = "\n".join(oid_list)
+    userName= "\n".join(userName_list)
 
     #WIDGETS-------------------------------------------------------------
-    drawer=Frame(meowmbers, bg="#FFFFFF", padx=20, pady=20)
+    drawer = Frame(meowmbers, bg="#FFFFFF", padx=20, pady=20)
     drawer.pack(side="top", expand=True)
 
     meowmbers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
     meowmbers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
 
-    query_label= Label(drawer, text=print_records, font=font_15, bg="#FFFFFF")
-    query_label.grid(row=1, column=0, pady=(15,0))
+    oidtext = Label(drawer, text="oid", font=font_15b, bg="#FFFFFF")
+    oidtext.grid(row=1, column=0, padx=25)
+
+    userNametext = Label(drawer, text="Username", font=font_15b, bg="#FFFFFF")
+    userNametext.grid(row=1, column=1, padx=25)
+
+    oid_label = Label(drawer, text=oid, font=font_15, bg="#FFFFFF")
+    oid_label.grid(row=2, column=0, pady=(5,0))
+
+    userName_label = Label(drawer, text=userName, font=font_15, bg="#FFFFFF")
+    userName_label.grid(row=2, column=1, pady=(5,0))
 
     conn.commit() #commit changes
     conn.close() #close connection
 
 
-def save():
+def save(): #SOON TO BE REMOVED
     conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
@@ -60,7 +82,7 @@ def save():
     editor.destroy()
 
 
-def edit():
+def edit(): #SOON TO BE REMOVED
 
     global editor
     editor = Tk()
@@ -124,12 +146,6 @@ def delete():
 '''    #clear the entry boxes
     username.delete(0, END)
     password.delete(0, END)'''
-
-
-#PARAMETER-----------------------------------------------------------
-font_30 = ("Gill Sans MT", 30, "bold")
-font_20 = ("Gill Sans MT", 20, "bold")
-font_15 = ("Gill Sans MT", 15)
 
 
 #WIDGETS-------------------------------------------------------------
