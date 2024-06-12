@@ -18,14 +18,14 @@ acc_change.geometry("400x600")
 acc_change.title("Account Info Page")
 
 #tabs
-'''notebook = ttk.Notebook(acc_change)
+notebook = ttk.Notebook(acc_change)
 notebook.pack(expand=True, fill='both')
 
 tab1 = Frame(notebook, bg="#99FF98")
 notebook.add(tab1, text="View Your Info")
 
 tab2 = Frame(notebook, bg="#99FF98")
-notebook.add(tab2, text="Edit Your Info")'''
+notebook.add(tab2, text="Edit Your Info")
 
 
 #PARAMETER-----------------------------------------------------------
@@ -35,7 +35,7 @@ font_15 = ("Gill Sans MT", 15)
 
 
 #FUNCTIONS-----------------------------------------------------------
-'''def display():
+def display():
     for widget in tab1.winfo_children(): #destroy existing widgets in tab1
         widget.destroy()
 
@@ -72,12 +72,12 @@ font_15 = ("Gill Sans MT", 15)
         print(f"No valid user record found for the username: {username}")
 
     conn.commit()  # Commit changes
-    conn.close()  # Close connection'''
+    conn.close()  # Close connection
 
 
 def edit():
-    '''for widget in tab2.winfo_children(): #destroy existing widgets in tab2
-       widget.destroy()'''
+    for widget in tab2.winfo_children(): #destroy existing widgets in tab2
+        widget.destroy()
 
     conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
@@ -92,7 +92,7 @@ def edit():
     global repassword_entry
 
     #WIDGETS-------------------------------------------------------------
-    cabinet=Frame(acc_change, bg="#FFFFFF", padx=20, pady=20)
+    cabinet=Frame(tab2, bg="#FFFFFF", padx=20, pady=20)
     cabinet.pack(side="top", expand=True)
 
     editor_title = Label(cabinet, text="EDIT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
@@ -166,9 +166,9 @@ def save():
         conn.close()
 
         username = newusername
-        #display()
+        display()
 
 
-#display() #call function in order to execute it
+display() #call function in order to execute it
 edit()
 acc_change.mainloop()
