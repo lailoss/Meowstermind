@@ -71,7 +71,7 @@ def date_time():
     root.after(1000, date_time)
 
 #background
-c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
+c.execute("SELECT background FROM userinfo WHERE username=? ", (username,))
 
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
@@ -90,25 +90,9 @@ def update_background(bg_name):
     global bg_image
     bg_image = backgrounds[bg_name]
     bg_label.config(image=bg_image)
-    c.execute("UPDATE timer SET background=? WHERE username=?", (bg_name, username))
+    c.execute("UPDATE userinfo SET background=? WHERE username=?", (bg_name, username))
     conn.commit()
     
-def load_background():
-    if os.path.exists("current_background.txt"):
-        with open("current_background.txt", "r") as f:
-            bg_name = f.read().strip()
-            return backgrounds.get(bg_name, backgrounds['default'])
-    else:
-        return backgrounds.get(current_background(), backgrounds['default'])
-
-# Function to update background if the shared file is changed
-def check_background_update():
-    new_bg_image = load_background()
-    if new_bg_image != bg_label.cget('image'):
-        bg_label.config(image=new_bg_image)
-        bg_label.image = new_bg_image
-    root.after(1000, check_background_update)
-
 #midframe
 def quote(quotepic, index):
     random_index = random.randint(0, len(images) - 1)  #Generate a random index

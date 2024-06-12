@@ -7,7 +7,20 @@ import time
 from mutagen.mp3 import MP3
 import customtkinter
 import pygame
+import tkinter.messagebox as messagebox
+import sqlite3
 
+# Initialise Pygame Mixer
+pygame.mixer.init()
+
+# Connect to the SQLite database (or create it if it doesn't exist)
+conn = sqlite3.connect('playlist.db')
+c = conn.cursor()
+
+# Create table if it doesn't exist
+c.execute('''CREATE TABLE IF NOT EXISTS playlist (
+             id INTEGER PRIMARY KEY,
+             song_path TEXT)''')
 
 music_window = customtkinter.CTk()
 music_window.grab_set()
@@ -15,26 +28,16 @@ music_window.title("Meow Music")
 music_window.geometry("800x500")
 music_window.resizable(False,False)
 
-# Initialise Pygame Mixer
-pygame.mixer.init()
-
 current_song_index = 0  # Global variable to store the current song index
 
 def open_folder():
-    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/Meowstermind/Mymusic/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
-    
-    # Loop thru song list and insert into playlist
+    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/Meowstermind/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
+    playlist.delete(0, END)
     for song in songs:
-        # Extract just the file name without the full path
         song_name = os.path.basename(song)
-        # Insert the song name into the playlist
         playlist.insert(END, song_name)
-    
-    # Save the list of songs to a file
-    with open("selected_songs.txt", "w") as file:
-        for song in songs:
-            file.write(song + "\n")
-            
+    save_selected_songs(songs)
+          
 # Grab song lenght time info
 def play_time():
     # Check for double timing
@@ -53,7 +56,7 @@ def play_time():
     # Grab song title from playlist
     song = playlist.get(current_song) # or put (ACTIVE) inside bracket if error
     # Add directory structure and mp3 to song title
-    song = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
+    song = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
     # Load song length with mutagen
     song_mut =MP3(song)
     # Get song length
@@ -103,29 +106,29 @@ def play_time():
     status_bar.after(1000, play_time)
 
     
-# Play Button             
 def play_song():
-    # Get the selected song name from the playlist
-    music_name = playlist.get(ACTIVE)
-    # Set stopped variable to false so song can play
-    global stopped
-    stopped = False
-    song = playlist.get(ACTIVE)
-    
-    # Load and play the selected song
-    song_path = os.path.join("C:/Users/Fawqan/Meowstermind/Mymusic/Songs", song)  # Construct the full file path
-    pygame.mixer.music.load(song_path)
-    pygame.mixer.music.play(loops=0)
-    
-    # Write the selected song path to a file
-    with open("selected_song.txt", "w") as file:
-        file.write(song_path)
+    try:
+        music_name = playlist.get(ACTIVE)
+        global stopped
+        stopped = False
+        song = playlist.get(ACTIVE)
+        song_path = os.path.join("C:/Users/Fawqan/Meowstermind/Songs", song)
         
-    # Update the "Now Playing" label with just the song name
-    music.config(text=music_name)
-    
-    # Call the play_time function to update the status bar
-    play_time()
+        print(f"Trying to load song: {song_path}")
+        if not os.path.isfile(song_path):
+            print(f"File does not exist: {song_path}")
+            return
+        
+        pygame.mixer.music.load(song_path)
+        pygame.mixer.music.play(loops=0)
+        
+        with open("selected_song.txt", "w") as file:
+            file.write(song_path)
+        
+        music.config(text=music_name)
+        play_time()
+    except pygame.error as e:
+        print(f"An error occurred: {e}")
 
     
 # Create global pause
@@ -181,7 +184,7 @@ def previous_song():
     
     # Get the song title from the playlist using the current index
     song = playlist.get(current_song_index)
-    song_path = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
+    song_path = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
     # Load and play the previous song
     pygame.mixer.music.load(song_path)
     pygame.mixer.music.play(loops=0)
@@ -217,7 +220,7 @@ def next_song():
     next_song_title = playlist.get(next_index)
     
     # Construct the file path for the next song
-    next_song_path = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{next_song_title}'
+    next_song_path = f'C:/Users/Fawqan/Meowstermind/Songs/{next_song_title}'
     
     # Load and play song
     pygame.mixer.music.load(next_song_path)
@@ -238,16 +241,22 @@ def next_song():
 # Delete A song
 def delete_song():
     stop()
-    # Delete currently selected song
-    playlist.delete(ANCHOR)
-    # Stop music if its play
-    pygame.mixer.music.stop()
+    if playlist.curselection():  # Check if any item is selected in the playlist
+        index = playlist.curselection()[0]
+        song_path = playlist.get(index)
+        playlist.delete(index)
+        c.execute("DELETE FROM playlist WHERE song_path = ?", (song_path,))
+        conn.commit()
+        pygame.mixer.music.stop()
+    else:
+        messagebox.showinfo("Info", "No song selected to delete.")
+
     
 # Create slider function
 def slide(x):
     #slider_label.config(text=f'{int(my_slider.get())} of {int(song_length)}')
     song = playlist.get(ACTIVE)
-    song = f'C:/Users/Fawqan/Meowstermind/Mymusic/Songs/{song}'
+    song = f'C:/Users/Fawqan/Meowstermind/Songs/{song}'
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0, start=int(my_slider.get()))
@@ -361,6 +370,37 @@ scroll.pack(side=RIGHT, fill=Y)
 scroll.pack(side=RIGHT, fill=Y)
 playlist.pack(side=LEFT,fill=BOTH)
 
+# Function to load selected songs from the database
+def load_selected_songs():
+    try:
+        playlist.delete(0, END)
+        c.execute("SELECT song_path FROM playlist")
+        selected_songs = c.fetchall()
+        for song_info in selected_songs:
+            song_path = song_info[0]  # Extract the first (and only) element from the tuple
+            song_name = os.path.basename(song_path)
+            playlist.insert(END, song_name)
+    except sqlite3.Error as e:
+        print("Error reading playlist:", e)
+        
+# Function to save selected songs to the database
+def save_selected_songs(songs):
+    try:
+        c.execute("DELETE FROM playlist")
+        for song in songs:
+            c.execute("INSERT INTO playlist (song_path) VALUES (?)", (song,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print("Error saving playlist:", e)
+
+load_selected_songs()
+
+# Close the connection when the application exits
+def on_close():
+    conn.close()
+    music_window.destroy()
+
+music_window.protocol("WM_DELETE_WINDOW", on_close)
 
 music_window.mainloop()
 
