@@ -86,7 +86,8 @@ def use_background(bg_name):
             'cafe': 5,
             'meadow': 10
         }.get(bg_name, 0)
-        messagebox.showwarning("Locked", f"Awww, it is locked :( you need {required_hours - total_hours} more hours to unlock it.")
+        hours_you_need=round(required_hours-total_hours,1)
+        messagebox.showwarning("Locked", f"Awww, it is locked :( you need {hours_you_need} more hours to unlock it.")
 
 
 #constants ====================================================
