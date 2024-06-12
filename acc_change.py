@@ -15,17 +15,8 @@ print("Username check passed")
 
 acc_change = Tk()
 acc_change.geometry("400x600")
+acc_change.configure(bg="#99FF98")
 acc_change.title("Account Info Page")
-
-#tabs
-notebook = ttk.Notebook(acc_change)
-notebook.pack(expand=True, fill='both')
-
-tab1 = Frame(notebook, bg="#99FF98")
-notebook.add(tab1, text="View Your Info")
-
-tab2 = Frame(notebook, bg="#99FF98")
-notebook.add(tab2, text="Edit Your Info")
 
 
 #PARAMETER-----------------------------------------------------------
@@ -35,50 +26,7 @@ font_15 = ("Gill Sans MT", 15)
 
 
 #FUNCTIONS-----------------------------------------------------------
-def display():
-    for widget in tab1.winfo_children(): #destroy existing widgets in tab1
-        widget.destroy()
-
-    conn = sqlite3.connect("database.db")  # Create / fetch database
-    c = conn.cursor()  # Create cursor
-
-    c.execute("SELECT * FROM userinfo WHERE username=?", (username,))
-    record = c.fetchone()
-    print("Fetched record:", record)
-
-    if record and len(record) == 2:
-        display_username, display_password = record
-
-        #WIDGETS-------------------------------------------------------------
-        cupboard = Frame(tab1, bg="#FFFFFF", padx=20, pady=20)
-        cupboard.pack(side="top", expand=True)
-
-        acc_change_title = Label(cupboard, text="YOUR\nACCOUNT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
-        acc_change_title.grid(row=0, column=0, columnspan=2, sticky="ew")
-
-        username_text = Label(cupboard, text="Username:", font=font_15, bg="#FFFFFF")
-        username_text.grid(row=1, column=0, pady=(15, 0))
-
-        username_label = Label(cupboard, text=display_username, font=font_15, bg="#FFFFFF")
-        username_label.grid(row=1, column=1, pady=(15, 0))
-
-        password_text = Label(cupboard, text="Password:", font=font_15, bg="#FFFFFF")
-        password_text.grid(row=2, column=0, pady=(15, 0))
-
-        password_label = Label(cupboard, text=display_password, font=font_15, bg="#FFFFFF")
-        password_label.grid(row=2, column=1, pady=(15, 0))
-
-    else:
-        print(f"No valid user record found for the username: {username}")
-
-    conn.commit()  # Commit changes
-    conn.close()  # Close connection
-
-
 def edit():
-    for widget in tab2.winfo_children(): #destroy existing widgets in tab2
-        widget.destroy()
-
     conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
@@ -92,10 +40,10 @@ def edit():
     global repassword_entry
 
     #WIDGETS-------------------------------------------------------------
-    cabinet=Frame(tab2, bg="#FFFFFF", padx=20, pady=20)
+    cabinet=Frame(acc_change, bg="#FFFFFF", padx=20, pady=20)
     cabinet.pack(side="top", expand=True)
 
-    editor_title = Label(cabinet, text="EDIT", font=font_30, padx=0, pady=20, bg="#FFFFFF")
+    editor_title = Label(cabinet, text="EDIT ACCOUNT\nDETAILS", font=font_30, padx=0, pady=20, bg="#FFFFFF")
     editor_title.grid(row=0, column=0, columnspan=2, sticky="ew")    
 
     username_label = Label(cabinet, text="Username", font=font_15, pady=5, bg="#FFFFFF")
@@ -110,7 +58,7 @@ def edit():
     password_entry = Entry(cabinet, show="•", font=font_15, bg="#FFFFFF")
     password_entry.grid(row=2, column=1)
 
-    repassword_label = Label(cabinet, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
+    repassword_label = Label(cabinet, text="Re-enter\nPassword", font=font_15, pady=5, bg="#FFFFFF")
     repassword_label.grid(row=3, column=0)
 
     repassword_entry = Entry(cabinet, show="•", font=font_15, bg="#FFFFFF")
@@ -166,9 +114,7 @@ def save():
         conn.close()
 
         username = newusername
-        display()
 
 
-display() #call function in order to execute it
 edit()
 acc_change.mainloop()

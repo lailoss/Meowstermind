@@ -72,7 +72,7 @@ def date_time():
     root.after(1000, date_time)
 
 #background
-c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
+'''c.execute("SELECT background FROM timer WHERE username=? ORDER BY id DESC LIMIT 1", (username,))
 
 current_background_result = c.fetchone()
 current_background = current_background_result[0] if current_background_result else 'default'
@@ -108,7 +108,7 @@ def check_background_update():
     if new_bg_image != bg_label.cget('image'):
         bg_label.config(image=new_bg_image)
         bg_label.image = new_bg_image
-    root.after(1000, check_background_update)
+    root.after(1000, check_background_update)'''
 
 #midframe
 def quote(quotepic, index):
