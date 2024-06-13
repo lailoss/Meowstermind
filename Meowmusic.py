@@ -32,11 +32,24 @@ current_song_index = 0  # Global variable to store the current song index
 
 def open_folder():
     songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/Meowstermind/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
-    playlist.delete(0, END)
+    
+    # List to store selected song paths
+    selected_songs = []
+    
+    # Fetch existing songs from the database
+    existing_songs = playlist.get(0, END)
+    
+    # Loop through each selected song and add it to the playlist
     for song in songs:
         song_name = os.path.basename(song)
-        playlist.insert(END, song_name)
-    save_selected_songs(songs)
+        
+        # Check if the song is already in the playlist
+        if song_name not in playlist.get(0, END):
+            playlist.insert(END, song_name)
+            selected_songs.append(song)
+    
+    # Save selected songs to database
+    save_selected_songs(selected_songs)
           
 # Grab song lenght time info
 def play_time():
@@ -240,18 +253,34 @@ def next_song():
     
 # Delete A song
 def delete_song():
-    stop()
-    if playlist.curselection():  # Check if any item is selected in the playlist
-        index = playlist.curselection()[0]
-        song_path = playlist.get(index)
-        playlist.delete(index)
-        c.execute("DELETE FROM playlist WHERE song_path = ?", (song_path,))
-        conn.commit()
-        pygame.mixer.music.stop()
+    selected_indices = playlist.curselection()  # Get selected indices
+    if selected_indices:  # Check if any item is selected in the playlist
+        index = selected_indices[0]
+        song_name = playlist.get(index)
+        song_path = os.path.join("C:/Users/Fawqan/Meowstermind/Songs", song_name).replace('\\', '/')
+        
+        print(f"Deleting song: {song_path}")  # Debug statement
+        
+        # Check if the song exists in the database before deleting
+        c.execute("SELECT * FROM playlist WHERE song_path = ?", (song_path,))
+        song_in_db = c.fetchone()
+        if song_in_db:
+            print(f"Song found in database: {song_in_db}")
+            c.execute("DELETE FROM playlist WHERE song_path = ?", (song_path,))
+            conn.commit()
+            print("Song deleted from database")
+            
+            # Delete song from the listbox
+            playlist.delete(index)
+            print("Song deleted from playlist")
+            
+            pygame.mixer.music.stop()
+        else:
+            print("Song not found in database")
     else:
+        print("No song selected")
         messagebox.showinfo("Info", "No song selected to delete.")
 
-    
 # Create slider function
 def slide(x):
     #slider_label.config(text=f'{int(my_slider.get())} of {int(song_length)}')
@@ -373,7 +402,6 @@ playlist.pack(side=LEFT,fill=BOTH)
 # Function to load selected songs from the database
 def load_selected_songs():
     try:
-        playlist.delete(0, END)
         c.execute("SELECT song_path FROM playlist")
         selected_songs = c.fetchall()
         for song_info in selected_songs:
@@ -386,9 +414,14 @@ def load_selected_songs():
 # Function to save selected songs to the database
 def save_selected_songs(songs):
     try:
-        c.execute("DELETE FROM playlist")
+        # Fetch existing songs from the database
+        c.execute("SELECT song_path FROM playlist")
+        existing_songs = [row[0] for row in c.fetchall()]
+        
+        # Append new songs to existing entries
         for song in songs:
-            c.execute("INSERT INTO playlist (song_path) VALUES (?)", (song,))
+            if song not in existing_songs:
+                c.execute("INSERT INTO playlist (song_path) VALUES (?)", (song,))
         conn.commit()
     except sqlite3.Error as e:
         print("Error saving playlist:", e)
@@ -401,6 +434,19 @@ def on_close():
     music_window.destroy()
 
 music_window.protocol("WM_DELETE_WINDOW", on_close)
+
+# Define the on_select function
+def on_select(event):
+    selected_indices = playlist.curselection()
+    if selected_indices:
+        index = selected_indices[0]
+        song_name = playlist.get(index)
+        print(f"Selected song: {song_name}")
+    else:
+        print("No song selected")
+
+# Bind the <<ListboxSelect>> event to the on_select function
+playlist.bind('<<ListboxSelect>>', on_select)
 
 music_window.mainloop()
 
