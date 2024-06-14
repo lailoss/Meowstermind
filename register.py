@@ -78,8 +78,8 @@ def signup():
         repassword_entry.delete(0, END)
 
         messagebox.showinfo("Success", "Account created successfully!")
-        REGwindow.destroy()
-        proc = subprocess.run(argslogin)
+        """REGwindow.destroy()
+        proc = subprocess.run(argslogin)"""
 
 
 #FRAME---------------------------------------------------------------

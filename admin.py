@@ -22,135 +22,50 @@ def query():
 
     c.execute("SELECT *, oid FROM userinfo")
     records = c.fetchall()
-    print(records)
+    print("all records fetched")
 
-    meowmbers = Tk()
-    meowmbers.geometry("400x500")
-    meowmbers.configure(bg="#99BDFA")
-    meowmbers.title("Meowers")
+    meowers = Tk()
+    meowers.geometry("400x500")
+    meowers.configure(bg="#99BDFA")
+    meowers.title("Meowers")
 
-    oid_list = []
-    userName_list = []
-
-    for record in records:
-        oid_list.append(str(record[3]))
-        userName_list.append(str(record[0]))
-
-    oid = "\n".join(oid_list)
-    userName= "\n".join(userName_list)
 
     #WIDGETS-------------------------------------------------------------
-    drawer = Frame(meowmbers, bg="#FFFFFF", padx=20, pady=20)
+    drawer = Frame(meowers, bg="#FFFFFF", padx=20, pady=20)
     drawer.pack(side="top", expand=True)
 
-    meowmbers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
-    meowmbers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
+    meowers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
+    meowers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
 
     oidtext = Label(drawer, text="oid", font=font_15b, bg="#FFFFFF")
-    oidtext.grid(row=1, column=0, padx=25)
+    oidtext.grid(row=1, column=0, padx=(15,25))
 
-    userNametext = Label(drawer, text="Username", font=font_15b, bg="#FFFFFF")
-    userNametext.grid(row=1, column=1, padx=25)
+    usernametext = Label(drawer, text="  Username", font=font_15b, bg="#FFFFFF")
+    usernametext.grid(row=1, column=1, padx=(30,15))
 
-    oid_label = Label(drawer, text=oid, font=font_15, bg="#FFFFFF")
-    oid_label.grid(row=2, column=0, pady=(5,0))
+    cupboard = Frame(drawer, bg="#FFFFFF")
+    cupboard.grid(row=2, column=0, columnspan=2)
 
-    userName_label = Label(drawer, text=userName, font=font_15, bg="#FFFFFF")
-    userName_label.grid(row=2, column=1, pady=(5,0))
+    max_username_length = max(len(record[0]) for record in records)
 
-    #scrollbar
-    canvas = Canvas(drawer, bg="#FFFFFF")
-    canvas.grid(row=0, column=2, rowspan=3)
-
-    scrollbar = Scrollbar(drawer, orient="vertical", command=canvas.yview)
-    scrollbar.grid(row=0, column=2, rowspan=3)
-
-    scrollable_frame = Frame(canvas)
-
-    scrollable_frame.bind(
-        "<Configure>",
-        lambda e: canvas.configure(
-            scrollregion=canvas.bbox("all")
-        )
-    )
-
-    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-    canvas.configure(yscrollcommand=scrollbar.set)
-
-
-    conn.commit() #commit changes
-    conn.close() #close connection
-
-
-'''def save(): #SOON TO BE REMOVED
-    conn = sqlite3.connect("database.db") #create / fetch database
-    c = conn.cursor() #create cursor
-
-    idnum = identry.get()
-    c.execute(""" UPDATE userinfo SET
-              username = :username,
-              password = :password
-
-              WHERE oid = :oid""",
-              {'username' : username_entry.get(),
-               'password' : password_entry.get(),
-               'oid' : idnum
-              })
-
-    conn.commit() #commit changes
-    conn.close() #close connection
-    editor.destroy()'''
-
-
-'''def edit(): #SOON TO BE REMOVED
-
-    global editor
-    editor = Tk()
-    editor.geometry("400x500")
-    editor.configure(bg="#99BDFA")
-    editor.title("Editor") 
-
-    conn = sqlite3.connect("database.db") #create / fetch database
-    c = conn.cursor() #create cursor
-
-    idnum = identry.get()
-    c.execute("SELECT * FROM userinfo WHERE oid = " + idnum)
-    records = c.fetchall()
-    print(records)
-
-    #WE GOING GLOBAL YALL------------------------------------------------
-    global username_entry
-    global password_entry
-
-    #WIDGETS-------------------------------------------------------------
-    cabinet=Frame(editor, bg="#FFFFFF", padx=20, pady=20)
-    cabinet.pack(side="top", expand=True)
-
-    editor_title = Label(cabinet, text="EDIT", font=font_20, padx=0, pady=20, bg="#FFFFFF")
-    editor_title.grid(row=0, column=0, columnspan=2, sticky="ew")    
-
-    username_label = Label(cabinet, text="Username", font=font_15, pady=5, bg="#FFFFFF")
-    username_label.grid(row=1, column=0)
-
-    username_entry = Entry(cabinet, font=font_15, bg="#FFFFFF")
-    username_entry.grid(row=1, column=1)
-
-    password_label = Label(cabinet, text="Password", font=font_15, pady=5, bg="#FFFFFF")
-    password_label.grid(row=2, column=0)
-
-    password_entry = Entry(cabinet, show="•", font=font_15, bg="#FFFFFF")
-    password_entry.grid(row=2, column=1)
-
-    savebutton = Button(cabinet, text="Save changes", font=font_15, bg="#FFFFFF", command=save)
-    savebutton.grid(row=4, column=0, columnspan=2, pady=(50,0))
-
-    #FILL IN THE BLANK----------------------------------------------------
-    #to loop through results
-    #placed after widget so it works
+    record_label = Text(cupboard, font=font_15, bg="#FFFFFF", width=max_username_length + 17, height=10) #text so that we can add scrollbar
+    record_label.pack(side="left", fill="both", expand=True)
+    
     for record in records:
-        username_entry.insert(0, record[0])
-        password_entry.insert(0, record[1])
-'''
+        betteroid = f"{record[3]:02}"
+        record_label.insert("end", "     " + betteroid + "\t\t" + str(record[0]) + "\n")
+
+    record_label.config(state="disabled") #makes it read-only
+
+    scrollbar = Scrollbar(cupboard, orient="vertical")
+    scrollbar.pack(side="right", fill="y")
+    record_label.config(yscrollcommand=scrollbar.set) #scrollbar added here
+    scrollbar.config(command=record_label.yview) #verticalized the scrollbar based on record_label
+
+
+    conn.commit() #commit changes
+    conn.close() #close connection
+
 
 def delete():
     conn = sqlite3.connect("database.db") #create / fetch database
@@ -176,9 +91,6 @@ idlabel.grid(row=1, column=0, pady=20)
 
 identry = Entry(frame, font=font_15)
 identry.grid(row=1, column=1)
-
-'''editbutton = Button(frame, text="Edit record", font=font_15, bg="#FFFFFF", relief="flat", command=edit)
-editbutton.grid(row=2, column=0, columnspan=2)'''
 
 delbutton = Button(frame, text="Delete record", font=font_15, fg="red", bg="#FFFFFF", relief="flat", command=delete)
 delbutton.grid(row=3, column=0, columnspan=2)
