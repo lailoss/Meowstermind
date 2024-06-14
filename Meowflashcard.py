@@ -416,7 +416,7 @@ tab1 = tk.Frame(notebook)
 notebook.add(tab1, text='Create')
 
 # Load the background image
-bg_image = tk.PhotoImage(file="pawbg.png")
+bg_image = tk.PhotoImage(file="./images/pawbg.png")
 
 # Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab1, image=bg_image)
@@ -520,7 +520,7 @@ tab2 = tk.Frame(notebook)
 notebook.add(tab2, text='Flashcards')
 
 # Load the background image
-bg_image1 = tk.PhotoImage(file="pawbg1.png")
+bg_image1 = tk.PhotoImage(file="./images/pawbg1.png")
 
 # Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab2, image=bg_image1)
@@ -552,9 +552,9 @@ definition_label.place(x=200, y=230)  # Adjust the y-coordinate to make room for
 
 # button
 # Create PhotoImage objects for the images
-flip_image = tk.PhotoImage(file='flip.png')
-next_image = tk.PhotoImage(file='next.png')
-prev_image = tk.PhotoImage(file='pre.png')
+flip_image = tk.PhotoImage(file='./images/flip.png')
+next_image = tk.PhotoImage(file='./images/next.png')
+prev_image = tk.PhotoImage(file='./images/pre.png')
 
 # Create Player Control Buttons with custom background color and images
 flip_btn = tk.Button(tab2, image=flip_image, command=flip_card, borderwidth=0, highlightthickness=0)

@@ -314,7 +314,7 @@ def volume(x):
     pygame.mixer.music.set_volume(volume_slider.get())
 
 # Load the background image
-bg_image = tk.PhotoImage(file="mymusicbg.png")
+bg_image = tk.PhotoImage(file="./images/mymusicbg.png")
 
 # Create a label with the background image and add it to the root window
 bg_label = tk.Label(music_window, image=bg_image)
@@ -332,10 +332,10 @@ title_label.place(x=150,y=50)
 
 # button
 # Define Player Control Button Images
-back_btn_img = PhotoImage(file="backmusic.png")
-foward_btn_img = PhotoImage(file="fowardmusic.png")
-pause_btn_img = PhotoImage(file="pausemusic.png")
-stop_btn_img = PhotoImage(file="stopmusic.png")
+back_btn_img = PhotoImage(file="./images/backmusic.png")
+foward_btn_img = PhotoImage(file="./images/fowardmusic.png")
+pause_btn_img = PhotoImage(file="./images/pausemusic.png")
+stop_btn_img = PhotoImage(file="./images/stopmusic.png")
 
 # Create Player Control Buttons with custom background color
 back_btn = Button(music_window, image=back_btn_img, borderwidth=0, bg="#EFE0BF", command=previous_song)
