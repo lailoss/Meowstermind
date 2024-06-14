@@ -107,6 +107,7 @@ def save():
 
     if len(newun) < 1:
         messagebox.showerror("Error", "Username must be at least 1 character long.")
+        return
         
     elif len(newpw) < 8:
         messagebox.showerror("Error", "New password must be at least 8 characters long.")
@@ -115,12 +116,17 @@ def save():
     elif newpw != repassword:
         messagebox.showerror("Error", " New passwords do not match.")
         return False
-
-    else: 
+    
+    try:
         new_hashedpw = bcrypt.hashpw(newpw.encode(), bcrypt.gensalt()).decode()
         c.execute("UPDATE userinfo SET password = ? WHERE username = ?", (new_hashedpw, username))
         conn.commit()
+        messagebox.showinfo("Success", "Account details updated successfully!")
+    except sqlite3.Error as e:
+        messagebox.showerror("Database Error", f"An error occurred: {e}")
+    finally:
         conn.close()
+
 
         # Clear entry boxes
         currpw_entry.delete(0, END)
@@ -131,3 +137,10 @@ def save():
 
 edit()
 acc_change.mainloop()
+
+
+"""    else: 
+        new_hashedpw = bcrypt.hashpw(newpw.encode(), bcrypt.gensalt()).decode()
+        c.execute("UPDATE userinfo SET password = ? WHERE username = ?", (new_hashedpw, username))
+        conn.commit()
+        conn.close()"""

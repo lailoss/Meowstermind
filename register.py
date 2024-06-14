@@ -61,10 +61,11 @@ def signup():
         c = conn.cursor() #create cursor
 
         #insert into table
-        c.execute("INSERT INTO userinfo VALUES (:username, :password)", 
+        c.execute("INSERT INTO userinfo VALUES (:username, :password, :background)", 
             {
                 'username': username_entry.get(),
-                'password': hashedpw
+                'password': hashedpw,
+                'background': ""
             }
         )
 
