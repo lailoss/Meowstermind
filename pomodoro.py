@@ -132,7 +132,7 @@ def start_timer():
         pygame.mixer.music.set_pos(paused_position)
     else:
         # Play the song when the timer starts
-        play_selected_song()
+        play_next_song()
     
     time_run = True
     timer()
