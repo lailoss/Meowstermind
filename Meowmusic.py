@@ -442,8 +442,41 @@ def load_selected_songs():
             playlist.insert(END, song_name)
     except sqlite3.Error as e:
         print("Error reading playlist:", e)
+        return []
 
 load_selected_songs()
+
+# Function to play the next song in the playlist
+def play_next_song():
+    global current_song_index
+    if playlist:
+        if current_song_index >= len(playlist):
+            current_song_index = 0
+        next_song = playlist[current_song_index]
+        current_song_index += 1
+        pygame.mixer.music.load(next_song)
+        pygame.mixer.music.play()
+
+# Event handler for song end
+def song_end(event):
+    if event.type == pygame.USEREVENT:
+        play_next_song()
+
+# Play selected songs in a loop
+def play_selected_songs():
+    global current_song_index
+    current_song_index = 0
+    if playlist:
+        while True:
+            next_song = playlist[current_song_index]
+            pygame.mixer.music.load(next_song)
+            pygame.mixer.music.play()
+            pygame.mixer.music.set_endevent(pygame.USEREVENT)
+            current_song_index += 1
+            if current_song_index >= len(playlist):
+                current_song_index = 0
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(10)  # Adjust as needed for smooth playback
 
 # Close the connection when the application exits
 def on_close():
