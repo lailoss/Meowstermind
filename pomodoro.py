@@ -89,21 +89,39 @@ print('Initial value of sec:', sec.get())
 
 
 # play selected song---------------------------------------------------
-def play_selected_song():
+playlist = []
+
+# Function to load selected songs from the database
+def load_selected_songs():
     try:
-        with open("selected_songs.txt", "r") as file:
-            songs = file.readlines()
-        if songs:
-            song = random.choice(songs).strip()
-            pygame.mixer.music.load(song)
-            pygame.mixer.music.play()
+        c.execute("SELECT song_path FROM playlist WHERE username = ?", (username,))
+        songs = c.fetchall()
+        return [song[0] for song in songs]
     except Exception as e:
-        print(f"No song found or unable to play song: {e}")
+        print(f"Error loading playlist: {e}")
+        return []
+
+# Load the playlist when the script starts
+playlist = load_selected_songs()
+
+# Function to play the next song in the playlist
+def play_next_song():
+    if playlist:
+        next_song = playlist.pop(0)
+        playlist.append(next_song)  # Move the song to the end of the playlist
+        pygame.mixer.music.load(next_song)
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_endevent(pygame.USEREVENT)  # Set an event when the song ends
+
+# Event handler for song end
+def song_end(event):
+    if event.type == pygame.USEREVENT:
+        play_next_song()
 
 #warning; lots of FUNCTIONS----------------------------------------
+# Start the timer and play the selected song
 def start_timer():
-    global paused_position, initial_study_time , start_time
-    global time_run
+    global paused_position, initial_study_time, start_time, time_run
     
     initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     start_time = time.time()
@@ -118,8 +136,7 @@ def start_timer():
     
     time_run = True
     timer()
-    
-   
+      
 def pause_timer():
     global time_run, paused_position
     time_run=False
