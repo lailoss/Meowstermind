@@ -91,19 +91,21 @@ print('Initial value of sec:', sec.get())
 # play selected song---------------------------------------------------
 def play_selected_song():
     try:
-        with open("selected_songs.txt", "r") as file:
-            songs = file.readlines()
+        c.execute("SELECT song_path FROM playlist WHERE username = ?", (username,))
+        songs = c.fetchall()
         if songs:
-            song = random.choice(songs).strip()
+            song = random.choice(songs)[0]  # Get the song path from the tuple
             pygame.mixer.music.load(song)
             pygame.mixer.music.play()
+        else:
+            print("No songs found for this user.")
     except Exception as e:
         print(f"No song found or unable to play song: {e}")
 
 #warning; lots of FUNCTIONS----------------------------------------
+# Start the timer and play the selected song
 def start_timer():
-    global paused_position, initial_study_time , start_time
-    global time_run
+    global paused_position, initial_study_time, start_time, time_run
     
     initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     start_time = time.time()
@@ -118,8 +120,7 @@ def start_timer():
     
     time_run = True
     timer()
-    
-   
+      
 def pause_timer():
     global time_run, paused_position
     time_run=False

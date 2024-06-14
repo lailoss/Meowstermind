@@ -415,33 +415,33 @@ scroll.config(command=playlist.yview)
 scroll.pack(side=RIGHT, fill=Y)
 scroll.pack(side=RIGHT, fill=Y)
 playlist.pack(side=LEFT,fill=BOTH)
-
-# Function to load selected songs from the database
-def load_selected_songs():
-    try:
-        c.execute("SELECT song_path FROM playlist WHERE username = ?",(username,))
-        selected_songs = c.fetchall()
-        for song_info in selected_songs:
-            song_path = song_info[0]  # Extract the first (and only) element from the tuple
-            song_name = os.path.basename(song_path)
-            playlist.insert(END, song_name)
-    except sqlite3.Error as e:
-        print("Error reading playlist:", e)
         
 # Function to save selected songs to the database
 def save_selected_songs(songs, username):
     try:
         # Fetch existing songs from the database
-        c.execute("SELECT song_path FROM playlist")
+        c.execute("SELECT song_path FROM playlist WHERE username = ?", (username,))
         existing_songs = [row[0] for row in c.fetchall()]
         
         # Append new songs to existing entries
         for song in songs:
             if song not in existing_songs:
-                c.execute("INSERT INTO playlist (username, song_path) VALUES (?,?)", (username,song))
+                c.execute("INSERT INTO playlist (username, song_path) VALUES (?, ?)", (username, song))
         conn.commit()
     except sqlite3.Error as e:
         print("Error saving playlist:", e)
+
+# Function to load selected songs from the database
+def load_selected_songs():
+    try:
+        c.execute("SELECT song_path FROM playlist WHERE username = ?", (username,))
+        selected_songs = c.fetchall()
+        for song_info in selected_songs:
+            song_path = song_info[0]
+            song_name = os.path.basename(song_path)
+            playlist.insert(END, song_name)
+    except sqlite3.Error as e:
+        print("Error reading playlist:", e)
 
 load_selected_songs()
 
