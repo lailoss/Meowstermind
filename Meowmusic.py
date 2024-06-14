@@ -9,18 +9,35 @@ import customtkinter
 import pygame
 import tkinter.messagebox as messagebox
 import sqlite3
+import sys
 
 # Initialise Pygame Mixer
 pygame.mixer.init()
 
+#gets username from login
+if len(sys.argv) > 1:
+    username = sys.argv[1]
+else:
+    print("username not provided :()")
+    sys.exit(1)
+
 # Connect to the SQLite database (or create it if it doesn't exist)
-conn = sqlite3.connect('playlist.db')
+conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
-# Create table if it doesn't exist
+try:
+    c.execute('ALTER TABLE playlist ADD COLUMN username TEXT')
+except sqlite3.OperationalError as e:
+    print(f"OperationalError: {e}")
+
+# Create table if it doesn't exist (This part is to ensure your table has been created)
 c.execute('''CREATE TABLE IF NOT EXISTS playlist (
              id INTEGER PRIMARY KEY,
-             song_path TEXT)''')
+             song_path TEXT,
+             username TEXT
+            )''')
+
+conn.commit()
 
 music_window = customtkinter.CTk()
 music_window.grab_set()
@@ -49,7 +66,7 @@ def open_folder():
             selected_songs.append(song)
     
     # Save selected songs to database
-    save_selected_songs(selected_songs)
+    save_selected_songs(selected_songs, username)
           
 # Grab song lenght time info
 def play_time():
@@ -262,11 +279,11 @@ def delete_song():
         print(f"Deleting song: {song_path}")  # Debug statement
         
         # Check if the song exists in the database before deleting
-        c.execute("SELECT * FROM playlist WHERE song_path = ?", (song_path,))
+        c.execute("SELECT * FROM playlist WHERE song_path = ? AND username = ?", (song_path, username))
         song_in_db = c.fetchone()
         if song_in_db:
             print(f"Song found in database: {song_in_db}")
-            c.execute("DELETE FROM playlist WHERE song_path = ?", (song_path,))
+            c.execute("DELETE FROM playlist WHERE song_path = ? AND username = ?", (song_path, username))
             conn.commit()
             print("Song deleted from database")
             
@@ -402,7 +419,7 @@ playlist.pack(side=LEFT,fill=BOTH)
 # Function to load selected songs from the database
 def load_selected_songs():
     try:
-        c.execute("SELECT song_path FROM playlist")
+        c.execute("SELECT song_path FROM playlist WHERE username = ?",(username,))
         selected_songs = c.fetchall()
         for song_info in selected_songs:
             song_path = song_info[0]  # Extract the first (and only) element from the tuple
@@ -412,7 +429,7 @@ def load_selected_songs():
         print("Error reading playlist:", e)
         
 # Function to save selected songs to the database
-def save_selected_songs(songs):
+def save_selected_songs(songs, username):
     try:
         # Fetch existing songs from the database
         c.execute("SELECT song_path FROM playlist")
@@ -421,7 +438,7 @@ def save_selected_songs(songs):
         # Append new songs to existing entries
         for song in songs:
             if song not in existing_songs:
-                c.execute("INSERT INTO playlist (song_path) VALUES (?)", (song,))
+                c.execute("INSERT INTO playlist (username, song_path) VALUES (?,?)", (username,song))
         conn.commit()
     except sqlite3.Error as e:
         print("Error saving playlist:", e)
