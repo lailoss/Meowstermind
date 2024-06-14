@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+bedroom
+=======
+<<<<<<< HEAD
 <<<<<<< HEAD
 default
 =======
@@ -7,3 +10,4 @@ bedroom
 =======
 default
 >>>>>>> e9192324b8e0e34ca47934e9ee5158ae0d3da7db
+>>>>>>> bba0f19909b3fe442260ca3219e477544206eecd

@@ -3,6 +3,8 @@ from tkinter import messagebox
 import subprocess
 import sys
 import sqlite3
+import bcrypt
+
 
 LOGwindow = None  # Global variable to hold the login window
 LOGwindow = Tk()
@@ -27,6 +29,9 @@ argsadmin = '"%s" "%s"' % (sys.executable, pathadmin)
 
 
 #FUNCTIONS ---------------------------------------------------------
+def hash_password(password):
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
 def login():
     global LOGwindow
     username = username_entry.get().strip()
@@ -36,10 +41,10 @@ def login():
     c = conn.cursor() #create cursor
 
     #scans through the table
-    c.execute("SELECT * FROM userinfo WHERE username=? AND password=?", (username, password))
+    c.execute("SELECT password FROM userinfo WHERE username=?", (username,))
     user = c.fetchone() #fetch one as in fetch the ONE that matches. its either match or no match.
 
-    if user: #dont have to explicitly type 'true', it knows.
+    if user and bcrypt.checkpw(password.encode(), user[0].encode()): #dont have to explicitly type 'true', it knows.
         messagebox.showinfo("Success", "Login successful!")
         LOGwindow.destroy()
         print(f"Username to be passed: {username}")

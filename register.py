@@ -3,6 +3,8 @@ from tkinter import messagebox
 import sqlite3
 import subprocess
 import sys
+import bcrypt
+
 
 REGwindow = Tk()
 REGwindow.geometry("600x600")
@@ -31,7 +33,11 @@ font_15 = ("Gill Sans MT", 15)
 pathlogin = "login.py"
 argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
 
+
 #FUNCTIONS ---------------------------------------------------------
+def hashfunc(password):
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
 def signup():
     username = username_entry.get().strip()
     password = password_entry.get().strip()
@@ -49,6 +55,8 @@ def signup():
         return False
 
     else: 
+        hashedpw = hashfunc(password)
+
         conn = sqlite3.connect("database.db") #create / fetch database
         c = conn.cursor() #create cursor
 
@@ -56,7 +64,7 @@ def signup():
         c.execute("INSERT INTO userinfo VALUES (:username, :password)", 
             {
                 'username': username_entry.get(),
-                'password': password_entry.get()
+                'password': hashedpw
             }
         )
 
