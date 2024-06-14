@@ -44,7 +44,7 @@ frame1.grid(row=1, column=0)
 reglabel = Label(frame1, text="Are you a new member?\n", font=font_20, padx=10, pady=20, bg="#FFFFFF")
 reglabel.grid(row=0, column=0)
 
-picreg = PhotoImage(file="picreg.png")
+picreg = PhotoImage(file="./images/picreg.png")
 picreglabel = Label(frame1,image=picreg, pady=5, bg="#FFFFFF")
 picreglabel.grid(row=1, column=0)
 
@@ -57,7 +57,7 @@ frame2.grid(row=1, column=1)
 loglabel = Label(frame2, text="Already have an account?\nWelcome back!", font=font_20, padx=10, pady=20, bg="#FFFFFF")
 loglabel.grid(row=0, column=0)
 
-piclog = PhotoImage(file="piclog.png")
+piclog = PhotoImage(file="./images/piclog.png")
 picloglabel = Label(frame2,image=piclog, pady=5, bg="#FFFFFF")
 picloglabel.grid(row=1, column=0)
 
