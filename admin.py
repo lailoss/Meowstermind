@@ -2,7 +2,7 @@ from tkinter import *
 import sqlite3
 
 admin = Tk()
-admin.geometry("600x700")
+admin.geometry("500x600")
 admin.configure(bg="#99BDFA")
 admin.title("Admin Page")
 
@@ -58,11 +58,31 @@ def query():
     userName_label = Label(drawer, text=userName, font=font_15, bg="#FFFFFF")
     userName_label.grid(row=2, column=1, pady=(5,0))
 
+    #scrollbar
+    canvas = Canvas(drawer, bg="#FFFFFF")
+    canvas.grid(row=0, column=2, rowspan=3)
+
+    scrollbar = Scrollbar(drawer, orient="vertical", command=canvas.yview)
+    scrollbar.grid(row=0, column=2, rowspan=3)
+
+    scrollable_frame = Frame(canvas)
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+
     conn.commit() #commit changes
     conn.close() #close connection
 
 
-def save(): #SOON TO BE REMOVED
+'''def save(): #SOON TO BE REMOVED
     conn = sqlite3.connect("database.db") #create / fetch database
     c = conn.cursor() #create cursor
 
@@ -79,10 +99,10 @@ def save(): #SOON TO BE REMOVED
 
     conn.commit() #commit changes
     conn.close() #close connection
-    editor.destroy()
+    editor.destroy()'''
 
 
-def edit(): #SOON TO BE REMOVED
+'''def edit(): #SOON TO BE REMOVED
 
     global editor
     editor = Tk()
@@ -130,7 +150,7 @@ def edit(): #SOON TO BE REMOVED
     for record in records:
         username_entry.insert(0, record[0])
         password_entry.insert(0, record[1])
-
+'''
 
 def delete():
     conn = sqlite3.connect("database.db") #create / fetch database
@@ -142,10 +162,6 @@ def delete():
     identry.delete(0, END) #clear entry box
     conn.commit() #commit changes
     conn.close() #close connection
-
-'''    #clear the entry boxes
-    username.delete(0, END)
-    password.delete(0, END)'''
 
 
 #WIDGETS-------------------------------------------------------------
@@ -161,8 +177,8 @@ idlabel.grid(row=1, column=0, pady=20)
 identry = Entry(frame, font=font_15)
 identry.grid(row=1, column=1)
 
-editbutton = Button(frame, text="Edit record", font=font_15, bg="#FFFFFF", relief="flat", command=edit)
-editbutton.grid(row=2, column=0, columnspan=2)
+'''editbutton = Button(frame, text="Edit record", font=font_15, bg="#FFFFFF", relief="flat", command=edit)
+editbutton.grid(row=2, column=0, columnspan=2)'''
 
 delbutton = Button(frame, text="Delete record", font=font_15, fg="red", bg="#FFFFFF", relief="flat", command=delete)
 delbutton.grid(row=3, column=0, columnspan=2)
