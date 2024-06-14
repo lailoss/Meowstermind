@@ -45,7 +45,7 @@ pom.resizable(False, False)
 #consts
 red='#FFFAF2' #please note that this is not actually red, im just lazy to change everything tq
 peach='#FFE4B6'
-bg_img=PhotoImage(file='timer.png')
+bg_img=PhotoImage(file='./images/timer.png')
 pink='#FFC5C5'
 
 #tracker or whatever it's called
@@ -152,7 +152,7 @@ def pause_timer():
    
     global pause_popup
     global pausebg
-    pausebg=PhotoImage(file='./pausepopup.png')
+    pausebg=PhotoImage(file='./images/pausepopup.png')
     pause_popup = Toplevel()
     pause_popup.title(f'Don\'t give up!')
     pause_popup.geometry('300x200')
@@ -174,7 +174,7 @@ def stop_timer():
 def break_mode():
     print('hellow world')
     global bg_timer
-    bg_timer=PhotoImage(file='BREAK.png')
+    bg_timer=PhotoImage(file='./images/BREAK.png')
     bg.config(image=bg_timer)
      
     

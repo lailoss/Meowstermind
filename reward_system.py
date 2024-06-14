@@ -8,7 +8,7 @@ rewards=Tk()
 rewards.geometry('800x500')
 rewards.title ('Wallpapers by Itang!')
 rewards.resizable(False, False)
-rewardsbg=PhotoImage(file='reward_bg.png')
+rewardsbg=PhotoImage(file='./images/reward_bg.png')
 bg=Label(rewards,image=rewardsbg)
 bg.pack()
 
