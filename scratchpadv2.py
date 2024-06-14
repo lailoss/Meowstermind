@@ -10,9 +10,15 @@ else:
     sys.exit(1)
     
 #database
-connect=sqlite3.connect('database.db')
-cursor=connect.cursor() #allow you to send SQL commands to database
-cursor.execute("CREATE TABLE IF NOT EXISTS nota (title PRIMARY KEY, content TEXT, username TEXT)")
+connect = sqlite3.connect('database.db')
+cursor = connect.cursor()
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS nota (
+        title TEXT PRIMARY KEY,
+        content TEXT,
+        username TEXT
+    )
+""")
 connect.commit()
 
 

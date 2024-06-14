@@ -21,6 +21,7 @@ argsreg = '"%s" "%s"' % (sys.executable, pathreg)
 #FUNCTIONS ----------------------------------------------------------
 
 def redirect_l():
+    primary.destroy()
     proc = subprocess.run(argslogin)
 
 def redirect_r():
@@ -33,8 +34,6 @@ def redirect_r():
 #weights
 primary.grid_columnconfigure(0, weight=1) #helps with centering , by column
 primary.grid_columnconfigure(1, weight=1)
-#primary.grid_rowconfigure(0, weight=1) #helps with centering , by row
-
 
 title = Label(primary, text="W E L C O M E", font=font_30, pady=50, bg="#E8D09C")
 title.grid(row =0, column=0, columnspan=2, sticky="ew")

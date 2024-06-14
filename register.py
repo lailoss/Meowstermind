@@ -30,13 +30,22 @@ font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
 #path
+pathreg = "register.py"
+argsreg = '"%s" "%s"' % (sys.executable, pathreg)
+
 pathlogin = "login.py"
 argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
 
 
 #FUNCTIONS ---------------------------------------------------------
+def redirect_l():
+    REGwindow.destroy()
+    proc = subprocess.run(argslogin)
+
+
 def hashfunc(password):
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
 
 def signup():
     username = username_entry.get().strip()
@@ -82,41 +91,36 @@ def signup():
         proc = subprocess.run(argslogin)
 
 
-#FRAME---------------------------------------------------------------
-frame=Frame(REGwindow, bg="#FFFFFF", padx=20, pady=20)
-
-
 #WIDGETS-------------------------------------------------------------
+frame=Frame(REGwindow, bg="#FFFFFF", padx=20, pady=20)
+frame.pack(side="top", expand=True)
+
 reg_title = Label(frame, text="REGISTRATION", font=font_30, padx=0, pady=30, bg="#FFFFFF")
-
-username_label = Label(frame, text="Username", font=font_15, pady=5, bg="#FFFFFF")
-username_entry = Entry(frame, font=font_15, bg="#FFFFFF")
-
-password_label = Label(frame, text="Password", font=font_15, pady=5, bg="#FFFFFF")
-password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
-
-repassword_label = Label(frame, text="Re-enter Password", font=font_15, pady=5, bg="#FFFFFF")
-repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
-
-#loginPage_button = Button(frame, text = "Already have an account? Login now!", font=font_15, fg= "navy", bg= "#FFFFFF" ,relief="flat")
-create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", borderwidth=0, padx=50, command=signup)
-
-
-#PACK IT IN (OR GRID IG)----------------------------------------------
 reg_title.grid(row=0, column=1, columnspan=2, sticky="ew")
 
-username_label.grid(row=1, column=1)
+username_label = Label(frame, text="Username", font=font_15, bg="#FFFFFF")
+username_label.grid(row=1, column=1, pady=5)
+
+username_entry = Entry(frame, font=font_15, bg="#FFFFFF")
 username_entry.grid(row=1, column=2)
 
-password_label.grid(row=2, column=1)
+password_label = Label(frame, text="Password", font=font_15, bg="#FFFFFF")
+password_label.grid(row=2, column=1, pady=5)
+
+password_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 password_entry.grid(row=2, column=2)
 
-repassword_label.grid(row=3, column=1)
+repassword_label = Label(frame, text="Re-enter\nPassword", font=font_15, bg="#FFFFFF")
+repassword_label.grid(row=3, column=1, pady=5)
+
+repassword_entry = Entry(frame, show="•", font=font_15, bg="#FFFFFF")
 repassword_entry.grid(row=3, column=2)
 
-create_button.grid(row=4, column=1, columnspan=2)
-#loginPage_button.grid(row= 5, column= 1, columnspan=2, sticky="ew")
+logbutton = Button(frame, text="Already have an account? Login here!", font=font_15, fg="navy", bg="#FFFFFF", relief="flat", command=redirect_l)
+logbutton.grid(row=4, column=1, columnspan=2, pady=5)
 
-frame.pack(side="top", expand=True)
+create_button = Button(frame, text="Create Account", font=font_20, bg="#FFFFFF", command=signup)
+create_button.grid(row=5, column=1, columnspan=2)
+
 
 REGwindow.mainloop()

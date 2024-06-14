@@ -127,20 +127,11 @@ def save():
     finally:
         conn.close()
 
-
         # Clear entry boxes
         currpw_entry.delete(0, END)
         newpw_entry.delete(0, END)
         repassword_entry.delete(0, END)
 
-        messagebox.showinfo("Success", "Account details updated successfully!")
 
 edit()
 acc_change.mainloop()
-
-
-"""    else: 
-        new_hashedpw = bcrypt.hashpw(newpw.encode(), bcrypt.gensalt()).decode()
-        c.execute("UPDATE userinfo SET password = ? WHERE username = ?", (new_hashedpw, username))
-        conn.commit()
-        conn.close()"""
