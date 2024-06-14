@@ -33,7 +33,7 @@ def query():
     userName_list = []
 
     for record in records:
-        oid_list.append(str(record[2]))
+        oid_list.append(str(record[3]))
         userName_list.append(str(record[0]))
 
     oid = "\n".join(oid_list)

@@ -3,6 +3,7 @@ from tkinter import messagebox
 import subprocess
 import sys
 import sqlite3
+import bcrypt
 
 LOGwindow = None  # Global variable to hold the login window
 LOGwindow = Tk()
@@ -36,14 +37,20 @@ def login():
     c = conn.cursor() #create cursor
 
     #scans through the table
-    c.execute("SELECT * FROM userinfo WHERE username=? AND password=?", (username, password))
+    c.execute("SELECT * FROM userinfo WHERE username=?", (username,))
     user = c.fetchone() #fetch one as in fetch the ONE that matches. its either match or no match.
 
-    if user: #dont have to explicitly type 'true', it knows.
-        messagebox.showinfo("Success", "Login successful!")
-        LOGwindow.destroy()
-        print(f"Username to be passed: {username}")
-        proc = subprocess.run([sys.executable, "homescreen.py", username])
+    if user:
+        hashed_password = user[1]
+        if bcrypt.checkpw(password.encode(), hashed_password.encode()): #dont have to explicitly type 'true', it knows.
+            print("Password check passed")  # Debugging
+            messagebox.showinfo("Success", "Login successful!")
+            LOGwindow.destroy()
+            print(f"Username to be passed: {username}")  # Debugging
+            proc = subprocess.run([sys.executable, "homescreen.py", username])
+        else:
+            messagebox.showerror("Error", "Invalid username or password.")
+            print("Invalid password.") 
 
     elif (username == "meow" and password == "1234"):
         LOGwindow.destroy()
@@ -51,6 +58,7 @@ def login():
 
     else:
         messagebox.showerror("Error", "Invalid username or password.")
+        print("Invalid password.")  
 
 
 #FRAME---------------------------------------------------------------
@@ -80,3 +88,13 @@ frame.pack(side="top", expand=True)
 
 
 LOGwindow.mainloop()
+
+
+"""    hashed_password = user[1]
+    
+    if user and bcrypt.checkpw(password.encode(), hashed_password.encode()): #dont have to explicitly type 'true', it knows.
+            print("Password check passed")  # Debugging
+            messagebox.showinfo("Success", "Login successful!")
+            LOGwindow.destroy()
+            print(f"Username to be passed: {username}")  # Debugging
+            proc = subprocess.run([sys.executable, "homescreen.py", username])"""
