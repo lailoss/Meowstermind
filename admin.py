@@ -22,28 +22,25 @@ def query():
 
     c.execute("SELECT *, oid FROM userinfo")
     records = c.fetchall()
-    print(records)
+    print("all records fetched")
 
-    meowmbers = Tk()
-    meowmbers.geometry("400x500")
-    meowmbers.configure(bg="#99BDFA")
-    meowmbers.title("Meowers")
+    meowers = Tk()
+    meowers.geometry("400x500")
+    meowers.configure(bg="#99BDFA")
+    meowers.title("Meowers")
 
-    '''print_records=''
-    for record in records:
-        print_records += str(record[3]) + "           \t" + str(record[0]) +"\n"'''
 
     #WIDGETS-------------------------------------------------------------
-    drawer = Frame(meowmbers, bg="#FFFFFF", padx=20, pady=20)
+    drawer = Frame(meowers, bg="#FFFFFF", padx=20, pady=20)
     drawer.pack(side="top", expand=True)
 
-    meowmbers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
-    meowmbers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
+    meowers_title = Label(drawer, text="MEOWERS", font=font_20, padx=0, pady=20, bg="#FFFFFF")
+    meowers_title.grid(row=0, column=0, columnspan=2, sticky="ew")
 
     oidtext = Label(drawer, text="oid", font=font_15b, bg="#FFFFFF")
-    oidtext.grid(row=1, column=0, padx=(20,30))
+    oidtext.grid(row=1, column=0, padx=(15,25))
 
-    usernametext = Label(drawer, text="Username", font=font_15b, bg="#FFFFFF")
+    usernametext = Label(drawer, text="  Username", font=font_15b, bg="#FFFFFF")
     usernametext.grid(row=1, column=1, padx=(30,15))
 
     cupboard = Frame(drawer, bg="#FFFFFF")
@@ -51,17 +48,19 @@ def query():
 
     max_username_length = max(len(record[0]) for record in records)
 
-    record_label = Text(cupboard, font=font_15, bg="#FFFFFF", width=max_username_length + 17, height=10)
+    record_label = Text(cupboard, font=font_15, bg="#FFFFFF", width=max_username_length + 17, height=10) #text so that we can add scrollbar
     record_label.pack(side="left", fill="both", expand=True)
-
+    
     for record in records:
-        record_label.insert("end", "     " + str(record[3]) + "                \t" + str(record[0]) + "\n")
+        betteroid = f"{record[3]:02}"
+        record_label.insert("end", "     " + betteroid + "\t\t" + str(record[0]) + "\n")
+
+    record_label.config(state="disabled") #makes it read-only
 
     scrollbar = Scrollbar(cupboard, orient="vertical")
     scrollbar.pack(side="right", fill="y")
-    record_label.config(yscrollcommand=scrollbar.set)
-    scrollbar.config(command=record_label.yview)
-
+    record_label.config(yscrollcommand=scrollbar.set) #scrollbar added here
+    scrollbar.config(command=record_label.yview) #verticalized the scrollbar based on record_label
 
 
     conn.commit() #commit changes

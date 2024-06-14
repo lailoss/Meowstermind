@@ -21,13 +21,15 @@ c = conn.cursor() #create cursor
 '''c.execute("""CREATE TABLE userinfo(
     username text,
     password text
-    )""")
-'''
+    )""")'''
+
 #PARAMETER-----------------------------------------------------------
+#fonts
 font_30 = ("Gill Sans MT", 30, "bold")
 font_20 = ("Gill Sans MT", 20)
 font_15 = ("Gill Sans MT", 15)
 
+#path
 pathlogin = "login.py"
 argslogin = '"%s" "%s"' % (sys.executable, pathlogin)
 
@@ -59,10 +61,11 @@ def signup():
         c = conn.cursor() #create cursor
 
         #insert into table
-        c.execute("INSERT INTO userinfo VALUES (:username, :password)", 
+        c.execute("INSERT INTO userinfo VALUES (:username, :password, :background)", 
             {
                 'username': username_entry.get(),
-                'password': hashedpw
+                'password': hashedpw,
+                'background': ""
             }
         )
 
@@ -75,8 +78,8 @@ def signup():
         repassword_entry.delete(0, END)
 
         messagebox.showinfo("Success", "Account created successfully!")
-        REGwindow.destroy()
-        proc = subprocess.run(argslogin)
+        """REGwindow.destroy()
+        proc = subprocess.run(argslogin)"""
 
 
 #FRAME---------------------------------------------------------------
