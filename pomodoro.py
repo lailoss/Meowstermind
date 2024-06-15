@@ -190,7 +190,7 @@ def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode, total_hours, initial_study_time
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-    cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
+    cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background=red)
     cycletext.place(x='80', y='33')
     
     if total_time > 0:
