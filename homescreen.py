@@ -31,9 +31,9 @@ acc_pic = PhotoImage(file="./icons/iconacc.png")
 rewards_pic = PhotoImage(file="./icons/iconrewards.png")
 
 #midframe pictures
-qtitle = PhotoImage(file="./quotes/title/t1.png")
+qtitle = PhotoImage(file="./quotes/t1.png")
 
-images = [f"./quotes/content/wp{i}.png" for i in range(1, 11)]
+images = [f"./quotes/wp{i}.png" for i in range(1, 11)]
 images_dict = {i:ImageTk.PhotoImage(Image.open(image)) for i, image in enumerate(images)}
 
 #icon pictures
