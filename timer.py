@@ -19,7 +19,7 @@ root.resizable(False, False)
 red='#d04e2f'
 peach='#FFE4B6'
 #beep=pygame. mixer.music.load('pomodoro_beep.mp3')
-bg_img=PhotoImage(file='timer.png')
+bg_img=PhotoImage(file='./images/timer.png')
 pink='#FFC5C5'
 
 #tracker or whatever it's called
@@ -91,7 +91,7 @@ def stop_timer():
 def break_mode():
     print('hellow world')
     global bg_timer
-    bg_timer=PhotoImage(file='BREAK.png')
+    bg_timer=PhotoImage(file='./images/BREAK.png')
     bg.config(image=bg_timer)
     break_noti.destroy()
     
@@ -127,7 +127,7 @@ def timer():
             cycle+=1
             is_breaktime()
             break_presets()
-            break_notiimg=PhotoImage(file='BREAK_NOTI.png')
+            break_notiimg=PhotoImage(file='./images/BREAK_NOTI.png')
             break_noti = Toplevel()
             break_noti.title(f'Break Time!')
             break_noti.geometry('500x300')
@@ -141,7 +141,7 @@ def timer():
             breaktime=False
             study_mode()
                 
-            studynotiimg=PhotoImage(file='STUDY_NOTI.png')
+            studynotiimg=PhotoImage(file='./images/STUDY_NOTI.png')
             study_noti = Toplevel()
             study_noti.title(f'Study Time!')
             study_noti.geometry('500x300')

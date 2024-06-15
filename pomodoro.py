@@ -32,7 +32,6 @@ c.execute('''
 ''')
 conn.commit()
 
-
 #window
 pom=Tk()
 pom.geometry('600x300') 
@@ -46,7 +45,7 @@ pom.resizable(False, False)
 #consts
 red='#FFFAF2' #please note that this is not actually red, im just lazy to change everything tq
 peach='#FFE4B6'
-bg_img=PhotoImage(file='timer.png')
+bg_img=PhotoImage(file='./images/timer.png')
 pink='#FFC5C5'
 
 #tracker or whatever it's called
@@ -59,7 +58,6 @@ total_hours=0
 
 
 paused_position=None
-total_hours=0
 time_run=False
 
 #background-------------------------------------------
@@ -89,7 +87,12 @@ print('Initial value of sec:', sec.get())
 
 
 # play selected song---------------------------------------------------
+# Initialize pygame mixer and set the end event for music
+pygame.mixer.music.set_endevent(pygame.USEREVENT)
+
 playlist = []
+current_song_index = 0  # Index to track current song in playlist
+paused_position = None  # Position to resume music after pause
 
 # Function to load selected songs from the database
 def load_selected_songs():
@@ -104,51 +107,52 @@ def load_selected_songs():
 # Load the playlist when the script starts
 playlist = load_selected_songs()
 
-# Function to play the next song in the playlist
-def play_next_song():
+# Function to play a random song from the playlist
+def play_random_song():
+    global paused_position
     if playlist:
-        next_song = playlist.pop(0)
-        playlist.append(next_song)  # Move the song to the end of the playlist
-        pygame.mixer.music.load(next_song)
+        random_song = random.choice(playlist)
+        pygame.mixer.music.load(random_song)
         pygame.mixer.music.play()
-        pygame.mixer.music.set_endevent(pygame.USEREVENT)  # Set an event when the song ends
-
+        
 # Event handler for song end
 def song_end(event):
     if event.type == pygame.USEREVENT:
-        play_next_song()
+        play_random_song()
 
 #warning; lots of FUNCTIONS----------------------------------------
 # Start the timer and play the selected song
 def start_timer():
     global paused_position, initial_study_time, start_time, time_run
     
-    initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-    start_time = time.time()
-    
-    if paused_position is not None:
-        # Resume from the paused position
-        pygame.mixer.music.unpause()
-        pygame.mixer.music.set_pos(paused_position)
-    else:
-        # Play the song when the timer starts
-        play_next_song()
-    
-    time_run = True
-    timer()
+    if not time_run:  # Only start the timer if it's not already running
+        initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
+        start_time = time.time()
+        
+        if paused_position is not None:
+            # Resume from the paused position
+            pygame.mixer.music.unpause()
+            pygame.mixer.music.set_pos(paused_position)
+            paused_position = None  # Clear the paused position
+        elif not pygame.mixer.music.get_busy():
+            # No music is playing, start playing a new song
+            play_random_song()
+        
+        time_run = True
+        timer()
+
       
 def pause_timer():
-    global time_run, paused_position
+    global time_run, paused_position, current_song_index
     time_run=False
     paused_position = pygame.mixer.music.get_pos() / 1000.0
     pygame.mixer.music.pause()  # Pause the music
-    print('timer has paused')
-    global current_time
+    current_song_index -= 1
     pom.after_cancel(current_time) #cancels the operation above
    
     global pause_popup
     global pausebg
-    pausebg=PhotoImage(file='./pausepopup.png')
+    pausebg=PhotoImage(file='./images/pausepopup.png')
     pause_popup = Toplevel()
     pause_popup.title(f'Don\'t give up!')
     pause_popup.geometry('300x200')
@@ -170,7 +174,7 @@ def stop_timer():
 def break_mode():
     print('hellow world')
     global bg_timer
-    bg_timer=PhotoImage(file='BREAK.png')
+    bg_timer=PhotoImage(file='./images/BREAK.png')
     bg.config(image=bg_timer)
      
     
@@ -186,7 +190,7 @@ def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode, total_hours, initial_study_time
    
     total_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
-    cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background='#FF4545')
+    cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background=red)
     cycletext.place(x='80', y='33')
     
     if total_time > 0:
@@ -288,6 +292,11 @@ def workc():
     if is_breaktime==True:
         break_presets()
 
+# Close the connection when the application exits
+def on_close():
+    conn.close()
+    pom.destroy
+    
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
 startbutton=Button(pom, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='285',y=' 240')
@@ -307,4 +316,11 @@ workbbutton.place(x='270',y=' 160')
 workcbutton=Button(pom, image=maria, bg=pink, font='comfortaa 18 bold', borderwidth=0, command=workc)
 workcbutton.place(x='365',y=' 160')
 
+# Load the playlist and handle song end events
+playlist = load_selected_songs()
+pygame.mixer.music.set_endevent(pygame.USEREVENT)
+pygame.mixer.music.set_volume(0.5)  # Adjust volume if needed
+
 pom.mainloop()
+
+

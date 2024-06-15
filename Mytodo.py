@@ -163,7 +163,7 @@ def grab_date():
     date_window.destroy()
 
 # background image
-bg_image = PhotoImage(file="todobg.png")
+bg_image = PhotoImage(file="./images/todobg.png")
 background_label = Label(todo_window, image=bg_image)
 
 # Create a label with the background image and add it to the root window

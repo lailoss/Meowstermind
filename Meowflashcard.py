@@ -63,7 +63,7 @@ def add_set(conn, username, name):
         conn.commit()
         
         return set_id
-    
+  
 # Function to add a flashcard to the database
 def add_card(conn, username, set_id, word, definition):
     cursor = conn.cursor()
@@ -149,18 +149,23 @@ def add_word():
     definition = definition_var.get()
     
     if set_name and word and definition:
-        if set_name not in get_sets(conn, username):
-            set_id = add_set(conn,username, set_name)
-        else:
-            set_id = get_sets(conn, username)[set_name]
-            
-        add_card(conn, username, set_id, word, definition)
-        
-        terms_var.set('')
-        definition_var.set('')    
-               
-        populate_sets_combobox()  
-        select_set() # Refresh display after adding a new word
+        if len(word) < 26:
+            if len(definition) < 46:
+                if set_name not in get_sets(conn, username):
+                    set_id = add_set(conn,username, set_name)
+                else:
+                    set_id = get_sets(conn, username)[set_name]
+                    
+                add_card(conn, username, set_id, word, definition)
+                
+                terms_var.set('')
+                definition_var.set('')    
+                    
+                populate_sets_combobox()  
+                select_set() # Refresh display after adding a new word
+                
+            else: messagebox.showerror("Error", "Your definition should not exceed 45 characters.")
+        else: messagebox.showerror("Error","Your word should not exceed 25 characters.")
 
 def populate_sets_combobox():
     sets_combobox['values'] = tuple(get_sets(conn, username).keys())
@@ -372,16 +377,17 @@ def show_card():
 def flip_card(event=None):
     global card_index
     global current_cards
-    
+
     if current_cards:
         _, definition = current_cards[card_index]
         definition_label.config(text=definition)
-
+        
 # Function to handle the space key press event
 def handle_space(event):
+    
     # Check if the focus is not on an entry widget before flipping the card
     if fc_window.focus_get() not in [entry, entry1, entry2]:
-        flip_card()
+        flip_card
         
 # Function to move to the next card
 def next_card():
@@ -416,7 +422,7 @@ tab1 = tk.Frame(notebook)
 notebook.add(tab1, text='Create')
 
 # Load the background image
-bg_image = tk.PhotoImage(file="pawbg.png")
+bg_image = tk.PhotoImage(file="./images/pawbg.png")
 
 # Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab1, image=bg_image)
@@ -451,7 +457,7 @@ definition_var = tk.StringVar()
 # Label and Entry Widgets for entering set name, word and definition
 
 # set title :
-set_name_label = customtkinter.CTkLabel(tab1, text="Set Tittle | Subject | Category :", font=("Canva Sans", 15),text_color='#746F66')
+set_name_label = customtkinter.CTkLabel(tab1, text="Set Title | Subject | Category :", font=("Canva Sans", 15),text_color='#746F66')
 set_name_label.place(x=108, y=140)
 
 entry_frame = tk.Frame(tab1, bg="#D4C9B5")
@@ -520,7 +526,7 @@ tab2 = tk.Frame(notebook)
 notebook.add(tab2, text='Flashcards')
 
 # Load the background image
-bg_image1 = tk.PhotoImage(file="pawbg1.png")
+bg_image1 = tk.PhotoImage(file="./images/pawbg1.png")
 
 # Create a label with the background image and add it to the fc_window window
 bg_label = tk.Label(tab2, image=bg_image1)
@@ -528,33 +534,33 @@ bg_label.place(relwidth=1, relheight=1)
 
 # inner frame
 inner_frame_width = 730
-inner_frame_height = 383
+inner_frame_height = 390
 inner_frame = customtkinter.CTkFrame(tab2, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color='#45595A')
 inner_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # flashcard frame
-meowset_frame_width = 600
-meowset_frame_height = 180
+meowset_frame_width = 690
+meowset_frame_height = 240
 meowset_frame = customtkinter.CTkFrame(tab2, width=meowset_frame_width, height=meowset_frame_height, corner_radius=5, fg_color="#D4C9B5")
-meowset_frame.place(x=100,y=140)
+meowset_frame.place(x=50,y=100)
 
  ## Initialize variables for tracking card index and current cards
 card_index = 0
 current_cards = []  # corrected variable name
     
 # Label to display the word on flashcards
-word_label = ttk.Label(tab2, text=' ', font=('Georgia', 35), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center")
-word_label.place(x=200, y=150)  # Adjust the y-coordinate to make room for the definition label
+word_label = ttk.Label(tab2, text=' ', font=('Georgia', 25), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center", justify="center")
+word_label.place(x=170, y=150)  # Adjust the y-coordinate to make room for the definition label
 
 # Label to display the definition on flashcard
-definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center")
-definition_label.place(x=200, y=230)  # Adjust the y-coordinate to make room for the word label
+definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center", justify="center")
+definition_label.place(x=170, y=230)  # Adjust the y-coordinate to make room for the word label
 
 # button
 # Create PhotoImage objects for the images
-flip_image = tk.PhotoImage(file='flip.png')
-next_image = tk.PhotoImage(file='next.png')
-prev_image = tk.PhotoImage(file='pre.png')
+flip_image = tk.PhotoImage(file='./images/flip.png')
+next_image = tk.PhotoImage(file='./images/next.png')
+prev_image = tk.PhotoImage(file='./images/pre.png')
 
 # Create Player Control Buttons with custom background color and images
 flip_btn = tk.Button(tab2, image=flip_image, command=flip_card, borderwidth=0, highlightthickness=0)
@@ -567,20 +573,20 @@ next_btn.configure(bg="#45595A")
 pre_btn.configure(bg="#45595A")
 
 # Place buttons individually
-flip_btn.place(x=350, y=340)
-next_btn.place(x=470, y=340)
-pre_btn.place(x=230, y=340)
+flip_btn.place(x=350, y=355)
+next_btn.place(x=470, y=355)
+pre_btn.place(x=230, y=355)
 
-fc_window.bind('<space>', handle_space) 
+fc_window.bind('<Up>', lambda event: (fc_window.focus_set(), flip_card()))
 fc_window.bind('<Right>', lambda event: next_card())
 fc_window.bind('<Left>', lambda event: prev_card())
 
 # Modify your button creation to include buttons for editing and deleting flashcards
 edit_flashcard_button = ttk.Button(tab2, text='Edit card', command=edit_selected_card)
-edit_flashcard_button.place(x=100, y=100)
+edit_flashcard_button.place(x=50, y=60)
 
 delete_flashcard_button = ttk.Button(tab2, text='Delete card', command=delete_card_set)
-delete_flashcard_button.place(x=180, y=100)
+delete_flashcard_button.place(x=130, y=60)
 
 populate_sets_combobox()
 fc_window.mainloop()

@@ -314,7 +314,7 @@ def volume(x):
     pygame.mixer.music.set_volume(volume_slider.get())
 
 # Load the background image
-bg_image = tk.PhotoImage(file="mymusicbg.png")
+bg_image = tk.PhotoImage(file="./images/mymusicbg.png")
 
 # Create a label with the background image and add it to the root window
 bg_label = tk.Label(music_window, image=bg_image)
@@ -332,10 +332,10 @@ title_label.place(x=150,y=50)
 
 # button
 # Define Player Control Button Images
-back_btn_img = PhotoImage(file="backmusic.png")
-foward_btn_img = PhotoImage(file="fowardmusic.png")
-pause_btn_img = PhotoImage(file="pausemusic.png")
-stop_btn_img = PhotoImage(file="stopmusic.png")
+back_btn_img = PhotoImage(file="./images/backmusic.png")
+foward_btn_img = PhotoImage(file="./images/fowardmusic.png")
+pause_btn_img = PhotoImage(file="./images/pausemusic.png")
+stop_btn_img = PhotoImage(file="./images/stopmusic.png")
 
 # Create Player Control Buttons with custom background color
 back_btn = Button(music_window, image=back_btn_img, borderwidth=0, bg="#EFE0BF", command=previous_song)
@@ -442,8 +442,41 @@ def load_selected_songs():
             playlist.insert(END, song_name)
     except sqlite3.Error as e:
         print("Error reading playlist:", e)
+        return []
 
 load_selected_songs()
+
+# Function to play the next song in the playlist
+def play_next_song():
+    global current_song_index
+    if playlist:
+        if current_song_index >= len(playlist):
+            current_song_index = 0
+        next_song = playlist[current_song_index]
+        current_song_index += 1
+        pygame.mixer.music.load(next_song)
+        pygame.mixer.music.play()
+
+# Event handler for song end
+def song_end(event):
+    if event.type == pygame.USEREVENT:
+        play_next_song()
+
+# Play selected songs in a loop
+def play_selected_songs():
+    global current_song_index
+    current_song_index = 0
+    if playlist:
+        while True:
+            next_song = playlist[current_song_index]
+            pygame.mixer.music.load(next_song)
+            pygame.mixer.music.play()
+            pygame.mixer.music.set_endevent(pygame.USEREVENT)
+            current_song_index += 1
+            if current_song_index >= len(playlist):
+                current_song_index = 0
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(10)  # Adjust as needed for smooth playback
 
 # Close the connection when the application exits
 def on_close():
