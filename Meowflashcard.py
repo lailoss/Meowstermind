@@ -457,7 +457,7 @@ definition_var = tk.StringVar()
 # Label and Entry Widgets for entering set name, word and definition
 
 # set title :
-set_name_label = customtkinter.CTkLabel(tab1, text="Set Tittle | Subject | Category :", font=("Canva Sans", 15),text_color='#746F66')
+set_name_label = customtkinter.CTkLabel(tab1, text="Set Title | Subject | Category :", font=("Canva Sans", 15),text_color='#746F66')
 set_name_label.place(x=108, y=140)
 
 entry_frame = tk.Frame(tab1, bg="#D4C9B5")
