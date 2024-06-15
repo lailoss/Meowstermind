@@ -20,8 +20,10 @@ c = conn.cursor() #create cursor
 #CREATE TABLE---------------------------------------------------------------------------------------
 '''c.execute("""CREATE TABLE userinfo(
     username text,
-    password text
+    password text,
     )""")'''
+
+#checks to see if there's background column
 
 #PARAMETER-----------------------------------------------------------
 #fonts

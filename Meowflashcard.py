@@ -63,7 +63,7 @@ def add_set(conn, username, name):
         conn.commit()
         
         return set_id
-    
+  
 # Function to add a flashcard to the database
 def add_card(conn, username, set_id, word, definition):
     cursor = conn.cursor()
@@ -372,16 +372,17 @@ def show_card():
 def flip_card(event=None):
     global card_index
     global current_cards
-    
+
     if current_cards:
         _, definition = current_cards[card_index]
         definition_label.config(text=definition)
-
+        
 # Function to handle the space key press event
 def handle_space(event):
+    
     # Check if the focus is not on an entry widget before flipping the card
     if fc_window.focus_get() not in [entry, entry1, entry2]:
-        flip_card()
+        flip_card
         
 # Function to move to the next card
 def next_card():
@@ -528,27 +529,27 @@ bg_label.place(relwidth=1, relheight=1)
 
 # inner frame
 inner_frame_width = 730
-inner_frame_height = 383
+inner_frame_height = 390
 inner_frame = customtkinter.CTkFrame(tab2, width=inner_frame_width, height=inner_frame_height, corner_radius=5, fg_color='#45595A')
 inner_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # flashcard frame
-meowset_frame_width = 600
-meowset_frame_height = 180
+meowset_frame_width = 690
+meowset_frame_height = 240
 meowset_frame = customtkinter.CTkFrame(tab2, width=meowset_frame_width, height=meowset_frame_height, corner_radius=5, fg_color="#D4C9B5")
-meowset_frame.place(x=100,y=140)
+meowset_frame.place(x=50,y=100)
 
  ## Initialize variables for tracking card index and current cards
 card_index = 0
 current_cards = []  # corrected variable name
     
 # Label to display the word on flashcards
-word_label = ttk.Label(tab2, text=' ', font=('Georgia', 35), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center")
-word_label.place(x=200, y=150)  # Adjust the y-coordinate to make room for the definition label
+word_label = ttk.Label(tab2, text=' ', font=('Georgia', 25), background="#D4C9B5", wraplength=meowset_frame_width - 40, anchor="center", justify="center")
+word_label.place(x=170, y=150)  # Adjust the y-coordinate to make room for the definition label
 
 # Label to display the definition on flashcard
-definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center")
-definition_label.place(x=200, y=230)  # Adjust the y-coordinate to make room for the word label
+definition_label = ttk.Label(tab2, text=' ', font=('Arial', 15), background="#D4C9B5", wraplength=meowset_frame_width - 30, anchor="center", justify="center")
+definition_label.place(x=170, y=230)  # Adjust the y-coordinate to make room for the word label
 
 # button
 # Create PhotoImage objects for the images
@@ -567,20 +568,20 @@ next_btn.configure(bg="#45595A")
 pre_btn.configure(bg="#45595A")
 
 # Place buttons individually
-flip_btn.place(x=350, y=340)
-next_btn.place(x=470, y=340)
-pre_btn.place(x=230, y=340)
+flip_btn.place(x=350, y=355)
+next_btn.place(x=470, y=355)
+pre_btn.place(x=230, y=355)
 
-fc_window.bind('<space>', handle_space) 
+fc_window.bind('<Up>', lambda event: (fc_window.focus_set(), flip_card()))
 fc_window.bind('<Right>', lambda event: next_card())
 fc_window.bind('<Left>', lambda event: prev_card())
 
 # Modify your button creation to include buttons for editing and deleting flashcards
 edit_flashcard_button = ttk.Button(tab2, text='Edit card', command=edit_selected_card)
-edit_flashcard_button.place(x=100, y=100)
+edit_flashcard_button.place(x=50, y=60)
 
 delete_flashcard_button = ttk.Button(tab2, text='Delete card', command=delete_card_set)
-delete_flashcard_button.place(x=180, y=100)
+delete_flashcard_button.place(x=130, y=60)
 
 populate_sets_combobox()
 fc_window.mainloop()
