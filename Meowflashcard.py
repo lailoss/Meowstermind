@@ -149,18 +149,23 @@ def add_word():
     definition = definition_var.get()
     
     if set_name and word and definition:
-        if set_name not in get_sets(conn, username):
-            set_id = add_set(conn,username, set_name)
-        else:
-            set_id = get_sets(conn, username)[set_name]
-            
-        add_card(conn, username, set_id, word, definition)
-        
-        terms_var.set('')
-        definition_var.set('')    
-               
-        populate_sets_combobox()  
-        select_set() # Refresh display after adding a new word
+        if len(word) < 26:
+            if len(definition) < 46:
+                if set_name not in get_sets(conn, username):
+                    set_id = add_set(conn,username, set_name)
+                else:
+                    set_id = get_sets(conn, username)[set_name]
+                    
+                add_card(conn, username, set_id, word, definition)
+                
+                terms_var.set('')
+                definition_var.set('')    
+                    
+                populate_sets_combobox()  
+                select_set() # Refresh display after adding a new word
+                
+            else: messagebox.showerror("Error", "Your definition should not exceed 45 characters.")
+        else: messagebox.showerror("Error","Your word should not exceed 25 characters.")
 
 def populate_sets_combobox():
     sets_combobox['values'] = tuple(get_sets(conn, username).keys())
