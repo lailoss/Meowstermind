@@ -128,27 +128,31 @@ def start_timer():
     if not time_run:  # Only start the timer if it's not already running
         initial_study_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
         start_time = time.time()
-        
+
         if paused_position is not None:
-            # Resume from the paused position
-            pygame.mixer.music.unpause()
-            pygame.mixer.music.set_pos(paused_position)
+            # Resume from the paused position if music was paused
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.unpause()
+                pygame.mixer.music.set_pos(paused_position)
             paused_position = None  # Clear the paused position
-        elif not pygame.mixer.music.get_busy():
-            # No music is playing, start playing a new song
+        elif not pygame.mixer.music.get_busy() and playlist:
+            # No music is playing, start playing a new song if there is a playlist
             play_random_song()
-        
+
         time_run = True
         timer()
 
       
 def pause_timer():
     global time_run, paused_position, current_song_index
-    time_run=False
-    paused_position = pygame.mixer.music.get_pos() / 1000.0
-    pygame.mixer.music.pause()  # Pause the music
+    time_run = False
+    if pygame.mixer.music.get_busy():
+        paused_position = pygame.mixer.music.get_pos() / 1000.0
+        pygame.mixer.music.pause()  # Pause the music
+    else:
+        paused_position = None  # No music playing, set paused_position to None
     current_song_index -= 1
-    pom.after_cancel(current_time) #cancels the operation above
+    pom.after_cancel(current_time)  # cancels the operation above
    
     global pause_popup
     global pausebg
