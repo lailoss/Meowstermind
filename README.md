@@ -6,7 +6,7 @@ Python (tkinter, pygame)
 
 How to Install and Run the Project?
 =start at primary.py 
-https://lailoss.itch.io/meowstermind
+(https://hanani-chikenrice.itch.io/meowstermind)
 
 How to Use the Project
 1. Click on primary.py and register
