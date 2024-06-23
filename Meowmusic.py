@@ -25,17 +25,17 @@ else:
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
-try:
-    c.execute('ALTER TABLE playlist ADD COLUMN username TEXT')
-except sqlite3.OperationalError as e:
-    print(f"OperationalError: {e}")
-
 # Create table if it doesn't exist (This part is to ensure your table has been created)
 c.execute('''CREATE TABLE IF NOT EXISTS playlist (
              id INTEGER PRIMARY KEY,
              song_path TEXT,
              username TEXT
             )''')
+
+try:
+    c.execute('ALTER TABLE playlist ADD COLUMN username TEXT')
+except sqlite3.OperationalError:
+    pass
 
 conn.commit()
 
@@ -48,7 +48,7 @@ music_window.resizable(False,False)
 current_song_index = 0  # Global variable to store the current song index
 
 def open_folder():
-    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/TT2L-08/Meowstermind/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
+    songs = filedialog.askopenfilenames(initialdir="C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", title="Choose A Song", filetypes=(("mp3 Files", "*.mp3"),))
     
     # List to store selected song paths
     selected_songs = []
@@ -86,7 +86,7 @@ def play_time():
     # Grab song title from playlist
     song = playlist.get(current_song) # or put (ACTIVE) inside bracket if error
     # Add directory structure and mp3 to song title
-    song = f'C:/Users/Fawqan/TT2L-08/Meowstermind/Songs/{song}'
+    song = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song)
     # Load song length with mutagen
     song_mut =MP3(song)
     # Get song length
@@ -142,7 +142,7 @@ def play_song():
         global stopped
         stopped = False
         song = playlist.get(ACTIVE)
-        song_path = os.path.join("C:/Users/Fawqan/TT2L-08/Meowstermind/Songs", song)
+        song_path = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song)
         
         print(f"Trying to load song: {song_path}")
         if not os.path.isfile(song_path):
@@ -214,7 +214,7 @@ def previous_song():
     
     # Get the song title from the playlist using the current index
     song = playlist.get(current_song_index)
-    song_path = f'C:/Users/Fawqan/TT2L-08/Meowstermind/Songs/{song}'
+    song_path = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song)
     # Load and play the previous song
     pygame.mixer.music.load(song_path)
     pygame.mixer.music.play(loops=0)
@@ -232,6 +232,8 @@ def previous_song():
     playlist.selection_set(current_song_index, last=None)
  
 def next_song():
+    global current_song_index
+    
     # Reset Slider and Status bar
     status_bar.config(text='')
     my_slider.config(value=0)
@@ -250,7 +252,8 @@ def next_song():
     next_song_title = playlist.get(next_index)
     
     # Construct the file path for the next song
-    next_song_path = f'C:/Users/Fawqan/TT2L-08/Meowstermind/Songs/{next_song_title}'
+    song = playlist.get(current_song_index)
+    next_song_path = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song)
     
     # Load and play song
     pygame.mixer.music.load(next_song_path)
@@ -274,7 +277,7 @@ def delete_song():
     if selected_indices:  # Check if any item is selected in the playlist
         index = selected_indices[0]
         song_name = playlist.get(index)
-        song_path = os.path.join("C:/Users/Fawqan/TT2L-08/Meowstermind/Songs", song_name).replace('\\', '/')
+        song_path = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song_name).replace('\\', '/')
         
         print(f"Deleting song: {song_path}")  # Debug statement
         
@@ -302,7 +305,7 @@ def delete_song():
 def slide(x):
     #slider_label.config(text=f'{int(my_slider.get())} of {int(song_length)}')
     song = playlist.get(ACTIVE)
-    song = f'C:/Users/Fawqan/TT2L-08/Meowstermind/Songs/{song}'
+    song = os.path.join("C:/Users/Fawqan/TT2L-8/Meowstermind/Songs", song)
     
     pygame.mixer.music.load(song)
     pygame.mixer.music.play(loops=0, start=int(my_slider.get()))
