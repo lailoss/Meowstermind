@@ -55,8 +55,6 @@ short_breaktime=False
 long_breaktime=False
 breaktime=False
 total_hours=0
-
-
 paused_position=None
 time_run=False
 
@@ -177,7 +175,7 @@ def stop_timer():
     sec.set('00')
 
 def break_mode():
-    print('hellow world')
+    print('break mode started')
     global bg_timer
     bg_timer=PhotoImage(file='./images/BREAK.png')
     bg.config(image=bg_timer)
@@ -188,6 +186,10 @@ def study_mode():
     hrs.set('00')
     mins.set('00')
     sec.set('00')
+    print('study mode')
+   
+    
+    
     
 initial_study_time = 0
 
@@ -195,7 +197,7 @@ def start_break_timer():
     global initial_break_time, time_run
     initial_break_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
     time_run = True
-    timer()  # Start the break timer countdown
+    timer()  
 
 def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode, total_hours, initial_study_time
@@ -204,7 +206,7 @@ def timer():
     cycletext=Label(pom, text='ROUND '+ str(cycle), font='comfortaa 12 bold', background=red)
     cycletext.place(x='80', y='33')
     
-    if total_time > 0:
+    if total_time > 0 :
         total_time -= 1
         hrs.set(str(total_time // 3600).zfill(2))
         mins.set(str((total_time % 3600) // 60).zfill(2))
@@ -219,24 +221,20 @@ def timer():
             is_breaktime()
             break_presets()
             break_mode()
+            start_break_timer()
             
             studied_seconds = initial_study_time
             print("Total time spent studying (in seconds):", studied_seconds)
 
             hours_studied = studied_seconds / 3600.0
-            try:
-                c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (hours_studied, username))
-                conn.commit()
-                print("Study time inserted into database successfully.")
-            except Exception as e:
-                print("Error inserting study time into database:", e)
+            c.execute("INSERT INTO timer (hours_studied, username) VALUES (?, ?)", (hours_studied, username))
+            conn.commit()
+            print("Study time inserted into database successfully.")
             
         else:
-      
-         breaktime = False
-         study_mode()
-        
-        
+            breaktime = False
+            study_mode()
+            time_run = False
         
 
 def is_breaktime():
@@ -285,7 +283,7 @@ def worka():
     hrs.set("00")
     mins.set("00")
     sec.set("5")
-    if is_breaktime==True:
+    if breaktime:
         break_presets()
 
     
@@ -293,21 +291,17 @@ def workb():
     hrs.set('00')
     mins.set('40')
     sec.set('00')
-    if is_breaktime==True:
+    if breaktime:
         break_presets()
 
 def workc():
     hrs.set('01')
     mins.set('00')
     sec.set('00')
-    if is_breaktime==True:
+    if breaktime:
         break_presets()
 
-# Close the connection when the application exits
-def on_close():
-    conn.close()
-    pom.destroy
-    
+
 #play, pause and stop buttons
 starticon=PhotoImage(file='./images/start.png')
 startbutton=Button(pom, text='start', image=starticon,bg='white', borderwidth=0,command=start_timer). place(x='285',y=' 240')

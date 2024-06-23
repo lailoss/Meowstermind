@@ -106,6 +106,13 @@ def studynotigone():
     study_noti.destroy()
 
     
+    
+def start_break_timer():
+    global initial_break_time, time_run
+    initial_break_time = int(hrs.get()) * 3600 + int(mins.get()) * 60 + int(sec.get())
+    time_run = True
+    timer()  # Start the break timer countdown
+    
 def timer():
     global time_run, current_time, breaktime,short_breaktime, long_breaktime, cycle, study_mode
    
@@ -150,9 +157,6 @@ def timer():
             study_notibg=Label(study_noti,image=studynotiimg)
             study_notibg.pack()
             studynotigone()
-
-
-
 
 
 def is_breaktime():
